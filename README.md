@@ -1,2 +1,8 @@
-# Nh-m-6
-Phần mềm JAVA
+## 🚀 Cách chạy dự án
+
+### 1. Cài đặt frontend (React)
+```bash
+cd frontend
+npm install
+npm start
+```
