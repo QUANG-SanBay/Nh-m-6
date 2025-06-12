@@ -1,3 +1,25 @@
+# ✅ Node.js
+/frontend/node_modules/
+/frontend/build/
+# Thêm cho frontend
+/frontend/.env
+/frontend/.env.*.local
+/frontend/coverage/
+frontend/npm-debug.log*
+frontend/yarn-debug.log*
+frontend/yarn-error.log*
+/frontend/.pnp
+/frontend/.pnp.js
+
+# ✅ Java
+/backend/target/
+**/*.log
+
+# ✅ IDE / hệ thống
+.idea/
+.vscode/
+.DS_Store
+
 HELP.md
 target/
 .mvn/wrapper/maven-wrapper.jar
