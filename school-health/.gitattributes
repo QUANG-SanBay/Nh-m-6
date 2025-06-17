@@ -1,0 +1,18 @@
+# Đảm bảo file shell script dùng LF (Linux/Mac)
+*.sh text eol=lf
+
+# Đảm bảo file batch script dùng CRLF (Windows)
+*.cmd text eol=crlf
+*.bat text eol=crlf
+
+# Đảm bảo file Java, XML, properties dùng LF
+*.java text eol=lf
+*.xml text eol=lf
+*.properties text eol=lf
+
+# Đảm bảo file Markdown dùng LF
+*.md text eol=lf
+
+# Đảm bảo file cấu hình Maven wrapper dùng LF
+/mvnw text eol=lf
+/mvnw.cmd text eol=crlf
