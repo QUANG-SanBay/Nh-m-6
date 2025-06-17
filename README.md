@@ -1,6 +1,7 @@
 ## 🚀 Cách chạy dự án
 ### ====== Mới clone về ======
 ### 1. Cài đặt frontend (React)
+#### Lưu ý phải cài Node.js
 ```bash
 cd frontend
 npm install
