@@ -6,7 +6,13 @@ import HealthResults from './pages/parent/HealthResults';
 import HealthInfo from './pages/parent/HealthInfo';
 import Medicine from './pages/parent/Medicine';
 import Events from './pages/parent/Events';
+import NurseHome from './pages/nurse/Home';
+import NurseProfile from './pages/nurse/Profile';
 import './App.css';
+import StudentList from './pages/nurse/StudentHealth/StudentList';
+import StudentHealthDetail from './pages/nurse/StudentHealth/StudentHealthDetail';
+import PrescriptionRequestList from './pages/nurse/PrescriptionRequestList';
+import PrescriptionRequestDetail from './pages/nurse/PrescriptionRequestDetail';
 
 function App() {
   return (
@@ -15,13 +21,27 @@ function App() {
         <Routes>
           {/* Parent Routes */}
           <Route path="/parent/home" element={<ParentHome />} />
-          
           <Route path="/parent/profile" element={<ParentProfile />} />
           <Route path="/parent/medicine" element={<Medicine />} />
           <Route path="/parent/health-info" element={<HealthInfo />} />
           <Route path="/parent/health-results" element={<HealthResults />} />
           <Route path="/parent/events" element={<Events />} />
           <Route path="/parent/logout" element={<div>Trang Đăng xuất</div>} />
+
+          {/* Nurse Routes */}
+          <Route path="/nurse" element={<Navigate to="/nurse/home" replace />} />
+          <Route path="/nurse/home" element={<NurseHome />} />
+          <Route path="/nurse/profile" element={<NurseProfile />} />
+          <Route path="/nurse/prescription-requests" element={<PrescriptionRequestList />} />
+          <Route path="/nurse/prescription-request/:requestId" element={<PrescriptionRequestDetail />} />
+          <Route path="/nurse/student-health" element={<StudentList />} />
+          <Route path="/nurse/student-health/:id" element={<StudentHealthDetail />} />
+          <Route path="/nurse/medical-supplies" element={<div>Trang Kho thuốc & bệnh chứng</div>} />
+          <Route path="/nurse/registration" element={<div>Trang Quản lý đăng ký</div>} />
+          <Route path="/nurse/medical-exam" element={<div>Trang Kiểm tra y tế</div>} />
+          <Route path="/nurse/events" element={<div>Trang Lịch sử sự kiện</div>} />
+          <Route path="/nurse/settings" element={<div>Trang Cài đặt</div>} />
+          <Route path="/nurse/logout" element={<div>Trang Đăng xuất</div>} />
 
           {/* Redirect root to parent home */}
           <Route path="/" element={<Navigate to="/parent/home" replace />} />

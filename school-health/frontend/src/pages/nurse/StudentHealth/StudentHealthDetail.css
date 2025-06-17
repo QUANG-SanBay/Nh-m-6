@@ -1,0 +1,248 @@
+.health-detail-main {
+  padding: 80px 0 2rem;
+  background-color: #f5f6fa;
+  min-height: calc(100vh - 80px);
+}
+
+.health-detail-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+/* Header Section */
+.detail-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.back-button {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  background: none;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  color: #616161;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.back-button:hover {
+  background-color: #f5f5f5;
+}
+
+.detail-header h1 {
+  color: #2c3e50;
+  font-size: 1.8rem;
+  margin: 0;
+}
+
+.header-actions {
+  display: flex;
+  gap: 1rem;
+}
+
+/* Buttons */
+.edit-button,
+.save-button,
+.cancel-button {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.edit-button {
+  background-color: #e3f2fd;
+  color: #1976d2;
+  border: none;
+}
+
+.edit-button:hover {
+  background-color: #bbdefb;
+}
+
+.save-button {
+  background-color: #2196f3;
+  color: white;
+  border: none;
+}
+
+.save-button:hover {
+  background-color: #1976d2;
+}
+
+.cancel-button {
+  background-color: #f5f5f5;
+  color: #616161;
+  border: none;
+}
+
+.cancel-button:hover {
+  background-color: #eeeeee;
+}
+
+/* Health Record */
+.health-record {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+.record-section {
+  padding: 2rem;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.record-section:last-child {
+  border-bottom: none;
+}
+
+.record-section h2 {
+  color: #2c3e50;
+  font-size: 1.4rem;
+  margin: 0 0 1.5rem 0;
+}
+
+/* Info Grid */
+.info-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+}
+
+.info-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.info-group.full-width {
+  grid-column: 1 / -1;
+}
+
+.info-group label {
+  color: #616161;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.info-group span {
+  color: #2c3e50;
+  font-size: 1rem;
+  padding: 0.5rem 0;
+}
+
+/* Form Inputs */
+.info-group input,
+.info-group select,
+.info-group textarea {
+  padding: 0.75rem;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  color: #2c3e50;
+  background-color: white;
+  transition: all 0.3s ease;
+}
+
+.info-group textarea {
+  min-height: 100px;
+  resize: vertical;
+}
+
+.info-group input:focus,
+.info-group select:focus,
+.info-group textarea:focus {
+  border-color: #2196f3;
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(33, 150, 243, 0.1);
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+  .health-detail-container {
+    padding: 1rem;
+  }
+
+  .info-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .detail-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  .header-actions {
+    width: 100%;
+  }
+
+  .info-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .edit-button,
+  .save-button,
+  .cancel-button {
+    flex: 1;
+    justify-content: center;
+  }
+}
+
+.student-avatar {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 30px;
+  padding: 20px;
+  background: #f8f9fa;
+  border-radius: 8px;
+}
+
+.student-avatar img {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 4px solid #fff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.avatar-edit {
+  margin-top: 15px;
+  width: 100%;
+  max-width: 300px;
+}
+
+.avatar-edit input {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+.avatar-edit input:focus {
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+} 
