@@ -12,6 +12,11 @@ npm start
 cd backend
 ./mvnw spring-boot:run
 ```
+hoặc
+```bash
+cd backend
+mvnw spring-boot:run
+```
 ### ====== Đã cài npm ======
 ### 1. frontend (React)
 ```bash
@@ -22,4 +27,9 @@ npm start
 ```bash
 cd backend
 ./mvnw spring-boot:run
+```
+hoặc
+```bash
+cd backend
+mvnw spring-boot:run
 ```
