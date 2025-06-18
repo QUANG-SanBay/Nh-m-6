@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import './Header.css';
-
 const Header = () => {
   const [isProfileOpen, setIsProfileOpen] = useState(false);
 
@@ -36,7 +35,7 @@ const Header = () => {
               <i className="fas fa-medkit"></i>Kho thuốc
             </Link></li>
             <li><Link to="/nurse/registration" className="nav-link">
-              <i className="fas fa-clipboard-list"></i>Đăng ký
+              <i className="fas fa-clipboard-list"></i>Quản lý tiêm chủng
             </Link></li>
             <li><Link to="/nurse/medical-exam" className="nav-link">
               <i className="fas fa-stethoscope"></i>Kiểm tra y tế
