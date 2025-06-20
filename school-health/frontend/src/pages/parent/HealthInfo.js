@@ -1,7 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './HealthInfo.css';
 import Header from '../../components/parent/Header';
 import Footer from '../../components/parent/Footer';
+
+const API_BASE = process.env.REACT_APP_API_BASE || 'http://localhost:8080/api';
 
 const HealthInfo = () => {
   const [formData, setFormData] = useState({
@@ -21,6 +23,43 @@ const HealthInfo = () => {
     specialCondition: '',
     photo: null
   });
+  const [loading, setLoading] = useState(false);
+  const [message, setMessage] = useState('');
+
+  // Lấy dữ liệu hồ sơ sức khỏe hiện có
+  useEffect(() => {
+    if (formData.studentId) {
+      setLoading(true);
+      fetch(`${API_BASE}/hoso-suckhoe/hocsinh/${formData.studentId}`)
+        .then(res => res.json())
+        .then(data => {
+          if (data && data.length > 0) {
+            // Map dữ liệu từ backend sang formData nếu cần
+            const hs = data[0];
+            setFormData(prev => ({
+              ...prev,
+              fullName: hs.hocSinh?.hoTen || '',
+              dateOfBirth: hs.hocSinh?.ngaySinh || '',
+              gender: hs.hocSinh?.gioiTinh || '',
+              studentId: hs.hocSinh?.maHocSinh || '',
+              class: hs.hocSinh?.lop || '',
+              address: hs.hocSinh?.diaChi || '',
+              healthInfo: {
+                height: hs.chieuCao || '',
+                weight: hs.canNang || '',
+                vision: hs.thiLuc || '',
+                hearing: hs.thinhLuc || '',
+                dental: hs.ketQuaRangMieng || ''
+              },
+              specialCondition: hs.benhManTinh || '',
+              // photo: null // Không xử lý ảnh ở backend
+            }));
+          }
+          setLoading(false);
+        })
+        .catch(() => setLoading(false));
+    }
+  }, [formData.studentId]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -53,8 +92,49 @@ const HealthInfo = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // TODO: Implement form submission logic
-    console.log('Form submitted:', formData);
+    setLoading(true);
+    setMessage('');
+    // Chuẩn bị dữ liệu gửi lên backend
+    const payload = {
+      // map lại đúng trường backend nếu cần
+      maHoSo: undefined, // để backend tự sinh hoặc cập nhật
+      diUng: '',
+      benhManTinh: formData.specialCondition,
+      tienSuDieuTri: '',
+      thiLuc: formData.healthInfo.vision,
+      thinhLuc: formData.healthInfo.hearing,
+      lichSuTiemChung: '',
+      ghiChu: '',
+      ngayCapNhatCuoi: new Date().toISOString().slice(0, 10),
+      chieuCao: formData.healthInfo.height,
+      canNang: formData.healthInfo.weight,
+      ketQuaRangMieng: formData.healthInfo.dental,
+      hocSinh: {
+        maHocSinh: formData.studentId,
+        hoTen: formData.fullName,
+        ngaySinh: formData.dateOfBirth,
+        gioiTinh: formData.gender,
+        lop: formData.class,
+        diaChi: formData.address
+      }
+    };
+    fetch(`${API_BASE}/hoso-suckhoe`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    })
+      .then(res => {
+        if (res.ok) return res.json();
+        throw new Error('Cập nhật thất bại');
+      })
+      .then(() => {
+        setMessage('Cập nhật/Khai báo thành công!');
+        setLoading(false);
+      })
+      .catch(() => {
+        setMessage('Cập nhật/Khai báo thất bại!');
+        setLoading(false);
+      });
   };
 
   return (
