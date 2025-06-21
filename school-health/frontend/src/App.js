@@ -8,6 +8,8 @@ import Medicine from './pages/parent/Medicine';
 import Events from './pages/parent/Events';
 import NurseHome from './pages/nurse/Home';
 import NurseProfile from './pages/nurse/Profile';
+import MedicalEvents from './pages/nurse/MedicalEvents';
+import EditEvent from './pages/nurse/EditEvent';
 import './App.css';
 import StudentList from './pages/nurse/StudentHealth/StudentList';
 import StudentHealthDetail from './pages/nurse/StudentHealth/StudentHealthDetail';
@@ -16,6 +18,7 @@ import PrescriptionRequestDetail from './pages/nurse/PrescriptionRequestDetail';
 import MedicalSupplies from './pages/nurse/MedicalSupplies';
 import MedicalExam from './pages/nurse/MedicalExam';
 import VaccinationManagement from './pages/nurse/VaccinationManagement';
+import EditStudentHealth from './pages/nurse/StudentHealth/EditStudentHealth';
 
 function App() {
   return (
@@ -39,10 +42,12 @@ function App() {
           <Route path="/nurse/prescription-request/:requestId" element={<PrescriptionRequestDetail />} />
           <Route path="/nurse/student-health" element={<StudentList />} />
           <Route path="/nurse/student-health/:id" element={<StudentHealthDetail />} />
+          <Route path="/nurse/student-health/:id/edit" element={<EditStudentHealth />} />
           <Route path="/nurse/medical-supplies" element={<MedicalSupplies />} />
           <Route path="/nurse/registration" element={<div>Trang Quản lý đăng ký</div>} />
           <Route path="/nurse/medical-exam" element={<MedicalExam />} />
-          <Route path="/nurse/events" element={<div>Trang Lịch sử sự kiện</div>} />
+          <Route path="/nurse/events" element={<MedicalEvents />} />
+          <Route path="/nurse/events/:eventId/edit" element={<EditEvent />} />
           <Route path="/nurse/settings" element={<div>Trang Cài đặt</div>} />
           <Route path="/nurse/logout" element={<div>Trang Đăng xuất</div>} />
           <Route path="/nurse/vaccination-management" element={<VaccinationManagement />} />

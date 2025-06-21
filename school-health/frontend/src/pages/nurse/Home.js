@@ -1,7 +1,8 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import Header from '../../components/nurse/Header';
 import Footer from '../../components/nurse/Footer';
-import './Home.css';
+import '../../styles/Home.css';
 
 const Home = () => {
   return (
@@ -50,10 +51,10 @@ const Home = () => {
                   <span className="action-icon">🏥</span>
                   <span>Kiểm tra y tế</span>
                 </button>
-                <button className="action-button">
+                <Link to="/nurse/events" className="action-button">
                   <span className="action-icon">📅</span>
-                  <span>Lịch hẹn</span>
-                </button>
+                  <span>Sự kiện y tế</span>
+                </Link>
               </div>
             </section>
 
