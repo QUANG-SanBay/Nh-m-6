@@ -1,7 +1,7 @@
-package com.schoolhealth.school_health.controller;
+package com.schoolhealth.controller;
 
-import com.schoolhealth.school_health.entity.HoSoSucKhoeHocSinh;
-import com.schoolhealth.school_health.service.HoSoSucKhoeHocSinhService;
+import com.schoolhealth.entity.HoSoSucKhoeHocSinh;
+import com.schoolhealth.service.HoSoSucKhoeHocSinhService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 

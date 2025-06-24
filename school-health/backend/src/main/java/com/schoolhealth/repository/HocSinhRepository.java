@@ -1,6 +1,6 @@
-package com.schoolhealth.school_health.repository;
+package com.schoolhealth.repository;
 
-import com.schoolhealth.school_health.entity.HocSinh;
+import com.schoolhealth.entity.HocSinh;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface HocSinhRepository extends JpaRepository<HocSinh, String> {

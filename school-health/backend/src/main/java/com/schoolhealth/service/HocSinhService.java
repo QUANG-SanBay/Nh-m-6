@@ -1,7 +1,7 @@
-package com.schoolhealth.school_health.service;
+package com.schoolhealth.service;
 
-import com.schoolhealth.school_health.entity.HocSinh;
-import com.schoolhealth.school_health.repository.HocSinhRepository;
+import com.schoolhealth.entity.HocSinh;
+import com.schoolhealth.repository.HocSinhRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

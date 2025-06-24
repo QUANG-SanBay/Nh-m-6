@@ -1,4 +1,4 @@
-package com.schoolhealth.school_health.config;
+package com.schoolhealth.config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.*;

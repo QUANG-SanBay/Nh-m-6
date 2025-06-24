@@ -1,4 +1,4 @@
-package com.schoolhealth.school_health.entity;
+package com.schoolhealth.entity;
 
 import jakarta.persistence.*;
 
