@@ -62,14 +62,14 @@ const VaccinationManagement = () => {
           {view === 'menu' && (
             <div className="menu-choice">
               <h1 className="title">Quản lý tiêm chủng</h1>
-              <button className="menu-btn" onClick={handleShowHistory}>Xem lịch sử các đợt tiêm chủng</button>
-              <button className="menu-btn" onClick={handleShowCreate}>Tạo đợt tiêm chủng mới</button>
+              <button className="btn-blue" onClick={handleShowHistory}>Xem lịch sử các đợt tiêm chủng</button>
+              <button className="btn-blue" onClick={handleShowCreate}>Tạo đợt tiêm chủng mới</button>
             </div>
           )}
           {view === 'history' && (
             <div className="history-view">
               <h2>Lịch sử các đợt tiêm chủng</h2>
-              <button className="back-btn" onClick={handleShowMenu}>← Quay lại</button>
+              <button className="btn-black" onClick={handleShowMenu}>← Quay lại</button>
               <table className="batch-table">
                 <thead>
                   <tr>
@@ -88,7 +88,7 @@ const VaccinationManagement = () => {
                       <td>{batch.eventDate}</td>
                       <td>{batch.location}</td>
                       <td>
-                        <button className="detail-btn" onClick={() => handleShowDetail(batch)}>Xem chi tiết</button>
+                        <button className="btn-blue" onClick={() => handleShowDetail(batch)}>Xem chi tiết</button>
                       </td>
                     </tr>
                   ))}
@@ -98,13 +98,13 @@ const VaccinationManagement = () => {
           )}
           {view === 'create' && (
             <div className="create-view">
-              <button className="back-btn" onClick={handleShowMenu}>← Quay lại</button>
+              <button className="btn-black" onClick={handleShowMenu}>← Quay lại</button>
               <VaccinationBatch />
             </div>
           )}
           {view === 'detail' && selectedBatch && (
             <div className="detail-view">
-              <button className="back-btn" onClick={handleShowHistory}>← Quay lại</button>
+              <button className="btn-black" onClick={handleShowHistory}>← Quay lại</button>
               <VaccinationBatch batchData={selectedBatch} readOnly />
             </div>
           )}

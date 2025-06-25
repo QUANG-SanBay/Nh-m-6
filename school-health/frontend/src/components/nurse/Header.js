@@ -34,7 +34,7 @@ const Header = () => {
             <li><Link to="/nurse/medical-supplies" className="nav-link">
               <i className="fas fa-medkit"></i>Kho thuốc
             </Link></li>
-            <li><Link to="/nurse/registration" className="nav-link">
+            <li><Link to="/nurse/vaccination-management" className="nav-link">
               <i className="fas fa-clipboard-list"></i>Quản lý tiêm chủng
             </Link></li>
             <li><Link to="/nurse/medical-exam" className="nav-link">

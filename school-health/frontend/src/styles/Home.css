@@ -100,11 +100,15 @@ section h2 {
   border-radius: 8px;
   cursor: pointer;
   transition: all 0.3s ease;
+  text-decoration: none;
+  color: inherit;
 }
 
 .action-button:hover {
   background: #e9ecef;
   transform: translateY(-2px);
+  text-decoration: none;
+  color: inherit;
 }
 
 .action-icon {

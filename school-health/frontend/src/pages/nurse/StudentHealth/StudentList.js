@@ -1,19 +1,34 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { Link, useLocation } from 'react-router-dom';
 import Header from '../../../components/nurse/Header';
 import Footer from '../../../components/nurse/Footer';
 import './StudentList.css';
 
 const StudentList = () => {
   const [searchTerm, setSearchTerm] = useState('');
-  
+  const location = useLocation();
+
   // Mock data - replace with API call later
-  const [students] = useState([
-    { id: 1, name: 'Nguyễn Văn A', class: '10A1', studentId: 'HS001', healthStatus: 'Bình thường' },
-    { id: 2, name: 'Trần Thị B', class: '10A2', studentId: 'HS002', healthStatus: 'Cần theo dõi' },
-    { id: 3, name: 'Phạm Văn C', class: '10A1', studentId: 'HS003', healthStatus: 'Bình thường' },
-    { id: 4, name: 'Lê Thị D', class: '10A3', studentId: 'HS004', healthStatus: 'Đang điều trị' },
+  const [students, setStudents] = useState([
+    { id: 1, name: 'Nguyễn Văn A', class: '10A1', studentId: 'HS001', healthStatus: 'Bình thường', height: 165, weight: 55, bloodType: 'O+', allergies: ['Hải sản'], medicalHistory: ['Đau dạ dày'] },
+    { id: 2, name: 'Trần Thị B', class: '10A2', studentId: 'HS002', healthStatus: 'Cần theo dõi', height: 160, weight: 50, bloodType: 'A+', allergies: [], medicalHistory: ['Hen suyễn'] },
+    { id: 3, name: 'Phạm Văn C', class: '10A1', studentId: 'HS003', healthStatus: 'Bình thường', height: 170, weight: 60, bloodType: 'B+', allergies: [], medicalHistory: [] },
+    { id: 4, name: 'Lê Thị D', class: '10A3', studentId: 'HS004', healthStatus: 'Đang điều trị', height: 155, weight: 48, bloodType: 'AB+', allergies: ['Phấn hoa'], medicalHistory: [] },
   ]);
+
+  useEffect(() => {
+    // Nhận và cập nhật học sinh từ trang Edit
+    if (location.state && location.state.updatedStudent) {
+      const updatedStudent = location.state.updatedStudent;
+      setStudents(prevStudents =>
+        prevStudents.map(student =>
+          student.id === updatedStudent.id ? updatedStudent : student
+        )
+      );
+      // Xóa state để tránh cập nhật lại khi refresh
+      window.history.replaceState({}, '');
+    }
+  }, [location.state]);
 
   const filteredStudents = students.filter(student =>
     student.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -69,10 +84,14 @@ const StudentList = () => {
                     <i className="fas fa-eye"></i>
                     Xem chi tiết
                   </Link>
-                  <button className="edit-button">
+                  <Link 
+                    to={`/nurse/student-health/${student.id}/edit`} 
+                    className="edit-button"
+                    state={{ student: student }}
+                  >
                     <i className="fas fa-edit"></i>
                     Chỉnh sửa
-                  </button>
+                  </Link>
                 </div>
               </div>
             ))}

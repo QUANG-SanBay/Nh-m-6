@@ -43,8 +43,8 @@ const PrescriptionRequestDetail = () => {
   return (
     <div className="nurse-layout">
       <Header />
-      <main>
-        <div className="prescription-request-detail">
+      <main className="prescription-detail-main">
+        <div className="prescription-detail-container">
           <div className="header">
             <button className="back-button" onClick={() => navigate(-1)}>
               ← Quay lại

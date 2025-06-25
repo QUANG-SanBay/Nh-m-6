@@ -149,11 +149,11 @@ const MedicalExam = () => {
             <div className="exam-action-buttons">
               {isEditing ? (
                 <>
-                  <button type="button" className="save-btn" onClick={handleSave}>Lưu</button>
-                  <button type="button" className="cancel-btn" onClick={handleCancel}>Hủy</button>
+                  <button type="button" className="btn-black" onClick={handleSave}>Lưu</button>
+                  <button type="button" className="btn-black" onClick={handleCancel}>Hủy</button>
                 </>
               ) : (
-                <button type="button" className="edit-btn" onClick={handleEdit}>Chỉnh sửa</button>
+                <button type="button" className="btn-blue" onClick={handleEdit}>Chỉnh sửa</button>
               )}
             </div>
           </form>

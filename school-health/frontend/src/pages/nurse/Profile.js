@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import Header from '../../components/nurse/Header';
 import Footer from '../../components/nurse/Footer';
-import './Profile.css';
+import '../../styles/Profile.css';
 
 const Profile = () => {
   const [isEditing, setIsEditing] = useState(false);
