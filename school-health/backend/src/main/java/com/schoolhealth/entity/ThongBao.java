@@ -13,7 +13,7 @@ public class ThongBao {
     private LocalDateTime thoiGianGui;
     private Boolean daDoc;
     @ManyToOne
-    @JoinColumn(name = "nguoi_nhan_id")
+    @JoinColumn(name = "nguoi_nhan_id", referencedColumnName = "maPhuHuynh")
     private PhuHuynh nguoiNhan;
 
     public String getMaThongBao() { return maThongBao; }

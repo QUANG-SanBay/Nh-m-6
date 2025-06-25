@@ -6,6 +6,8 @@ import java.util.List;
 @Entity
 @Table(name = "nhan_vien_y_te")
 public class NhanVienYTe extends NguoiDung {
+    @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
     private String maNhanVienYTe;
     private String hoTen;
 

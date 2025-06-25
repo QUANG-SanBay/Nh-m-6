@@ -5,6 +5,8 @@ import jakarta.persistence.*;
 @Entity
 @Table(name = "quan_tri_vien")
 public class QuanTriVien extends NguoiDung {
+    @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
     private String maQuanTriVien;
     private String hoTen;
     // getter, setter

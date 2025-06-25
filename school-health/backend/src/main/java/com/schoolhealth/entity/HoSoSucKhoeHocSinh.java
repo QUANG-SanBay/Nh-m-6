@@ -19,11 +19,11 @@ public class HoSoSucKhoeHocSinh {
     private Date ngayCapNhatCuoi;
 
     @ManyToOne
-    @JoinColumn(name = "ma_hoc_sinh")
+    @JoinColumn(name = "ma_hoc_sinh", referencedColumnName = "maHocSinh")
     private HocSinh hocSinh;
 
     @ManyToOne
-    @JoinColumn(name = "ma_nhan_vien_y_te")
+    @JoinColumn(name = "ma_nhan_vien_y_te", referencedColumnName = "maNhanVienYTe")
     private NhanVienYTe nhanVienYTe;
 
     public String getMaHoSo() { return maHoSo; }

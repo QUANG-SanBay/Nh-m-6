@@ -7,6 +7,8 @@ import java.util.List;
 @Entity
 @Table(name = "hoc_sinh")
 public class HocSinh extends NguoiDung {
+    @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
     private String maHocSinh;
     private String hoTen;
     @Temporal(TemporalType.DATE)
@@ -16,7 +18,7 @@ public class HocSinh extends NguoiDung {
     private String diaChi;
 
     @ManyToOne
-    @JoinColumn(name = "ma_phu_huynh")
+    @JoinColumn(name = "ma_phu_huynh", referencedColumnName = "maPhuHuynh")
     private PhuHuynh phuHuynh;
 
     @OneToMany(mappedBy = "hocSinh")

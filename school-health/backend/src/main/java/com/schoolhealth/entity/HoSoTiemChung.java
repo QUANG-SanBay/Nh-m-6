@@ -15,15 +15,15 @@ public class HoSoTiemChung {
     private Boolean dongYPhuHuynh;
 
     @ManyToOne
-    @JoinColumn(name = "ma_chien_dich")
+    @JoinColumn(name = "ma_chien_dich", referencedColumnName = "maChienDich")
     private ChienDichTiemChung chienDichTiemChung;
 
     @ManyToOne
-    @JoinColumn(name = "ma_hoc_sinh")
+    @JoinColumn(name = "ma_hoc_sinh", referencedColumnName = "maHocSinh")
     private HocSinh hocSinh;
 
     @ManyToOne
-    @JoinColumn(name = "ma_nhan_vien_y_te")
+    @JoinColumn(name = "ma_nhan_vien_y_te", referencedColumnName = "maNhanVienYTe")
     private NhanVienYTe nhanVienYTe;
 
     public String getMaHoSo() { return maHoSo; }

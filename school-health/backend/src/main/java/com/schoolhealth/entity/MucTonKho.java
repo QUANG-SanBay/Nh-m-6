@@ -17,15 +17,15 @@ public class MucTonKho {
     private Date ngayNhapKhoCuoi;
 
     @ManyToOne
-    @JoinColumn(name = "ma_nhan_vien_y_te")
+    @JoinColumn(name = "ma_nhan_vien_y_te", referencedColumnName = "maNhanVienYTe")
     private NhanVienYTe nhanVienYTe;
 
     @ManyToOne
-    @JoinColumn(name = "ma_thuoc", nullable = true)
+    @JoinColumn(name = "ma_thuoc", referencedColumnName = "maThuoc", nullable = true)
     private Thuoc thuoc;
 
     @ManyToOne
-    @JoinColumn(name = "ma_vat_tu", nullable = true)
+    @JoinColumn(name = "ma_vat_tu", referencedColumnName = "maVatTu", nullable = true)
     private VatTuYTe vatTuYTe;
 
     public String getMaMucTonKho() { return maMucTonKho; }

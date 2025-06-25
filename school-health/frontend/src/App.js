@@ -1,5 +1,8 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import Login from './pages/Login';
+import Logout from './pages/Logout';
+import ProtectedRoute from './components/ProtectedRoute';
 import ParentHome from './pages/parent/Home';
 import ParentProfile from './pages/parent/Profile';
 import HealthResults from './pages/parent/HealthResults';
@@ -22,33 +25,109 @@ function App() {
     <Router>
       <div className="App">
         <Routes>
+          {/* Auth Routes */}
+          <Route path="/login" element={<Login />} />
+          <Route path="/logout" element={<Logout />} />
+
           {/* Parent Routes */}
-          <Route path="/parent/home" element={<ParentHome />} />
-          <Route path="/parent/profile" element={<ParentProfile />} />
-          <Route path="/parent/medicine" element={<Medicine />} />
-          <Route path="/parent/health-info" element={<HealthInfo />} />
-          <Route path="/parent/health-results" element={<HealthResults />} />
-          <Route path="/parent/events" element={<Events />} />
-          <Route path="/parent/logout" element={<div>Trang Đăng xuất</div>} />
+          <Route path="/parent/home" element={
+            <ProtectedRoute allowedRoles={['PHU_HUYNH']}>
+              <ParentHome />
+            </ProtectedRoute>
+          } />
+          <Route path="/parent/profile" element={
+            <ProtectedRoute allowedRoles={['PHU_HUYNH']}>
+              <ParentProfile />
+            </ProtectedRoute>
+          } />
+          <Route path="/parent/medicine" element={
+            <ProtectedRoute allowedRoles={['PHU_HUYNH']}>
+              <Medicine />
+            </ProtectedRoute>
+          } />
+          <Route path="/parent/health-info" element={
+            <ProtectedRoute allowedRoles={['PHU_HUYNH']}>
+              <HealthInfo />
+            </ProtectedRoute>
+          } />
+          <Route path="/parent/health-results" element={
+            <ProtectedRoute allowedRoles={['PHU_HUYNH']}>
+              <HealthResults />
+            </ProtectedRoute>
+          } />
+          <Route path="/parent/events" element={
+            <ProtectedRoute allowedRoles={['PHU_HUYNH']}>
+              <Events />
+            </ProtectedRoute>
+          } />
+          <Route path="/parent/logout" element={<Logout />} />
 
           {/* Nurse Routes */}
           <Route path="/nurse" element={<Navigate to="/nurse/home" replace />} />
-          <Route path="/nurse/home" element={<NurseHome />} />
-          <Route path="/nurse/profile" element={<NurseProfile />} />
-          <Route path="/nurse/prescription-requests" element={<PrescriptionRequestList />} />
-          <Route path="/nurse/prescription-request/:requestId" element={<PrescriptionRequestDetail />} />
-          <Route path="/nurse/student-health" element={<StudentList />} />
-          <Route path="/nurse/student-health/:id" element={<StudentHealthDetail />} />
-          <Route path="/nurse/medical-supplies" element={<MedicalSupplies />} />
-          <Route path="/nurse/registration" element={<div>Trang Quản lý đăng ký</div>} />
-          <Route path="/nurse/medical-exam" element={<MedicalExam />} />
-          <Route path="/nurse/events" element={<div>Trang Lịch sử sự kiện</div>} />
-          <Route path="/nurse/settings" element={<div>Trang Cài đặt</div>} />
-          <Route path="/nurse/logout" element={<div>Trang Đăng xuất</div>} />
-          <Route path="/nurse/vaccination-management" element={<VaccinationManagement />} />
+          <Route path="/nurse/home" element={
+            <ProtectedRoute allowedRoles={['NHAN_VIEN_Y_TE']}>
+              <NurseHome />
+            </ProtectedRoute>
+          } />
+          <Route path="/nurse/profile" element={
+            <ProtectedRoute allowedRoles={['NHAN_VIEN_Y_TE']}>
+              <NurseProfile />
+            </ProtectedRoute>
+          } />
+          <Route path="/nurse/prescription-requests" element={
+            <ProtectedRoute allowedRoles={['NHAN_VIEN_Y_TE']}>
+              <PrescriptionRequestList />
+            </ProtectedRoute>
+          } />
+          <Route path="/nurse/prescription-request/:requestId" element={
+            <ProtectedRoute allowedRoles={['NHAN_VIEN_Y_TE']}>
+              <PrescriptionRequestDetail />
+            </ProtectedRoute>
+          } />
+          <Route path="/nurse/student-health" element={
+            <ProtectedRoute allowedRoles={['NHAN_VIEN_Y_TE']}>
+              <StudentList />
+            </ProtectedRoute>
+          } />
+          <Route path="/nurse/student-health/:id" element={
+            <ProtectedRoute allowedRoles={['NHAN_VIEN_Y_TE']}>
+              <StudentHealthDetail />
+            </ProtectedRoute>
+          } />
+          <Route path="/nurse/medical-supplies" element={
+            <ProtectedRoute allowedRoles={['NHAN_VIEN_Y_TE']}>
+              <MedicalSupplies />
+            </ProtectedRoute>
+          } />
+          <Route path="/nurse/registration" element={
+            <ProtectedRoute allowedRoles={['NHAN_VIEN_Y_TE']}>
+              <div>Trang Quản lý đăng ký</div>
+            </ProtectedRoute>
+          } />
+          <Route path="/nurse/medical-exam" element={
+            <ProtectedRoute allowedRoles={['NHAN_VIEN_Y_TE']}>
+              <MedicalExam />
+            </ProtectedRoute>
+          } />
+          <Route path="/nurse/events" element={
+            <ProtectedRoute allowedRoles={['NHAN_VIEN_Y_TE']}>
+              <div>Trang Lịch sử sự kiện</div>
+            </ProtectedRoute>
+          } />
+          <Route path="/nurse/settings" element={
+            <ProtectedRoute allowedRoles={['NHAN_VIEN_Y_TE']}>
+              <div>Trang Cài đặt</div>
+            </ProtectedRoute>
+          } />
+          <Route path="/nurse/logout" element={<Logout />} />
+          <Route path="/nurse/vaccination-management" element={
+            <ProtectedRoute allowedRoles={['NHAN_VIEN_Y_TE']}>
+              <VaccinationManagement />
+            </ProtectedRoute>
+          } />
 
-          {/* Redirect root to parent home */}
-          <Route path="/" element={<Navigate to="/parent/home" replace />} />
+          {/* Redirect root to login */}
+          <Route path="/" element={<Navigate to="/login" replace />} />
         </Routes>
       </div>
     </Router>
