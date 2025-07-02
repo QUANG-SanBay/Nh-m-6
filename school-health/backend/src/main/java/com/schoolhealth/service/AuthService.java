@@ -33,7 +33,7 @@ public class AuthService {
         }
 
         // Kiểm tra trong bảng PhuHuynh
-        PhuHuynh phuHuynh = phuHuynhRepository.findByTenDangNhap(request.getTenDangNhap());
+        PhuHuynh phuHuynh = phuHuynhRepository.findByTenDangNhap(request.getTenDangNhap()).orElse(null);
         if (phuHuynh != null && phuHuynh.getMatKhauHash().equals(request.getMatKhau())) {
             return new AuthResponse("token-" + UUID.randomUUID(), "PHU_HUYNH", phuHuynh.getHoTen(), "Đăng nhập thành công", true);
         }
