@@ -25,6 +25,8 @@ public class AuthService {
     @Autowired
     private NhanVienYTeRepository nhanVienYTeRepository;
 
+    @Autowired
+    private HocSinhService hocSinhService; 
     public AuthResponse login(LoginRequest request) {
         // Kiểm tra trong bảng HocSinh
         HocSinh hocSinh = hocSinhRepository.findByTenDangNhap(request.getTenDangNhap());
@@ -50,23 +52,26 @@ public class AuthService {
     public AuthResponse register(RegisterRequest request) {
         // Kiểm tra tên đăng nhập đã tồn tại chưa
         if (hocSinhRepository.findByTenDangNhap(request.getTenDangNhap()) != null ||
-            phuHuynhRepository.findByTenDangNhap(request.getTenDangNhap()) != null ||
-            nhanVienYTeRepository.findByTenDangNhap(request.getTenDangNhap()) != null) {
-            return new AuthResponse(null, null, null, "Tên đăng nhập đã tồn tại", false);
+        phuHuynhRepository.findByTenDangNhap(request.getTenDangNhap()).isPresent() ||
+        nhanVienYTeRepository.findByTenDangNhap(request.getTenDangNhap()) != null) {
+        return new AuthResponse(null, null, null, "Tên đăng nhập đã tồn tại", false); // Xóa dấu chấm phẩy thừa
         }
 
         // Tạo tài khoản mới theo vai trò
-        switch (request.getVaiTro()) {
-            case "HOC_SINH":
-                HocSinh hocSinh = new HocSinh();
-                hocSinh.setTenDangNhap(request.getTenDangNhap());
-                hocSinh.setMatKhauHash(request.getMatKhau());
-                hocSinh.setEmail(request.getEmail());
-                hocSinh.setSoDienThoai(request.getSoDienThoai());
-                hocSinh.setVaiTro(request.getVaiTro());
-                hocSinh.setHoTen(request.getHoTen());
-                hocSinhRepository.save(hocSinh);
-                return new AuthResponse("token-" + UUID.randomUUID(), "HOC_SINH", hocSinh.getHoTen(), "Đăng ký thành công", true);
+            switch (request.getVaiTro()) {
+                case "HOC_SINH":
+                    HocSinh hocSinh = new HocSinh();
+                    hocSinh.setTenDangNhap(request.getTenDangNhap());
+                    hocSinh.setMatKhauHash(request.getMatKhau());
+                    hocSinh.setEmail(request.getEmail());
+                    hocSinh.setSoDienThoai(request.getSoDienThoai());
+                    hocSinh.setVaiTro(request.getVaiTro());
+                    hocSinh.setHoTen(request.getHoTen());
+                    // Thay thế dòng dưới:
+                    // hocSinhRepository.save(hocSinh);
+                    // bằng:
+                    hocSinhService.save(hocSinh); // Gọi qua service để sinh mã HS??????
+                    return new AuthResponse("token-" + UUID.randomUUID(), "HOC_SINH", hocSinh.getHoTen(), "Đăng ký thành công", true);
 
             case "PHU_HUYNH":
                 PhuHuynh phuHuynh = new PhuHuynh();

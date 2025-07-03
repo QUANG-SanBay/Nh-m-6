@@ -2,6 +2,7 @@ package com.schoolhealth.entity;
 
 import jakarta.persistence.*;
 import java.util.Date;
+import java.util.UUID;
 
 @Entity
 @Table(name = "ho_so_suc_khoe_hoc_sinh")
@@ -15,6 +16,13 @@ public class HoSoSucKhoeHocSinh {
     private String thinhLuc;
     private String lichSuTiemChung;
     private String ghiChu;
+    private double chieuCao;  // Thêm trường chiều cao
+    private double canNang;   // Thêm trường cân nặng
+    private String ketQuaRangMieng; // Thêm trường kết quả răng miệng
+    @Lob
+    @Column(columnDefinition = "TEXT")
+    private String anhHocSinh; // Thêm trường ảnh học sinh
+    
     @Temporal(TemporalType.DATE)
     private Date ngayCapNhatCuoi;
 
@@ -26,6 +34,15 @@ public class HoSoSucKhoeHocSinh {
     @JoinColumn(name = "ma_nhan_vien_y_te", referencedColumnName = "maNhanVienYTe")
     private NhanVienYTe nhanVienYTe;
 
+    // Constructor tạo ID mới nếu cần
+    @PrePersist
+    public void prePersist() {
+        if (this.maHoSo == null || this.maHoSo.isEmpty()) {
+            this.maHoSo = UUID.randomUUID().toString();
+        }
+    }
+
+    // Getters và setters hiện có
     public String getMaHoSo() { return maHoSo; }
     public void setMaHoSo(String maHoSo) { this.maHoSo = maHoSo; }
     public String getDiUng() { return diUng; }
@@ -48,4 +65,14 @@ public class HoSoSucKhoeHocSinh {
     public void setHocSinh(HocSinh hocSinh) { this.hocSinh = hocSinh; }
     public NhanVienYTe getNhanVienYTe() { return nhanVienYTe; }
     public void setNhanVienYTe(NhanVienYTe nhanVienYTe) { this.nhanVienYTe = nhanVienYTe; }
-} 
+    
+    // Getters và setters cho các trường mới
+    public double getChieuCao() { return chieuCao; }
+    public void setChieuCao(double chieuCao) { this.chieuCao = chieuCao; }
+    public double getCanNang() { return canNang; }
+    public void setCanNang(double canNang) { this.canNang = canNang; }
+    public String getKetQuaRangMieng() { return ketQuaRangMieng; }
+    public void setKetQuaRangMieng(String ketQuaRangMieng) { this.ketQuaRangMieng = ketQuaRangMieng; }
+    public String getAnhHocSinh() { return anhHocSinh; }
+    public void setAnhHocSinh(String anhHocSinh) { this.anhHocSinh = anhHocSinh; }
+}
