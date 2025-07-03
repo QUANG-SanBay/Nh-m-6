@@ -20,11 +20,15 @@
 }
 
 .logo {
+
+}
+.logo-link{
   display: flex;
   align-items: center;
   gap: 1rem;
+  text-decoration: none;
+  color: var(--text-color);
 }
-
 .logo img {
   height: 40px;
 }
