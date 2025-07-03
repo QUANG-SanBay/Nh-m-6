@@ -115,6 +115,7 @@ function App() {
           <Route path="/nurse/events" element={
             <ProtectedRoute allowedRoles={['NHAN_VIEN_Y_TE']}>
               <div>Trang Lịch sử sự kiện</div>
+              <MedicalEvents />
             </ProtectedRoute>
           } />
           <Route path="/nurse/settings" element={

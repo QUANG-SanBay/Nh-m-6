@@ -67,6 +67,27 @@ const MedicalEvents = () => {
   const location = useLocation();
 
   useEffect(() => {
+    fetch('http://localhost:8080/api/events')
+      .then(res => res.json())
+      .then(data => {
+        console.log('DATA BACKEND:', data);
+        const mappedEvents = data.map(event => ({
+          id: event.maSuKien,
+          title: event.loaiSuKien, // hoặc event.moTa nếu muốn
+          description: event.moTa,
+          date: event.thoiGianSuKien ? event.thoiGianSuKien.split('T')[0] : '',
+          time: event.thoiGianSuKien ? event.thoiGianSuKien.split('T')[1]?.slice(0,5) : '',
+          location: event.diaDiem || '',
+          status: event.trangThai || 'unknown',
+          participants: event.participants || 0,
+          type: event.type || ''
+        }));
+        setEvents(mappedEvents);
+      })
+      .catch(err => console.error('Lỗi lấy sự kiện:', err));
+  }, []);
+
+  useEffect(() => {
     // Kiểm tra xem có event được cập nhật gửi về từ trang edit không
     if (location.state && location.state.updatedEvent) {
       const updatedEvent = location.state.updatedEvent;
@@ -88,27 +109,60 @@ const MedicalEvents = () => {
     }));
   };
 
-  const handleSubmit = (e) => {
+  // Khi submit form tạo sự kiện mới
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    
     const newEvent = {
-      id: events.length + 1,
       ...formData,
       participants: parseInt(formData.participants) || 0,
       status: 'upcoming'
     };
 
-    setEvents(prev => [...prev, newEvent]);
-    setFormData({
-      title: '',
-      description: '',
-      date: '',
-      time: '',
-      location: '',
-      type: '',
-      participants: ''
-    });
-    setShowCreateForm(false);
+    try {
+      const response = await fetch('http://localhost:8080/api/events', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(newEvent)
+      });
+
+      if (response.ok) {
+        // Sau khi tạo thành công, fetch lại danh sách sự kiện
+        fetch('http://localhost:8080/api/events')
+          .then(res => res.json())
+          .then(data => {
+            const mappedEvents = data.map(event => ({
+              id: event.maSuKien,
+              title: event.loaiSuKien, // hoặc event.moTa nếu muốn
+              description: event.moTa,
+              date: event.thoiGianSuKien ? event.thoiGianSuKien.split('T')[0] : '',
+              time: event.thoiGianSuKien ? event.thoiGianSuKien.split('T')[1]?.slice(0,5) : '',
+              location: event.diaDiem || '',
+              status: event.trangThai || 'unknown',
+              participants: event.participants || 0,
+              type: event.type || ''
+            }));
+            setEvents(mappedEvents);
+          });
+        setFormData({
+          title: '',
+          description: '',
+          date: '',
+          time: '',
+          location: '',
+          type: '',
+          participants: ''
+        });
+        setShowCreateForm(false);
+      } else {
+        const errorText = await response.text();
+        alert('Có lỗi khi tạo sự kiện!\n' + errorText);
+        console.error('API error:', errorText);
+      }
+    } catch (error) {
+      alert('Không thể kết nối đến máy chủ!');
+    }
   };
 
   const handleCancelEvent = (eventId) => {
@@ -388,4 +442,4 @@ const MedicalEvents = () => {
   );
 };
 
-export default MedicalEvents; 
+export default MedicalEvents;
