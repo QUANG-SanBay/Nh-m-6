@@ -8,7 +8,7 @@ import java.util.List;
 @Table(name = "hoc_sinh")
 public class HocSinh extends NguoiDung {
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
+    // @GeneratedValue(strategy = GenerationType.UUID)
     private String maHocSinh;
     private String hoTen;
     @Temporal(TemporalType.DATE)
@@ -55,4 +55,12 @@ public class HocSinh extends NguoiDung {
     public void setHoSoTiemChungList(List<HoSoTiemChung> hoSoTiemChungList) { this.hoSoTiemChungList = hoSoTiemChungList; }
     public List<HoSoKiemTraYTe> getHoSoKiemTraYTeList() { return hoSoKiemTraYTeList; }
     public void setHoSoKiemTraYTeList(List<HoSoKiemTraYTe> hoSoKiemTraYTeList) { this.hoSoKiemTraYTeList = hoSoKiemTraYTeList; }
+    @PrePersist
+    public void prePersist() {
+        // Chỉ kiểm tra làm backup, logic chính vẫn ở HocSinhService
+        if (this.maHocSinh == null || this.maHocSinh.trim().isEmpty()) {
+            // Để trống, để HocSinhService xử lý
+            System.out.println("Warning: HocSinh ID was not set before persist!");
+        }
+    }
 } 

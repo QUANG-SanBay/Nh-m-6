@@ -129,6 +129,21 @@ function App() {
               <VaccinationManagement />
             </ProtectedRoute>
           } />
+          <Route path="/nurse/medical-events" element={
+            <ProtectedRoute allowedRoles={['NHAN_VIEN_Y_TE']}>
+              <MedicalEvents />
+            </ProtectedRoute>
+          } />
+          <Route path="/nurse/edit-event/:eventId" element={
+            <ProtectedRoute allowedRoles={['NHAN_VIEN_Y_TE']}>
+              <EditEvent />
+            </ProtectedRoute>
+          } />
+          <Route path="/nurse/edit-student-health/:id" element={
+            <ProtectedRoute allowedRoles={['NHAN_VIEN_Y_TE']}>
+              <EditStudentHealth />
+            </ProtectedRoute>
+          } />
 
           {/* Redirect root to login */}
           <Route path="/" element={<Navigate to="/login" replace />} />

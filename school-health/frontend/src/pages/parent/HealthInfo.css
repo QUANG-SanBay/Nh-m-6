@@ -1,3 +1,13 @@
+/* CSS Variables - thêm vào đầu file nếu chưa có */
+:root {
+  --primary-color: #4a90e2;
+  --secondary-color: #f8f9fa;
+  --text-color: #333;
+  --header-height: 80px;
+  --footer-bg: #2c3e50;
+  --accent-color: #e74c3c;
+}
+
 .health-info-page {
   min-height: 100vh;
   display: flex;
@@ -24,6 +34,7 @@
   color: var(--text-color);
   margin-bottom: 2rem;
   text-align: center;
+  font-size: 1.8rem;
 }
 
 .health-info-form {
@@ -32,6 +43,7 @@
   gap: 1.5rem;
 }
 
+/* Ảnh học sinh */
 .student-photo {
   align-self: flex-start;
   margin-bottom: 1rem;
@@ -39,21 +51,36 @@
 
 .photo-upload {
   position: relative;
-  width: 90px;
+  width: 120px;
 }
 
-.photo-placeholder,
-.photo-upload img {
-  width: 90px;
-  height: 120px;
+.photo-placeholder {
+  width: 120px;
+  height: 160px;
   border: 2px dashed #ccc;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
   color: #666;
   font-size: 0.9rem;
   margin-bottom: 0.5rem;
+  border-radius: 4px;
+  background-color: #fafafa;
+}
+
+.photo-placeholder i {
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+}
+
+.photo-upload img {
+  width: 120px;
+  height: 160px;
   object-fit: cover;
+  border-radius: 4px;
+  margin-bottom: 0.5rem;
+  border: 1px solid #ddd;
 }
 
 .photo-input {
@@ -61,7 +88,10 @@
 }
 
 .upload-button {
-  display: block;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
   width: 100%;
   padding: 0.5rem;
   background-color: var(--primary-color);
@@ -71,39 +101,57 @@
   cursor: pointer;
   font-size: 0.9rem;
   transition: background-color 0.3s ease;
+  text-decoration: none;
 }
 
 .upload-button:hover {
   background-color: #357abd;
 }
 
-.form-row {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-}
-
-.form-row label {
-  min-width: 100px;
-  color: var(--text-color);
-  font-weight: 500;
-}
-
+/* Form sections */
 .form-section {
   background-color: var(--secondary-color);
   padding: 1.5rem;
   border-radius: 8px;
+  border-left: 4px solid var(--primary-color);
 }
 
 .form-section h3 {
   color: var(--text-color);
   margin-bottom: 1rem;
-  font-size: 1.1rem;
+  font-size: 1.2rem;
+  font-weight: 600;
 }
 
+/* Form row (for single full-width fields) */
+.form-row {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.form-row label {
+  min-width: 120px;
+  color: var(--text-color);
+  font-weight: 500;
+  font-size: 0.9rem;
+}
+
+.form-row input,
+.form-row select {
+  flex: 1;
+  padding: 0.75rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 1rem;
+  transition: border-color 0.3s ease;
+}
+
+/* Form grid (for multiple fields in a row) */
 .form-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
   gap: 1rem;
 }
 
@@ -135,12 +183,15 @@
 
 .form-group input:focus,
 .form-group select:focus,
-.form-group textarea:focus {
+.form-group textarea:focus,
+.form-row input:focus,
+.form-row select:focus {
   outline: none;
   border-color: var(--primary-color);
   box-shadow: 0 0 0 2px rgba(74, 144, 226, 0.1);
 }
 
+/* Input with unit */
 .input-unit {
   position: relative;
   display: flex;
@@ -149,25 +200,33 @@
 
 .input-unit input {
   padding-right: 3rem;
+  width: 100%;
 }
 
 .unit {
   position: absolute;
   right: 1rem;
   color: #666;
+  font-size: 0.9rem;
+  font-weight: 500;
 }
 
+/* Textarea */
 textarea {
   min-height: 100px;
   resize: vertical;
   width: 100%;
+  font-family: inherit;
 }
 
+/* Form actions */
 .form-actions {
   display: flex;
   gap: 1rem;
   justify-content: flex-end;
   margin-top: 2rem;
+  padding-top: 1rem;
+  border-top: 1px solid #eee;
 }
 
 .btn-save,
@@ -186,8 +245,13 @@ textarea {
   color: white;
 }
 
-.btn-save:hover {
+.btn-save:hover:not(:disabled) {
   background-color: #357abd;
+}
+
+.btn-save:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
 }
 
 .btn-cancel {
@@ -199,9 +263,78 @@ textarea {
   background-color: #d0d0d0;
 }
 
+/* Loading overlay */
+.loading-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  color: white;
+}
+
+.loading-spinner {
+  border: 4px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  border-top: 4px solid #fff;
+  width: 40px;
+  height: 40px;
+  animation: spin 1s linear infinite;
+  margin-bottom: 10px;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Messages */
+.message {
+  margin: 15px 0;
+  padding: 12px 16px;
+  border-radius: 4px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.message.success {
+  background-color: #d4edda;
+  color: #155724;
+  border: 1px solid #c3e6cb;
+}
+
+.message.success::before {
+  content: "✓";
+  font-weight: bold;
+}
+
+.message.error {
+  background-color: #f8d7da;
+  color: #721c24;
+  border: 1px solid #f5c6cb;
+}
+
+.message.error::before {
+  content: "⚠";
+  font-weight: bold;
+}
+
+/* Responsive design */
 @media (max-width: 768px) {
-  .health-info-container {
+  .health-info-content {
     padding: 1rem;
+  }
+
+  .health-info-container {
+    padding: 1.5rem;
   }
 
   .form-row {
@@ -211,6 +344,7 @@ textarea {
 
   .form-row label {
     margin-bottom: 0.5rem;
+    min-width: auto;
   }
 
   .form-grid {
@@ -225,4 +359,28 @@ textarea {
   .btn-cancel {
     width: 100%;
   }
-} 
+
+  .student-photo {
+    align-self: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .health-info-container h1 {
+    font-size: 1.5rem;
+  }
+
+  .form-section {
+    padding: 1rem;
+  }
+
+  .photo-upload {
+    width: 100px;
+  }
+
+  .photo-placeholder,
+  .photo-upload img {
+    width: 100px;
+    height: 130px;
+  }
+}

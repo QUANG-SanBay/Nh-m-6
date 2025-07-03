@@ -7,9 +7,13 @@ import org.springframework.lang.NonNull;
 @Configuration
 public class CorsConfig implements WebMvcConfigurer {
     @Override
-    public void addCorsMappings(@NonNull CorsRegistry registry) {
-        registry.addMapping("/api/**") // Hoặc "/*" nếu bạn không dùng tiền tố
-                .allowedOrigins("http://localhost:3000")
-                .allowedMethods("*");
+
+    public void addCorsMappings(CorsRegistry registry) {
+        registry.addMapping("/**")
+                .allowedOriginPatterns("*")
+                .allowedOrigins("http://localhost:3000", "http://localhost:8080")
+                .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
+                .allowedHeaders("*")
+                .allowCredentials(false);
     }
 }

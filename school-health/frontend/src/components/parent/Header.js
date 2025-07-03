@@ -8,8 +8,10 @@ const Header = ({ activePage }) => {
     <header className="header">
       <div className="header-left">
         <div className="logo">
-          <img src={logo} alt="School Health Logo" />
-          <span>School Health</span>
+          <a className="logo-link" href="/parent/home">
+            <img src={logo} alt="School Health Logo" />
+            <span>School Health</span>
+          </a>
         </div>
         <nav className="nav-menu">
           <ul>
