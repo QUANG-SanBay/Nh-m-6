@@ -1,7 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './Medicine.css';
 import Header from '../../components/parent/Header';
 import Footer from '../../components/parent/Footer';
+
+const API_BASE = process.env.REACT_APP_API_BASE || 'http://localhost:8080/api';
 
 const Medicine = () => {
   const [formData, setFormData] = useState({
@@ -27,6 +29,79 @@ const Medicine = () => {
   const [message, setMessage] = useState('');
   const [messageType, setMessageType] = useState(''); // 'success' or 'error'
 
+  // Thêm useEffect để tự động điền thông tin khi nhập mã học sinh
+  useEffect(() => {
+    const loadStudentInfo = async () => {
+      if (!formData.studentId) return;
+      
+      try {
+        setLoading(true);
+        
+        // Gọi API để lấy thông tin hồ sơ sức khỏe của học sinh
+        const response = await fetch(`${API_BASE}/hoso-suckhoe/hocsinh/${formData.studentId}`);
+        
+        if (response.ok) {
+          const data = await response.json();
+          
+          if (Array.isArray(data) && data.length > 0) {
+            const hoSo = data[0];
+            setFormData(prev => ({
+              ...prev,
+              fullName: hoSo.hocSinh.hoTen || prev.fullName,
+              dateOfBirth: hoSo.hocSinh.ngaySinh ? formatDate(hoSo.hocSinh.ngaySinh) : prev.dateOfBirth,
+              gender: hoSo.hocSinh.gioiTinh || prev.gender,
+              class: hoSo.hocSinh.lop || prev.class,
+              address: hoSo.hocSinh.diaChi || prev.address,
+              healthInfo: {
+                height: hoSo.chieuCao ? hoSo.chieuCao.toString() : prev.healthInfo.height,
+                weight: hoSo.canNang ? hoSo.canNang.toString() : prev.healthInfo.weight,
+                vision: hoSo.thiLuc || prev.healthInfo.vision,
+                hearing: hoSo.thinhLuc || prev.healthInfo.hearing,
+                dental: hoSo.ketQuaRangMieng || prev.healthInfo.dental
+              },
+              photo: hoSo.anhHocSinh ? 
+                (hoSo.anhHocSinh.startsWith('data:') ? 
+                  hoSo.anhHocSinh : 
+                  `${API_BASE}${hoSo.anhHocSinh}`) 
+                : prev.photo
+            }));
+            
+            setMessage('Đã tải thông tin học sinh thành công');
+            setMessageType('success');
+          } else {
+            setMessage('Không tìm thấy thông tin học sinh với mã này');
+            setMessageType('error');
+          }
+        } else {
+          setMessage('Không tìm thấy thông tin học sinh với mã này');
+          setMessageType('error');
+        }
+      } catch (error) {
+        console.error('Error loading student info:', error);
+        setMessage('Lỗi khi tải thông tin học sinh');
+        setMessageType('error');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    // Debounce để tránh gọi API quá nhiều lần
+    const timeoutId = setTimeout(() => {
+      if (formData.studentId && formData.studentId.length >= 3) {
+        loadStudentInfo();
+      }
+    }, 500);
+
+    return () => clearTimeout(timeoutId);
+  }, [formData.studentId]);
+
+  // Hàm hỗ trợ định dạng ngày từ dạng Date sang yyyy-MM-dd
+  const formatDate = (dateString) => {
+    if (!dateString) return '';
+    const date = new Date(dateString);
+    return date.toISOString().split('T')[0];
+  };
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     
@@ -44,6 +119,12 @@ const Medicine = () => {
         ...prev,
         [name]: value
       }));
+    }
+
+    // Clear message khi user thay đổi mã học sinh
+    if (name === 'studentId') {
+      setMessage('');
+      setMessageType('');
     }
   };
 
@@ -138,36 +219,60 @@ const Medicine = () => {
     setMessage('');
 
     try {
-      // TODO: Implement API call for medicine request
+      // Create medicine request payload theo format API yêu cầu thuốc
       const medicineRequest = {
         hocSinh: {
-          maHocSinh: formData.studentId,
-          hoTen: formData.fullName,
-          ngaySinh: formData.dateOfBirth,
-          gioiTinh: formData.gender,
-          lop: formData.class,
-          diaChi: formData.address
+          maHocSinh: formData.studentId
         },
-        chieuCao: formData.healthInfo.height,
-        canNang: formData.healthInfo.weight,
-        thiLuc: formData.healthInfo.vision,
-        thinhLuc: formData.healthInfo.hearing,
-        ketQuaRangMieng: formData.healthInfo.dental,
         lieuLuong: formData.medicineAmount,
+        moTa: `Thông tin sức khỏe: Chiều cao: ${formData.healthInfo.height}cm, Cân nặng: ${formData.healthInfo.weight}kg, Thị lực: ${formData.healthInfo.vision}, Thính lực: ${formData.healthInfo.hearing}, Răng miệng: ${formData.healthInfo.dental}`,
         tinhTrangDacBiet: formData.specialCondition,
-        anhHocSinh: formData.photo
+        ghiChu: `Thông tin bổ sung: Họ tên: ${formData.fullName}, Ngày sinh: ${formData.dateOfBirth}, Giới tính: ${formData.gender}, Lớp: ${formData.class}, Địa chỉ: ${formData.address}. ${formData.photo ? "Đã đính kèm ảnh" : "Không có ảnh đính kèm"}`
       };
 
-      console.log('Medicine request:', medicineRequest);
+      // Call API để tạo yêu cầu thuốc
+      const response = await fetch(`${API_BASE}/yeu-cau-thuoc`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(medicineRequest),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Có lỗi xảy ra khi gửi yêu cầu thuốc');
+      }
+
+      // Remove unused result variable
+      await response.json();
       
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 2000));
-      
-      setMessage('Gửi yêu cầu nhận thuốc thành công!');
+      setMessage('Gửi yêu cầu nhận thuốc thành công! Vui lòng chờ nhân viên y tế xử lý.');
       setMessageType('success');
       
+      // Reset form after successful submission
+      setFormData({
+        fullName: '',
+        dateOfBirth: '',
+        gender: '',
+        studentId: '',
+        class: '',
+        address: '',
+        healthInfo: {
+          height: '',
+          weight: '',
+          vision: '',
+          hearing: '',
+          dental: ''
+        },
+        medicineAmount: '',
+        specialCondition: '',
+        photo: null
+      });
+      
     } catch (error) {
-      setMessage(error.message || 'Có lỗi xảy ra khi gửi yêu cầu');
+      console.error('Error creating medicine request:', error);
+      setMessage(error.message || 'Có lỗi xảy ra khi gửi yêu cầu thuốc');
       setMessageType('error');
     } finally {
       setLoading(false);
