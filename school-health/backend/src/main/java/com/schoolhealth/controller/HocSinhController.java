@@ -26,6 +26,7 @@ public class HocSinhController {
 
     @PostMapping
     public HocSinh create(@RequestBody HocSinh hocSinh) {
+        hocSinh.setMaHocSinh(null);
         return hocSinhService.save(hocSinh);
     }
 

@@ -25,6 +25,15 @@ public class AuthService {
     @Autowired
     private NhanVienYTeRepository nhanVienYTeRepository;
 
+    @Autowired
+    private HocSinhService hocSinhService;
+    
+    @Autowired
+    private PhuHuynhService phuHuynhService;
+    
+    @Autowired
+    private NhanVienYTeService nhanVienYTeService;
+
     public AuthResponse login(LoginRequest request) {
         // Kiểm tra trong bảng HocSinh
         HocSinh hocSinh = hocSinhRepository.findByTenDangNhap(request.getTenDangNhap());
@@ -48,50 +57,60 @@ public class AuthService {
     }
 
     public AuthResponse register(RegisterRequest request) {
-        // Kiểm tra tên đăng nhập đã tồn tại chưa
-        if (hocSinhRepository.findByTenDangNhap(request.getTenDangNhap()) != null ||
-            phuHuynhRepository.findByTenDangNhap(request.getTenDangNhap()) != null ||
-            nhanVienYTeRepository.findByTenDangNhap(request.getTenDangNhap()) != null) {
-            return new AuthResponse(null, null, null, "Tên đăng nhập đã tồn tại", false);
-        }
+        try {
+            // Kiểm tra tên đăng nhập đã tồn tại chưa
+            if (hocSinhRepository.findByTenDangNhap(request.getTenDangNhap()) != null ||
+                phuHuynhRepository.findByTenDangNhap(request.getTenDangNhap()) != null ||
+                nhanVienYTeRepository.findByTenDangNhap(request.getTenDangNhap()) != null) {
+                return new AuthResponse(null, null, null, "Tên đăng nhập đã tồn tại", false);
+            }
 
-        // Tạo tài khoản mới theo vai trò
-        switch (request.getVaiTro()) {
-            case "HOC_SINH":
-                HocSinh hocSinh = new HocSinh();
-                hocSinh.setTenDangNhap(request.getTenDangNhap());
-                hocSinh.setMatKhauHash(request.getMatKhau());
-                hocSinh.setEmail(request.getEmail());
-                hocSinh.setSoDienThoai(request.getSoDienThoai());
-                hocSinh.setVaiTro(request.getVaiTro());
-                hocSinh.setHoTen(request.getHoTen());
-                hocSinhRepository.save(hocSinh);
-                return new AuthResponse("token-" + UUID.randomUUID(), "HOC_SINH", hocSinh.getHoTen(), "Đăng ký thành công", true);
+            // Tạo tài khoản mới theo vai trò
+            switch (request.getVaiTro()) {
+                case "HOC_SINH":
+                    HocSinh hocSinh = new HocSinh();
+                    hocSinh.setTenDangNhap(request.getTenDangNhap());
+                    hocSinh.setMatKhauHash(request.getMatKhau());
+                    hocSinh.setEmail(request.getEmail());
+                    hocSinh.setSoDienThoai(request.getSoDienThoai());
+                    hocSinh.setVaiTro(request.getVaiTro());
+                    hocSinh.setHoTen(request.getHoTen());
+                    
+                    // Sử dụng service để sinh mã tự động
+                    hocSinhService.save(hocSinh);
+                    return new AuthResponse("token-" + UUID.randomUUID(), "HOC_SINH", hocSinh.getHoTen(), "Đăng ký thành công", true);
 
-            case "PHU_HUYNH":
-                PhuHuynh phuHuynh = new PhuHuynh();
-                phuHuynh.setTenDangNhap(request.getTenDangNhap());
-                phuHuynh.setMatKhauHash(request.getMatKhau());
-                phuHuynh.setEmail(request.getEmail());
-                phuHuynh.setSoDienThoai(request.getSoDienThoai());
-                phuHuynh.setVaiTro(request.getVaiTro());
-                phuHuynh.setHoTen(request.getHoTen());
-                phuHuynhRepository.save(phuHuynh);
-                return new AuthResponse("token-" + UUID.randomUUID(), "PHU_HUYNH", phuHuynh.getHoTen(), "Đăng ký thành công", true);
+                case "PHU_HUYNH":
+                    PhuHuynh phuHuynh = new PhuHuynh();
+                    phuHuynh.setTenDangNhap(request.getTenDangNhap());
+                    phuHuynh.setMatKhauHash(request.getMatKhau());
+                    phuHuynh.setEmail(request.getEmail());
+                    phuHuynh.setSoDienThoai(request.getSoDienThoai());
+                    phuHuynh.setVaiTro(request.getVaiTro());
+                    phuHuynh.setHoTen(request.getHoTen());
+                    
+                    // Sử dụng service để sinh mã tự động
+                    phuHuynhService.save(phuHuynh);
+                    return new AuthResponse("token-" + UUID.randomUUID(), "PHU_HUYNH", phuHuynh.getHoTen(), "Đăng ký thành công", true);
 
-            case "NHAN_VIEN_Y_TE":
-                NhanVienYTe nhanVienYTe = new NhanVienYTe();
-                nhanVienYTe.setTenDangNhap(request.getTenDangNhap());
-                nhanVienYTe.setMatKhauHash(request.getMatKhau());
-                nhanVienYTe.setEmail(request.getEmail());
-                nhanVienYTe.setSoDienThoai(request.getSoDienThoai());
-                nhanVienYTe.setVaiTro(request.getVaiTro());
-                nhanVienYTe.setHoTen(request.getHoTen());
-                nhanVienYTeRepository.save(nhanVienYTe);
-                return new AuthResponse("token-" + UUID.randomUUID(), "NHAN_VIEN_Y_TE", nhanVienYTe.getHoTen(), "Đăng ký thành công", true);
+                case "NHAN_VIEN_Y_TE":
+                    NhanVienYTe nhanVienYTe = new NhanVienYTe();
+                    nhanVienYTe.setTenDangNhap(request.getTenDangNhap());
+                    nhanVienYTe.setMatKhauHash(request.getMatKhau());
+                    nhanVienYTe.setEmail(request.getEmail());
+                    nhanVienYTe.setSoDienThoai(request.getSoDienThoai());
+                    nhanVienYTe.setVaiTro(request.getVaiTro());
+                    nhanVienYTe.setHoTen(request.getHoTen());
+                    
+                    // Sử dụng service để sinh mã tự động
+                    nhanVienYTeService.save(nhanVienYTe);
+                    return new AuthResponse("token-" + UUID.randomUUID(), "NHAN_VIEN_Y_TE", nhanVienYTe.getHoTen(), "Đăng ký thành công", true);
 
-            default:
-                return new AuthResponse(null, null, null, "Vai trò không hợp lệ", false);
+                default:
+                    return new AuthResponse(null, null, null, "Vai trò không hợp lệ", false);
+            }
+        } catch (Exception e) {
+            return new AuthResponse(null, null, null, "Có lỗi xảy ra khi đăng ký: " + e.getMessage(), false);
         }
     }
-} 
+}

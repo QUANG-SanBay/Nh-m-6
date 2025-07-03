@@ -6,4 +6,5 @@ import java.util.List;
 
 public interface HoSoSucKhoeHocSinhRepository extends JpaRepository<HoSoSucKhoeHocSinh, String> {
     List<HoSoSucKhoeHocSinh> findByHocSinh_MaHocSinh(String maHocSinh);
-} 
+    List<HoSoSucKhoeHocSinh> findByHocSinh_PhuHuynh_MaPhuHuynh(String maPhuHuynh);
+}
