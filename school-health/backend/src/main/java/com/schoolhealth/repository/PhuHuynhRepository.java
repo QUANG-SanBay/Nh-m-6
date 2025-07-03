@@ -6,4 +6,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface PhuHuynhRepository extends JpaRepository<PhuHuynh, String> {
     PhuHuynh findByEmail(String email);
     PhuHuynh findByTenDangNhap(String tenDangNhap);
+    boolean existsById(String maPhuHuynh);
 }

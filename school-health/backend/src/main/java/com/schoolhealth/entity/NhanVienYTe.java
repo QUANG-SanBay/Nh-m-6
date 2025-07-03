@@ -7,7 +7,7 @@ import java.util.List;
 @Table(name = "nhan_vien_y_te")
 public class NhanVienYTe extends NguoiDung {
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
+    // Loại bỏ @GeneratedValue để tránh xung đột
     private String maNhanVienYTe;
     private String hoTen;
 
@@ -26,6 +26,13 @@ public class NhanVienYTe extends NguoiDung {
     @OneToMany(mappedBy = "nhanVienYTe")
     private List<HoSoSucKhoeHocSinh> hoSoSucKhoeList;
 
+    @PrePersist
+    public void prePersist() {
+        if (this.maNhanVienYTe == null || this.maNhanVienYTe.trim().isEmpty()) {
+            System.out.println("Warning: NhanVienYTe ID was not set before persist!");
+        }
+    }
+
     public String getMaNhanVienYTe() { return maNhanVienYTe; }
     public void setMaNhanVienYTe(String maNhanVienYTe) { this.maNhanVienYTe = maNhanVienYTe; }
     public String getHoTen() { return hoTen; }
@@ -40,4 +47,4 @@ public class NhanVienYTe extends NguoiDung {
     public void setChienDichKiemTraYTeList(List<ChienDichKiemTraYTe> chienDichKiemTraYTeList) { this.chienDichKiemTraYTeList = chienDichKiemTraYTeList; }
     public List<HoSoSucKhoeHocSinh> getHoSoSucKhoeList() { return hoSoSucKhoeList; }
     public void setHoSoSucKhoeList(List<HoSoSucKhoeHocSinh> hoSoSucKhoeList) { this.hoSoSucKhoeList = hoSoSucKhoeList; }
-} 
+}

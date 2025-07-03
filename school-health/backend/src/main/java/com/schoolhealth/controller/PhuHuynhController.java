@@ -31,6 +31,7 @@ public class PhuHuynhController {
     
     @GetMapping("/email/{email}")
     public ResponseEntity<PhuHuynh> getPhuHuynhByEmail(@PathVariable String email) {
+        // Sử dụng method getPhuHuynhByEmail() đã thêm vào Service
         Optional<PhuHuynh> phuHuynh = phuHuynhService.getPhuHuynhByEmail(email);
         return phuHuynh.map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
@@ -55,4 +56,4 @@ public class PhuHuynhController {
         phuHuynhService.deletePhuHuynh(maPhuHuynh);
         return ResponseEntity.ok().build();
     }
-} 
+}
