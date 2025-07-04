@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import Header from '../../components/nurse/Header';
 import Footer from '../../components/nurse/Footer';
@@ -7,34 +7,19 @@ import '../../styles/PrescriptionRequestDetail.css';
 const PrescriptionRequestDetail = () => {
   const { requestId } = useParams();
   const navigate = useNavigate();
-  const [notes, setNotes] = useState('');
+  const [request, setRequest] = useState(null);
 
-  // Mock data
-  const mockRequest = {
-    id: parseInt(requestId),
-    studentName: 'Nguyễn Văn A',
-    class: '10A1',
-    requestDate: '2024-03-20',
-    status: 'PENDING',
-    prescriptionItems: [
-      {
-        medicineName: 'Paracetamol',
-        quantity: '2 viên',
-        instructions: 'Uống sau bữa ăn'
-      },
-      {
-        medicineName: 'Vitamin C',
-        quantity: '1 viên',
-        instructions: 'Uống buổi sáng'
-      }
-    ],
-    parentNote: 'Học sinh bị sốt nhẹ, cần uống thuốc hạ sốt'
-  };
+  useEffect(() => {
+    fetch(`http://localhost:8080/api/yeu-cau-thuoc/${requestId}`)
+      .then(res => res.json())
+      .then(data => setRequest(data));
+  }, [requestId]);
+
+  if (!request) return <div>Đang tải...</div>;
 
   const handleStatusChange = (newStatus) => {
     // In a real application, this would make an API call
     console.log(`Status changed to: ${newStatus}`);
-    console.log(`Notes: ${notes}`);
     // For demo purposes, we'll just show an alert
     alert(`Đã ${newStatus === 'APPROVED' ? 'duyệt' : 'từ chối'} đơn thuốc`);
     navigate('/nurse/prescription-requests');
@@ -54,52 +39,42 @@ const PrescriptionRequestDetail = () => {
 
           <div className="request-details">
             <div className="student-info">
-              <h3>Thông tin học sinh</h3>
-              <p><strong>Họ tên:</strong> {mockRequest.studentName}</p>
-              <p><strong>Lớp:</strong> {mockRequest.class}</p>
-              <p><strong>Ngày yêu cầu:</strong> {new Date(mockRequest.requestDate).toLocaleDateString()}</p>
+              <h2>Thông tin học sinh</h2>
+              <p>Họ tên: {request.hoTenHocSinh || 'Không rõ'}</p>
+              <p>Lớp: {request.lopHocSinh || 'Không rõ'}</p>
+              <p>Ngày yêu cầu: {request.ngayTao ? new Date(request.ngayTao).toLocaleDateString() : 'Không rõ'}</p>
             </div>
 
             <div className="prescription-info">
-              <h3>Thông tin đơn thuốc</h3>
+              <h2>Thông tin đơn thuốc</h2>
               <div className="prescription-items">
-                {mockRequest.prescriptionItems.map((item, index) => (
-                  <div key={index} className="prescription-item">
-                    <p><strong>Tên thuốc:</strong> {item.medicineName}</p>
-                    <p><strong>Số lượng:</strong> {item.quantity}</p>
-                    <p><strong>Hướng dẫn sử dụng:</strong> {item.instructions}</p>
-                  </div>
-                ))}
+                <div className="prescription-item">
+                  <p>Tên thuốc: {request.tenThuoc || 'Không rõ'}</p>
+                  <p>Liều lượng: {request.lieuLuong || 'Không rõ'}</p>
+                  <p>Đơn vị: {request.donVi || 'Không rõ'}</p>
+                  <p>Mô tả: {request.moTa || 'Không rõ'}</p>
+                  <p>Tình trạng đặc biệt: {request.tinhTrangDacBiet || 'Không'}</p>
+                </div>
               </div>
             </div>
 
             <div className="parent-note">
               <h3>Ghi chú từ phụ huynh</h3>
-              <p>{mockRequest.parentNote}</p>
-            </div>
-
-            <div className="notes-section">
-              <h3>Ghi chú của y tá</h3>
-              <textarea
-                value={notes}
-                onChange={(e) => setNotes(e.target.value)}
-                placeholder="Nhập ghi chú về đơn thuốc..."
-                rows="4"
-              />
+              <p>{request.ghiChu || 'Không có ghi chú'}</p>
             </div>
 
             <div className="action-buttons">
               <button
                 className="approve-button"
                 onClick={() => handleStatusChange('APPROVED')}
-                disabled={mockRequest.status === 'APPROVED'}
+                disabled={request.trangThai === 'APPROVED'}
               >
                 Xác nhận
               </button>
               <button
                 className="reject-button"
                 onClick={() => handleStatusChange('REJECTED')}
-                disabled={mockRequest.status === 'REJECTED'}
+                disabled={request.trangThai === 'REJECTED'}
               >
                 Từ chối
               </button>

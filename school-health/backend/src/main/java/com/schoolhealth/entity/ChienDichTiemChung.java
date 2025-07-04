@@ -16,6 +16,7 @@ public class ChienDichTiemChung {
     @Temporal(TemporalType.DATE)
     private Date ngayKetThuc;
     private String trangThai;
+    private String diaDiem;
 
     @ManyToOne
     @JoinColumn(name = "ma_nhan_vien_y_te", referencedColumnName = "maNhanVienYTe")
@@ -36,6 +37,8 @@ public class ChienDichTiemChung {
     public void setNgayKetThuc(Date ngayKetThuc) { this.ngayKetThuc = ngayKetThuc; }
     public String getTrangThai() { return trangThai; }
     public void setTrangThai(String trangThai) { this.trangThai = trangThai; }
+    public String getDiaDiem() { return diaDiem; }
+    public void setDiaDiem(String diaDiem) { this.diaDiem = diaDiem; }
     public NhanVienYTe getNhanVienYTe() { return nhanVienYTe; }
     public void setNhanVienYTe(NhanVienYTe nhanVienYTe) { this.nhanVienYTe = nhanVienYTe; }
     public List<HoSoTiemChung> getHoSoTiemChungList() { return hoSoTiemChungList; }

@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Header from '../../components/nurse/Header';
 import Footer from '../../components/nurse/Footer';
 import '../../styles/Profile.css';
 
-const Profile = () => {
+const NurseProfile = () => {
+  const [profile, setProfile] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
   const [nurseData, setNurseData] = useState({
     name: 'Nguyễn Thị An',
@@ -17,6 +18,18 @@ const Profile = () => {
     specialization: 'Chăm sóc sức khỏe học đường',
     certifications: 'Chứng chỉ Sơ cấp cứu, Chứng chỉ Y tế học đường'
   });
+
+  useEffect(() => {
+    // Lấy username từ localStorage
+    const username = localStorage.getItem('username');
+    if (!username) {
+      alert('Không tìm thấy thông tin đăng nhập!');
+      return;
+    }
+    fetch(`http://localhost:8080/api/nurse/profile?username=${username}`)
+      .then(res => res.json())
+      .then(data => setProfile(data));
+  }, []);
 
   const handleEdit = () => {
     setIsEditing(true);
@@ -34,6 +47,8 @@ const Profile = () => {
       [name]: value
     }));
   };
+
+  if (!profile) return <div>Đang tải thông tin...</div>;
 
   return (
     <div className="nurse-layout">
@@ -211,4 +226,4 @@ const Profile = () => {
   );
 };
 
-export default Profile; 
+export default NurseProfile; 

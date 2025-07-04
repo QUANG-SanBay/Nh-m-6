@@ -1,50 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Header from '../../components/nurse/Header';
 import Footer from '../../components/nurse/Footer';
 import VaccinationBatch from './VaccinationBatch';
 import '../../styles/VaccinationManagement.css';
 
-// Dữ liệu mẫu cho lịch sử các đợt tiêm chủng
-const mockBatches = [
-  {
-    id: 1,
-    batchName: 'Đợt tiêm chủng tháng 3',
-    vaccineType: 'Covid-19',
-    eventDate: '2024-03-15',
-    location: 'Phòng Y tế',
-    expectedStudents: 120,
-    batchNote: 'Tiêm phòng cho học sinh khối 10',
-    vaccineInfo: {
-      vaccineName: 'AstraZeneca',
-      manufacturer: 'AstraZeneca PLC',
-      lotNumber: 'AZ12345',
-      productionDate: '2023-12-01',
-      expiryDate: '2025-12-01',
-      vaccineNote: 'Bảo quản lạnh'
-    }
-  },
-  {
-    id: 2,
-    batchName: 'Đợt tiêm chủng tháng 6',
-    vaccineType: 'Cúm mùa',
-    eventDate: '2024-06-10',
-    location: 'Hội trường',
-    expectedStudents: 150,
-    batchNote: 'Tiêm phòng cho toàn trường',
-    vaccineInfo: {
-      vaccineName: 'Vaxigrip',
-      manufacturer: 'Sanofi',
-      lotNumber: 'VX67890',
-      productionDate: '2024-01-10',
-      expiryDate: '2025-01-10',
-      vaccineNote: ''
-    }
-  }
-];
-
 const VaccinationManagement = () => {
   const [view, setView] = useState('menu'); // 'menu' | 'history' | 'create' | 'detail'
   const [selectedBatch, setSelectedBatch] = useState(null);
+  const [batches, setBatches] = useState([]);
 
   const handleShowHistory = () => setView('history');
   const handleShowCreate = () => setView('create');
@@ -53,6 +16,15 @@ const VaccinationManagement = () => {
     setSelectedBatch(batch);
     setView('detail');
   };
+
+  // Fetch batches from backend when view is 'history'
+  useEffect(() => {
+    if (view === 'history') {
+      fetch('http://localhost:8080/api/vaccination-batches')
+        .then(res => res.json())
+        .then(data => setBatches(data));
+    }
+  }, [view]);
 
   return (
     <div className="nurse-layout">
@@ -81,12 +53,12 @@ const VaccinationManagement = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {mockBatches.map(batch => (
-                    <tr key={batch.id}>
-                      <td>{batch.batchName}</td>
-                      <td>{batch.vaccineType}</td>
-                      <td>{batch.eventDate}</td>
-                      <td>{batch.location}</td>
+                  {batches.map(batch => (
+                    <tr key={batch.maChienDich}>
+                      <td>{batch.tenChienDich}</td>
+                      <td>{batch.loaiVacXin}</td>
+                      <td>{batch.ngayBatDau ? batch.ngayBatDau.split('T')[0] : ''}</td>
+                      <td>{batch.diaDiem}</td>
                       <td>
                         <button className="btn-blue" onClick={() => handleShowDetail(batch)}>Xem chi tiết</button>
                       </td>
@@ -99,7 +71,7 @@ const VaccinationManagement = () => {
           {view === 'create' && (
             <div className="create-view">
               <button className="btn-black" onClick={handleShowMenu}>← Quay lại</button>
-              <VaccinationBatch />
+              <VaccinationBatch onCreated={handleShowHistory} />
             </div>
           )}
           {view === 'detail' && selectedBatch && (
