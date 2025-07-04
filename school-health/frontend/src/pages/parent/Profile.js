@@ -1,18 +1,93 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './Profile.css';
 import Header from '../../components/parent/Header';
 import Footer from '../../components/parent/Footer';
+import { parentApi } from '../../api/parentApi';
 
 const Profile = () => {
   const [formData, setFormData] = useState({
+    maPhuHuynh: '',
     fullName: '',
     phoneNumber: '',
     email: '',
     relationship: '',
-    address: '',
-    emergencyContact: '',
-    emergencyPhone: ''
+    address: ''
   });
+  const [message, setMessage] = useState('');
+  const [messageType, setMessageType] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
+  const [originalData, setOriginalData] = useState({});
+
+  useEffect(() => {
+    // Lấy thông tin từ localStorage
+    const userName = localStorage.getItem("userName");
+    const hoTen = localStorage.getItem("hoTen");
+    const userRole = localStorage.getItem("userRole");
+    
+    // Kiểm tra userRole
+    if (userRole !== 'PHU_HUYNH' && userRole !== 'PhuHuynh') {
+      setMessage("Bạn không có quyền truy cập trang này.");
+      setMessageType("error");
+      return;
+    }
+    
+    // Tìm phụ huynh theo username hoặc tạo mới
+    if (userName || hoTen) {
+      loadOrCreateParent(userName || hoTen, hoTen);
+    } else {
+      setMessage("Không tìm thấy thông tin đăng nhập. Vui lòng đăng nhập lại.");
+      setMessageType("error");
+    }
+  }, []);
+
+  const loadOrCreateParent = async (searchKey, fullName) => {
+    try {
+      setLoading(true);
+      
+      // Thử tìm theo username trước
+      try {
+        const data = await parentApi.getParentByUsername(searchKey);
+        
+        const profileData = {
+          maPhuHuynh: data.maPhuHuynh || '',
+          fullName: data.hoTen || '',
+          phoneNumber: data.soDienThoai || '',
+          email: data.email || '',
+          relationship: data.quanHeVoiHocSinh || '',
+          address: data.thongTinLienHe || ''
+        };
+        
+        setFormData(profileData);
+        setOriginalData(profileData);
+        setMessage("");
+        setMessageType("");
+        
+      } catch (error) {
+        // Nếu không tìm thấy, tạo form trống với thông tin từ localStorage
+        const profileData = {
+          maPhuHuynh: '',
+          fullName: fullName || searchKey || '',
+          phoneNumber: '',
+          email: '',
+          relationship: '',
+          address: ''
+        };
+        
+        setFormData(profileData);
+        setOriginalData(profileData);
+        setMessage("Chưa có thông tin phụ huynh. Vui lòng cập nhật thông tin đầy đủ để hoàn thiện hồ sơ.");
+        setMessageType("info");
+        setIsEditing(true); // Tự động vào chế độ chỉnh sửa
+      }
+      
+    } catch (error) {
+      setMessage("Có lỗi xảy ra khi tải thông tin. Vui lòng thử lại sau.");
+      setMessageType("error");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -22,116 +97,251 @@ const Profile = () => {
     }));
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    // TODO: Implement form submission logic
-    console.log('Form submitted:', formData);
+  const handleEdit = () => {
+    setIsEditing(true);
+    setMessage("");
+    setMessageType("");
   };
+
+  const handleCancel = () => {
+    setFormData(originalData);
+    setIsEditing(false);
+    setMessage("");
+    setMessageType("");
+  };
+
+  const validateForm = () => {
+    if (!formData.fullName.trim()) {
+      setMessage("Vui lòng nhập họ và tên");
+      setMessageType("error");
+      return false;
+    }
+    if (!formData.phoneNumber.trim()) {
+      setMessage("Vui lòng nhập số điện thoại");
+      setMessageType("error");
+      return false;
+    }
+    if (!formData.email.trim()) {
+      setMessage("Vui lòng nhập email");
+      setMessageType("error");
+      return false;
+    }
+    if (!formData.relationship) {
+      setMessage("Vui lòng chọn quan hệ với học sinh");
+      setMessageType("error");
+      return false;
+    }
+    if (!formData.address.trim()) {
+      setMessage("Vui lòng nhập địa chỉ");
+      setMessageType("error");
+      return false;
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(formData.email)) {
+      setMessage("Định dạng email không hợp lệ");
+      setMessageType("error");
+      return false;
+    }
+
+    const phoneRegex = /^[0-9]{10,11}$/;
+    if (!phoneRegex.test(formData.phoneNumber)) {
+      setMessage("Số điện thoại phải có 10-11 chữ số");
+      setMessageType("error");
+      return false;
+    }
+
+    return true;
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    
+    if (!validateForm()) {
+      return;
+    }
+
+    try {
+      setLoading(true);
+      
+      const updateData = {
+        hoTen: formData.fullName,
+        soDienThoai: formData.phoneNumber,
+        email: formData.email,
+        quanHeVoiHocSinh: formData.relationship,
+        thongTinLienHe: formData.address,
+        tenDangNhap: localStorage.getItem('userName'),
+        vaiTro: 'PHU_HUYNH'
+      };
+
+      // Nếu chưa có maPhuHuynh, tạo mới
+      if (!formData.maPhuHuynh) {
+        const response = await parentApi.createParent(updateData);
+        
+        const newData = response.data || response;
+        setFormData(prev => ({
+          ...prev,
+          maPhuHuynh: newData.maPhuHuynh
+        }));
+        
+        setMessage("Tạo thông tin phụ huynh thành công!");
+        setMessageType("success");
+      } else {
+        await parentApi.updateParent(formData.maPhuHuynh, updateData);
+        
+        setMessage("Cập nhật thông tin thành công!");
+        setMessageType("success");
+      }
+      
+      setIsEditing(false);
+      setOriginalData(formData);
+      
+    } catch (error) {
+      setMessage(`Lỗi: ${error.message}`);
+      setMessageType("error");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const hasChanges = () => {
+    return JSON.stringify(formData) !== JSON.stringify(originalData);
+  };
+
+  if (loading && !formData.fullName) {
+    return (
+      <div className="profile-page">
+        <Header activePage="profile" />
+        <main className="profile-content">
+          <div className="profile-container">
+            <div className="loading-container">
+              <div className="loading-spinner"></div>
+              <p>Đang tải thông tin...</p>
+            </div>
+          </div>
+        </main>
+        <Footer />
+      </div>
+    );
+  }
 
   return (
     <div className="profile-page">
       <Header activePage="profile" />
 
-      {/* Main Content */}
       <main className="profile-content">
         <div className="profile-container">
-          <h1>Thông tin cá nhân</h1>
+          <div className="profile-header">
+            <h1>Thông tin cá nhân</h1>
+            {!isEditing && formData.maPhuHuynh && (
+              <button onClick={handleEdit} className="btn-edit">
+                <i className="fas fa-edit"></i>
+                Chỉnh sửa
+              </button>
+            )}
+          </div>
+
+          {message && (
+            <div className={`message ${messageType}`}>
+              {message}
+            </div>
+          )}
+
           <form onSubmit={handleSubmit} className="profile-form">
-            <div className="form-group">
-              <label htmlFor="fullName">Họ và tên</label>
-              <input
-                type="text"
-                id="fullName"
-                name="fullName"
-                value={formData.fullName}
-                onChange={handleChange}
-                required
-              />
-            </div>
-
-            <div className="form-group">
-              <label htmlFor="phoneNumber">Số điện thoại</label>
-              <input
-                type="tel"
-                id="phoneNumber"
-                name="phoneNumber"
-                value={formData.phoneNumber}
-                onChange={handleChange}
-                required
-              />
-            </div>
-
-            <div className="form-group">
-              <label htmlFor="email">Email</label>
-              <input
-                type="email"
-                id="email"
-                name="email"
-                value={formData.email}
-                onChange={handleChange}
-                required
-              />
-            </div>
-
-            <div className="form-group">
-              <label htmlFor="relationship">Quan hệ với học sinh</label>
-              <select
-                id="relationship"
-                name="relationship"
-                value={formData.relationship}
-                onChange={handleChange}
-                required
-              >
-                <option value="">Chọn quan hệ</option>
-                <option value="father">Cha</option>
-                <option value="mother">Mẹ</option>
-                <option value="guardian">Người giám hộ</option>
-                <option value="other">Khác</option>
-              </select>
-            </div>
-
-            <div className="form-group">
-              <label htmlFor="address">Địa chỉ</label>
-              <textarea
-                id="address"
-                name="address"
-                value={formData.address}
-                onChange={handleChange}
-                required
-              />
-            </div>
-
             <div className="form-section">
-              <h3>Thông tin liên hệ khẩn cấp</h3>
+              <h3>Thông tin cơ bản</h3>
+              
               <div className="form-group">
-                <label htmlFor="emergencyContact">Tên người liên hệ</label>
+                <label htmlFor="fullName">Họ và tên *</label>
                 <input
                   type="text"
-                  id="emergencyContact"
-                  name="emergencyContact"
-                  value={formData.emergencyContact}
+                  id="fullName"
+                  name="fullName"
+                  value={formData.fullName}
                   onChange={handleChange}
                   required
+                  disabled={!isEditing}
                 />
               </div>
 
               <div className="form-group">
-                <label htmlFor="emergencyPhone">Số điện thoại liên hệ</label>
+                <label htmlFor="phoneNumber">Số điện thoại *</label>
                 <input
                   type="tel"
-                  id="emergencyPhone"
-                  name="emergencyPhone"
-                  value={formData.emergencyPhone}
+                  id="phoneNumber"
+                  name="phoneNumber"
+                  value={formData.phoneNumber}
                   onChange={handleChange}
                   required
+                  disabled={!isEditing}
+                />
+              </div>
+
+              <div className="form-group">
+                <label htmlFor="email">Email *</label>
+                <input
+                  type="email"
+                  id="email"
+                  name="email"
+                  value={formData.email}
+                  onChange={handleChange}
+                  required
+                  disabled={!isEditing}
+                />
+              </div>
+
+              <div className="form-group">
+                <label htmlFor="relationship">Quan hệ với học sinh *</label>
+                <select
+                  id="relationship"
+                  name="relationship"
+                  value={formData.relationship}
+                  onChange={handleChange}
+                  required
+                  disabled={!isEditing}
+                >
+                  <option value="">Chọn quan hệ</option>
+                  <option value="Cha">Cha</option>
+                  <option value="Mẹ">Mẹ</option>
+                  <option value="Người giám hộ">Người giám hộ</option>
+                  <option value="Khác">Khác</option>
+                </select>
+              </div>
+
+              <div className="form-group">
+                <label htmlFor="address">Địa chỉ *</label>
+                <textarea
+                  id="address"
+                  name="address"
+                  value={formData.address}
+                  onChange={handleChange}
+                  required
+                  disabled={!isEditing}
                 />
               </div>
             </div>
 
-            <div className="form-actions">
-              <button type="submit" className="btn-save">Lưu thông tin</button>
-              <button type="button" className="btn-cancel">Hủy</button>
-            </div>
+            {isEditing && (
+              <div className="form-actions">
+                {formData.maPhuHuynh && (
+                  <button 
+                    type="button" 
+                    className="btn-cancel" 
+                    onClick={handleCancel}
+                    disabled={loading}
+                  >
+                    Hủy
+                  </button>
+                )}
+                <button 
+                  type="submit" 
+                  className="btn-save" 
+                  disabled={loading}
+                >
+                  {loading ? 'Đang lưu...' : (formData.maPhuHuynh ? 'Cập nhật' : 'Tạo hồ sơ')}
+                </button>
+              </div>
+            )}
           </form>
         </div>
       </main>
@@ -141,4 +351,4 @@ const Profile = () => {
   );
 };
 
-export default Profile; 
+export default Profile;
