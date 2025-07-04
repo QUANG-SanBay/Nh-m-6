@@ -54,6 +54,7 @@ const MedicalEvents = () => {
 
   const [showCreateForm, setShowCreateForm] = useState(false);
   const [filterStatus, setFilterStatus] = useState('all');
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [formData, setFormData] = useState({
     title: '',
     description: '',
@@ -73,18 +74,45 @@ const MedicalEvents = () => {
         console.log('DATA BACKEND:', data);
         const mappedEvents = data.map(event => ({
           id: event.maSuKien,
-          title: event.loaiSuKien, // hoặc event.moTa nếu muốn
-          description: event.moTa,
+          title: event.loaiSuKien || 'Không có tiêu đề',
+          description: event.moTa || 'Không có mô tả',
           date: event.thoiGianSuKien ? event.thoiGianSuKien.split('T')[0] : '',
           time: event.thoiGianSuKien ? event.thoiGianSuKien.split('T')[1]?.slice(0,5) : '',
-          location: event.diaDiem || '',
-          status: event.trangThai || 'unknown',
-          participants: event.participants || 0,
-          type: event.type || ''
+          location: event.diaDiem || 'Chưa có địa điểm',
+          status: event.trangThai || 'upcoming',
+          participants: event.soLuongThamGia || 0,
+          type: getEventTypeFromTitle(event.loaiSuKien)
         }));
         setEvents(mappedEvents);
       })
-      .catch(err => console.error('Lỗi lấy sự kiện:', err));
+      .catch(err => {
+        console.error('Lỗi lấy sự kiện:', err);
+        // Nếu lỗi, sử dụng dữ liệu mẫu
+        setEvents([
+          {
+            id: 1,
+            title: 'Khám sức khỏe định kỳ lớp 10A',
+            description: 'Kiểm tra sức khỏe định kỳ cho học sinh lớp 10A',
+            date: '2024-01-15',
+            time: '08:00',
+            location: 'Phòng Y tế',
+            status: 'active',
+            participants: 30,
+            type: 'health_check'
+          },
+          {
+            id: 2,
+            title: 'Tiêm chủng vắc-xin cúm',
+            description: 'Chương trình tiêm chủng vắc-xin cúm cho học sinh toàn trường',
+            date: '2024-01-20',
+            time: '09:00',
+            location: 'Hội trường',
+            status: 'upcoming',
+            participants: 500,
+            type: 'vaccination'
+          }
+        ]);
+      });
   }, []);
 
   useEffect(() => {
@@ -112,6 +140,31 @@ const MedicalEvents = () => {
   // Khi submit form tạo sự kiện mới
   const handleSubmit = async (e) => {
     e.preventDefault();
+    
+    // Validation
+    if (!formData.title.trim()) {
+      alert('Vui lòng nhập tên sự kiện!');
+      return;
+    }
+    if (!formData.date) {
+      alert('Vui lòng chọn ngày!');
+      return;
+    }
+    if (!formData.time) {
+      alert('Vui lòng chọn giờ!');
+      return;
+    }
+    if (!formData.location.trim()) {
+      alert('Vui lòng nhập địa điểm!');
+      return;
+    }
+    if (!formData.type) {
+      alert('Vui lòng chọn loại sự kiện!');
+      return;
+    }
+    
+    setIsSubmitting(true);
+    
     const newEvent = {
       ...formData,
       participants: parseInt(formData.participants) || 0,
@@ -134,16 +187,19 @@ const MedicalEvents = () => {
           .then(data => {
             const mappedEvents = data.map(event => ({
               id: event.maSuKien,
-              title: event.loaiSuKien, // hoặc event.moTa nếu muốn
-              description: event.moTa,
+              title: event.loaiSuKien || 'Không có tiêu đề',
+              description: event.moTa || 'Không có mô tả',
               date: event.thoiGianSuKien ? event.thoiGianSuKien.split('T')[0] : '',
               time: event.thoiGianSuKien ? event.thoiGianSuKien.split('T')[1]?.slice(0,5) : '',
-              location: event.diaDiem || '',
-              status: event.trangThai || 'unknown',
-              participants: event.participants || 0,
-              type: event.type || ''
+              location: event.diaDiem || 'Chưa có địa điểm',
+              status: event.trangThai || 'upcoming',
+              participants: event.soLuongThamGia || 0,
+              type: getEventTypeFromTitle(event.loaiSuKien)
             }));
             setEvents(mappedEvents);
+          })
+          .catch(err => {
+            console.error('Lỗi khi fetch lại dữ liệu:', err);
           });
         setFormData({
           title: '',
@@ -155,6 +211,7 @@ const MedicalEvents = () => {
           participants: ''
         });
         setShowCreateForm(false);
+        alert('Tạo sự kiện thành công!');
       } else {
         const errorText = await response.text();
         alert('Có lỗi khi tạo sự kiện!\n' + errorText);
@@ -162,15 +219,31 @@ const MedicalEvents = () => {
       }
     } catch (error) {
       alert('Không thể kết nối đến máy chủ!');
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
-  const handleCancelEvent = (eventId) => {
-    setEvents(prev => prev.map(event => 
-      event.id === eventId 
-        ? { ...event, status: 'cancelled' }
-        : event
-    ));
+  const handleCancelEvent = async (eventId) => {
+    if (window.confirm('Bạn có chắc chắn muốn xóa sự kiện này?')) {
+      try {
+        const response = await fetch(`http://localhost:8080/api/events/${eventId}`, {
+          method: 'DELETE'
+        });
+
+        if (response.ok) {
+          // Xóa sự kiện khỏi danh sách local
+          setEvents(prev => prev.filter(event => event.id !== eventId));
+        } else {
+          const errorText = await response.text();
+          alert('Có lỗi khi xóa sự kiện!\n' + errorText);
+          console.error('API error:', errorText);
+        }
+      } catch (error) {
+        alert('Không thể kết nối đến máy chủ!');
+        console.error('Network error:', error);
+      }
+    }
   };
 
   const getStatusColor = (status) => {
@@ -206,6 +279,17 @@ const MedicalEvents = () => {
   const filteredEvents = filterStatus === 'all' 
     ? events 
     : events.filter(event => event.status === filterStatus);
+
+  // Hàm helper để map loại sự kiện từ title
+  const getEventTypeFromTitle = (title) => {
+    if (!title) return 'other';
+    const lowerTitle = title.toLowerCase();
+    if (lowerTitle.includes('khám') || lowerTitle.includes('sức khỏe')) return 'health_check';
+    if (lowerTitle.includes('tiêm') || lowerTitle.includes('vắc-xin')) return 'vaccination';
+    if (lowerTitle.includes('tư vấn')) return 'consultation';
+    if (lowerTitle.includes('khẩn cấp')) return 'emergency';
+    return 'other';
+  };
 
   return (
     <div className="nurse-layout">
@@ -297,14 +381,12 @@ const MedicalEvents = () => {
                   >
                     Chỉnh sửa
                   </Link>
-                  {event.status === 'upcoming' && (
-                    <button
-                      className="cancel-btn"
-                      onClick={() => handleCancelEvent(event.id)}
-                    >
-                      Hủy sự kiện
-                    </button>
-                  )}
+                  <button
+                    className="cancel-btn"
+                    onClick={() => handleCancelEvent(event.id)}
+                  >
+                    Xóa sự kiện
+                  </button>
                 </div>
               </div>
             ))}
@@ -425,11 +507,23 @@ const MedicalEvents = () => {
                     type="button" 
                     className="cancel-btn"
                     onClick={() => setShowCreateForm(false)}
+                    disabled={isSubmitting}
                   >
                     Hủy
                   </button>
-                  <button type="submit" className="submit-btn">
-                    Tạo sự kiện
+                  <button 
+                    type="submit" 
+                    className="submit-btn"
+                    disabled={isSubmitting}
+                  >
+                    {isSubmitting ? (
+                      <>
+                        <span className="spinner-small"></span>
+                        Đang tạo...
+                      </>
+                    ) : (
+                      'Tạo sự kiện'
+                    )}
                   </button>
                 </div>
               </form>
