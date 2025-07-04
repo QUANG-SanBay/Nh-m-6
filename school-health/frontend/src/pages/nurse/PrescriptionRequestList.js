@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Header from '../../components/nurse/Header';
 import Footer from '../../components/nurse/Footer';
@@ -6,43 +6,24 @@ import '../../styles/PrescriptionRequestList.css';
 
 const PrescriptionRequestList = () => {
   const navigate = useNavigate();
-  
-  // Mock data
-  const [requests] = useState([
-    {
-      id: 1,
-      studentName: 'Nguyễn Văn A',
-      class: '10A1',
-      requestDate: '2024-03-20',
-      status: 'PENDING',
-      medicineName: 'Paracetamol',
-      quantity: '2 viên',
-      instructions: 'Uống sau bữa ăn'
-    },
-    {
-      id: 2,
-      studentName: 'Trần Thị B',
-      class: '11B2',
-      requestDate: '2024-03-19',
-      status: 'APPROVED',
-      medicineName: 'Vitamin C',
-      quantity: '1 viên',
-      instructions: 'Uống buổi sáng'
-    },
-    {
-      id: 3,
-      studentName: 'Lê Văn C',
-      class: '12C3',
-      requestDate: '2024-03-18',
-      status: 'REJECTED',
-      medicineName: 'Ibuprofen',
-      quantity: '1 viên',
-      instructions: 'Uống khi đau'
-    }
-  ]);
+  const [requests, setRequests] = useState([]);
 
-  const handleRequestClick = (requestId) => {
-    navigate(`/nurse/prescription-request/${requestId}`);
+  useEffect(() => {
+    fetch('http://localhost:8080/api/yeu-cau-thuoc')
+      .then(res => res.json())
+      .then(data => {
+        if (Array.isArray(data)) {
+          setRequests(data);
+        } else {
+          alert(data.error || 'Lỗi khi lấy danh sách yêu cầu thuốc!');
+          setRequests([]);
+        }
+      })
+      .catch(() => setRequests([]));
+  }, []);
+
+  const handleRequestClick = (maYeuCau) => {
+    navigate(`/nurse/prescription-request/${maYeuCau}`);
   };
 
   return (
@@ -52,25 +33,25 @@ const PrescriptionRequestList = () => {
         <div className="prescription-request-list">
           <h2>Danh sách yêu cầu nhận thuốc</h2>
           <div className="requests-container">
-            {requests.length === 0 ? (
+            {Array.isArray(requests) && requests.length === 0 ? (
               <p className="no-requests">Không có yêu cầu nhận thuốc nào</p>
             ) : (
-              requests.map((request) => (
+              Array.isArray(requests) && requests.map((request) => (
                 <div
-                  key={request.id}
+                  key={request.maYeuCau}
                   className="request-card"
-                  onClick={() => handleRequestClick(request.id)}
+                  onClick={() => handleRequestClick(request.maYeuCau)}
                 >
                   <div className="student-info">
-                    <h3>{request.studentName}</h3>
-                    <p>Lớp: {request.class}</p>
-                    <p>Ngày yêu cầu: {new Date(request.requestDate).toLocaleDateString()}</p>
-                    <p>Thuốc: {request.medicineName}</p>
+                    <h3>{request.hoTenHocSinh || 'Không rõ'}</h3>
+                    <p>Lớp: {request.lopHocSinh || 'Không rõ'}</p>
+                    <p>Ngày yêu cầu: {request.ngayTao ? new Date(request.ngayTao).toLocaleDateString() : ''}</p>
+                    <p>Thuốc: {request.tenThuoc}</p>
                   </div>
                   <div className="request-status">
-                    <span className={`status-badge ${request.status.toLowerCase()}`}>
-                      {request.status === 'PENDING' ? 'Chờ xử lý' : 
-                        request.status === 'APPROVED' ? 'Đã duyệt' : 'Đã từ chối'}
+                    <span className={`status-badge ${request.trangThai?.toLowerCase()}`}>
+                      {request.trangThai === 'CHO_DUYET' ? 'Chờ xử lý' : 
+                        request.trangThai === 'DA_DUYET' ? 'Đã duyệt' : 'Đã từ chối'}
                     </span>
                   </div>
                 </div>

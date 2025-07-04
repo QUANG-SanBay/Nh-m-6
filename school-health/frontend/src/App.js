@@ -85,11 +85,7 @@ function App() {
               <PrescriptionRequestList />
             </ProtectedRoute>
           } />
-          <Route path="/nurse/prescription-request/:requestId" element={
-            <ProtectedRoute allowedRoles={['NHAN_VIEN_Y_TE']}>
-              <PrescriptionRequestDetail />
-            </ProtectedRoute>
-          } />
+          <Route path="/nurse/prescription-request/:requestId" element={<PrescriptionRequestDetail />} />
           <Route path="/nurse/student-health" element={
             <ProtectedRoute allowedRoles={['NHAN_VIEN_Y_TE']}>
               <StudentList />

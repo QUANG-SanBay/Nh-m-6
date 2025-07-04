@@ -138,4 +138,8 @@ public class YeuCauThuocService {
         
         yeuCauThuocRepository.deleteById(maYeuCau);
     }
+    
+    public List<YeuCauThuoc> getAllYeuCauThuoc() {
+        return yeuCauThuocRepository.findAll();
+    }
 }
