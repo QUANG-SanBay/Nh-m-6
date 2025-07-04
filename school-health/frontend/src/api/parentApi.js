@@ -4,13 +4,49 @@ export const parentApi = {
   // Lấy thông tin phụ huynh theo email
   getParentByEmail: async (email) => {
     try {
-      const response = await fetch(`${API_BASE_URL}/phu-huynh/email/${email}`);
+      console.log('API Call: getParentByEmail with email:', email);
+      const url = `${API_BASE_URL}/phu-huynh/email/${encodeURIComponent(email)}`;
+      console.log('API URL:', url);
+      
+      const response = await fetch(url);
+      console.log('API Response status:', response.status);
+      
       if (!response.ok) {
-        throw new Error('Không thể lấy thông tin phụ huynh');
+        const errorText = await response.text();
+        console.error('API Error Response:', errorText);
+        throw new Error(`HTTP ${response.status}: ${errorText}`);
       }
-      return await response.json();
+      
+      const data = await response.json();
+      console.log('API Response data:', data);
+      return data;
     } catch (error) {
-      console.error('Error fetching parent data:', error);
+      console.error('Error in getParentByEmail:', error);
+      throw error;
+    }
+  },
+
+  // Lấy thông tin phụ huynh theo username
+  getParentByUsername: async (username) => {
+    try {
+      console.log('API Call: getParentByUsername with username:', username);
+      const url = `${API_BASE_URL}/phu-huynh/username/${encodeURIComponent(username)}`;
+      console.log('API URL:', url);
+      
+      const response = await fetch(url);
+      console.log('API Response status:', response.status);
+      
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error('API Error Response:', errorText);
+        throw new Error(`HTTP ${response.status}: ${errorText}`);
+      }
+      
+      const data = await response.json();
+      console.log('API Response data:', data);
+      return data;
+    } catch (error) {
+      console.error('Error in getParentByUsername:', error);
       throw error;
     }
   },
@@ -18,13 +54,20 @@ export const parentApi = {
   // Lấy thông tin phụ huynh theo ID
   getParentById: async (id) => {
     try {
+      console.log('API Call: getParentById with id:', id);
       const response = await fetch(`${API_BASE_URL}/phu-huynh/${id}`);
+      
       if (!response.ok) {
-        throw new Error('Không thể lấy thông tin phụ huynh');
+        const errorText = await response.text();
+        console.error('API Error Response:', errorText);
+        throw new Error(`HTTP ${response.status}: ${errorText}`);
       }
-      return await response.json();
+      
+      const data = await response.json();
+      console.log('API Response data:', data);
+      return data;
     } catch (error) {
-      console.error('Error fetching parent data:', error);
+      console.error('Error in getParentById:', error);
       throw error;
     }
   },
@@ -32,6 +75,7 @@ export const parentApi = {
   // Cập nhật thông tin phụ huynh
   updateParent: async (id, parentData) => {
     try {
+      console.log('API Call: updateParent with id:', id, 'data:', parentData);
       const response = await fetch(`${API_BASE_URL}/phu-huynh/${id}`, {
         method: 'PUT',
         headers: {
@@ -39,12 +83,18 @@ export const parentApi = {
         },
         body: JSON.stringify(parentData),
       });
+      
       if (!response.ok) {
-        throw new Error('Không thể cập nhật thông tin phụ huynh');
+        const errorData = await response.json();
+        console.error('API Error Response:', errorData);
+        throw new Error(errorData.error || 'Không thể cập nhật thông tin phụ huynh');
       }
-      return await response.json();
+      
+      const data = await response.json();
+      console.log('API Response data:', data);
+      return data;
     } catch (error) {
-      console.error('Error updating parent data:', error);
+      console.error('Error in updateParent:', error);
       throw error;
     }
   },
@@ -52,6 +102,7 @@ export const parentApi = {
   // Tạo phụ huynh mới
   createParent: async (parentData) => {
     try {
+      console.log('API Call: createParent with data:', parentData);
       const response = await fetch(`${API_BASE_URL}/phu-huynh`, {
         method: 'POST',
         headers: {
@@ -59,16 +110,22 @@ export const parentApi = {
         },
         body: JSON.stringify(parentData),
       });
+      
       if (!response.ok) {
-        throw new Error('Không thể tạo phụ huynh mới');
+        const errorData = await response.json();
+        console.error('API Error Response:', errorData);
+        throw new Error(errorData.error || 'Không thể tạo phụ huynh mới');
       }
-      return await response.json();
+      
+      const data = await response.json();
+      console.log('API Response data:', data);
+      return data;
     } catch (error) {
-      console.error('Error creating parent:', error);
+      console.error('Error in createParent:', error);
       throw error;
     }
   }
-}; 
+};
 export const sendMedicineRequest = async (data) => {
   const response = await fetch('http://localhost:8080/api/prescription-requests', {
     method: 'POST',
