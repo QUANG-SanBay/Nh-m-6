@@ -204,9 +204,9 @@ const Profile = () => {
     }
   };
 
-  const hasChanges = () => {
-    return JSON.stringify(formData) !== JSON.stringify(originalData);
-  };
+  // const hasChanges = () => {
+  //   return JSON.stringify(formData) !== JSON.stringify(originalData);
+  // };
 
   if (loading && !formData.fullName) {
     return (
