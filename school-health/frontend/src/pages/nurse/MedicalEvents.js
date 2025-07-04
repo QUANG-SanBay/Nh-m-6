@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useParams } from 'react-router-dom';
 import Header from '../../components/nurse/Header';
 import Footer from '../../components/nurse/Footer';
 import '../../styles/MedicalEvents.css';
@@ -66,6 +66,7 @@ const MedicalEvents = () => {
   });
 
   const location = useLocation();
+  const { id } = useParams();
 
   useEffect(() => {
     fetch('http://localhost:8080/api/events')
@@ -373,11 +374,12 @@ const MedicalEvents = () => {
                 </div>
 
                 <div className="event-actions">
-                  <button className="action-btn view-btn">Xem chi tiết</button>
+                  <Link to={`/nurse/events/${event.id}/detail`} className="action-btn view-btn">
+                    Xem chi tiết
+                  </Link>
                   <Link
                     to={`/nurse/events/${event.id}/edit`}
                     className="edit-btn"
-                    state={{ event: event }}
                   >
                     Chỉnh sửa
                   </Link>

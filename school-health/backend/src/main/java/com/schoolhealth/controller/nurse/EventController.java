@@ -115,6 +115,13 @@ public class EventController {
         }
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<?> getEventById(@PathVariable String id) {
+        return suKienYTeRepository.findById(id)
+            .map(event -> ResponseEntity.ok(event))
+            .orElse(ResponseEntity.notFound().build());
+    }
+
     // Inner class để map request từ frontend
     public static class EventRequest {
         private String title;

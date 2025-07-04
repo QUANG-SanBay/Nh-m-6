@@ -22,6 +22,9 @@ import MedicalSupplies from './pages/nurse/MedicalSupplies';
 import MedicalExam from './pages/nurse/MedicalExam';
 import VaccinationManagement from './pages/nurse/VaccinationManagement';
 import EditStudentHealth from './pages/nurse/StudentHealth/EditStudentHealth';
+import EventDetail from './pages/nurse/EventDetail';
+import { Link } from 'react-router-dom';
+import VaccinationBatch from './pages/nurse/VaccinationBatch';
 
 function App() {
   return (
@@ -144,6 +147,13 @@ function App() {
               <EditStudentHealth />
             </ProtectedRoute>
           } />
+          <Route path="/nurse/events/:id/detail" element={<EventDetail />} />
+          <Route path="/nurse/events/:id/edit" element={
+            <ProtectedRoute allowedRoles={['NHAN_VIEN_Y_TE']}>
+              <EditEvent />
+            </ProtectedRoute>
+          } />
+          <Route path="/nurse/vaccination-batch" element={<VaccinationBatch />} />
 
           {/* Redirect root to login */}
           <Route path="/" element={<Navigate to="/login" replace />} />
