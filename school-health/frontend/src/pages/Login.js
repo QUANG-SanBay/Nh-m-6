@@ -61,6 +61,12 @@ const Login = () => {
             case 'HOC_SINH':
               navigate('/student/home');
               break;
+            case 'QUAN_LY_NHA_TRUONG':
+              navigate('/manager/home');
+              break;
+            case 'QUAN_TRI_VIEN':
+              navigate('/admin/home');
+              break;
             default:
               navigate('/');
           }
@@ -279,6 +285,8 @@ const Register = ({ onClose }) => {
               <option value="PHU_HUYNH">Phụ huynh</option>
               <option value="HOC_SINH">Học sinh</option>
               <option value="NHAN_VIEN_Y_TE">Nhân viên y tế</option>
+              <option value="QUAN_LY_NHA_TRUONG">Quản lý nhà trường</option>
+              <option value="QUAN_TRI_VIEN">Quản trị viên</option>
             </select>
           </div>
 

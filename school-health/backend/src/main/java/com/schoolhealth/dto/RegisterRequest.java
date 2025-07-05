@@ -20,4 +20,4 @@ public class RegisterRequest {
     public void setVaiTro(String vaiTro) { this.vaiTro = vaiTro; }
     public String getHoTen() { return hoTen; }
     public void setHoTen(String hoTen) { this.hoTen = hoTen; }
-} 
+}
