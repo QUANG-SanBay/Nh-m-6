@@ -20,7 +20,7 @@ const initialBatch = {
   }
 };
 
-const VaccinationBatch = () => {
+const VaccinationBatch = ({ onCreated }) => {
   const [batch, setBatch] = useState(initialBatch);
   const [isEditing, setIsEditing] = useState(true);
 
@@ -33,9 +33,26 @@ const VaccinationBatch = () => {
     }
   };
 
-  const handleSave = () => {
+  const handleSave = async () => {
     setIsEditing(false);
-    alert('Đã lưu thông tin đợt tiêm chủng!');
+    const body = {
+      ...batch,
+      eventDate: batch.eventDate ? batch.eventDate + 'T00:00:00' : ''
+    };
+    const res = await fetch('http://localhost:8080/api/vaccination-batches', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body)
+    });
+    if (res.ok) {
+      setBatch(initialBatch);
+      setIsEditing(true);
+      alert('Tạo đợt tiêm chủng thành công!');
+      if (onCreated) onCreated();
+    } else {
+      alert('Có lỗi khi tạo đợt tiêm chủng!');
+      setIsEditing(true);
+    }
   };
 
   const handleEdit = () => setIsEditing(true);

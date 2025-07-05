@@ -55,22 +55,63 @@ const EditEvent = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    
+    // Validation
+    if (!formData.title.trim()) {
+      alert('Vui lòng nhập tên sự kiện!');
+      return;
+    }
+    if (!formData.date) {
+      alert('Vui lòng chọn ngày!');
+      return;
+    }
+    if (!formData.time) {
+      alert('Vui lòng chọn giờ!');
+      return;
+    }
+    if (!formData.location.trim()) {
+      alert('Vui lòng nhập địa điểm!');
+      return;
+    }
+    if (!formData.type) {
+      alert('Vui lòng chọn loại sự kiện!');
+      return;
+    }
+    
     setSaving(true);
 
     const updatedEvent = {
-      ...event,
       ...formData,
       participants: parseInt(formData.participants) || 0
     };
     
-    // Giả lập gọi API
-    setTimeout(() => {
-      console.log('Event updated:', updatedEvent);
+    try {
+      const response = await fetch(`http://localhost:8080/api/events/${event.id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(updatedEvent)
+      });
+
+      if (response.ok) {
+        console.log('Event updated successfully');
+        setSaving(false);
+        alert('Cập nhật sự kiện thành công!');
+        
+        // Điều hướng về trang danh sách và gửi kèm event đã cập nhật
+        navigate('/nurse/events', { state: { updatedEvent: updatedEvent } });
+      } else {
+        const errorText = await response.text();
+        alert('Có lỗi khi cập nhật sự kiện!\n' + errorText);
+        console.error('API error:', errorText);
+        setSaving(false);
+      }
+    } catch (error) {
+      alert('Không thể kết nối đến máy chủ!');
+      console.error('Network error:', error);
       setSaving(false);
-      
-      // Điều hướng về trang danh sách và gửi kèm event đã cập nhật
-      navigate('/nurse/events', { state: { updatedEvent: updatedEvent } });
-    }, 1000);
+    }
   };
 
   const handleCancel = () => {

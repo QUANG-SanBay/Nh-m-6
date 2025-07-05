@@ -1,0 +1,90 @@
+/* General Body Styles - Apply these to your main application's CSS */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    background-color: #f4f7f6; /* Light background for the whole page */
+    color: #333;
+    line-height: 1.6;
+}
+
+/* Nurse Layout Styles (assuming Header and Footer are separate components) */
+.nurse-layout {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh; /* Ensure layout takes full viewport height */
+}
+
+.nurse-main {
+    flex-grow: 1; /* Allows main content to expand and push footer down */
+    padding: 50px;
+    max-width: 900px; /* Limit content width for readability */
+    margin: 20px auto; /* Center the main content horizontally */
+    width: 100%; /* Ensure it takes full width up to max-width */
+}
+
+/* Event Detail Container */
+.event-detail-container {
+    background-color: #ffffff; /* White background for the detail card */
+    padding: 30px;
+    border-radius: 8px; /* Slightly rounded corners */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08); /* Subtle shadow for depth */
+    margin-top: 20px; /* Space from the top if any other elements are above */
+}
+
+/* Back Button */
+.event-detail-container button {
+    background-color: #007bff; /* A standard blue */
+    color: white;
+    padding: 10px 18px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    margin-bottom: 25px; /* Space below the button */
+    transition: background-color 0.2s ease; /* Smooth transition for hover effect */
+    display: inline-flex; /* For better icon/text alignment if adding one later */
+    align-items: center;
+    gap: 5px; /* Space between arrow and text */
+}
+
+.event-detail-container button:hover {
+    background-color: #0056b3; /* Darker blue on hover */
+}
+
+/* Event Title */
+.event-detail-container h1 {
+    color: #2c3e50; /* A dark, prominent color for the title */
+    font-size: 2.5em; /* Larger font size for main heading */
+    margin-top: 0; /* Remove default top margin */
+    margin-bottom: 20px; /* Space below title */
+    padding-bottom: 10px; /* Padding for the bottom border */
+    border-bottom: 1px solid #eee; /* A subtle separator line */
+}
+
+/* Event Details Paragraphs */
+.event-detail-container p {
+    font-size: 1.1em; /* Slightly larger text for readability */
+    margin-bottom: 12px; /* Consistent spacing between details */
+    color: #555; /* Slightly lighter color for detail text */
+}
+
+.event-detail-container p b {
+    color: #333; /* Make bold labels stand out a bit more */
+    min-width: 120px; /* Optional: give labels a consistent width for alignment */
+    display: inline-block; /* Required for min-width on inline elements */
+}
+
+/* Styles for Loading/Error Messages */
+/* Assuming these appear directly inside .nurse-layout main area if event is null/loading */
+.nurse-layout > div:not(.nurse-main) { /* Targets the direct div child of nurse-layout that is not nurse-main */
+    text-align: center;
+    padding: 50px;
+    font-size: 1.2em;
+    color: #666;
+    flex-grow: 1; /* Also make them push the footer down */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
