@@ -25,6 +25,7 @@ import EditStudentHealth from './pages/nurse/StudentHealth/EditStudentHealth';
 import EventDetail from './pages/nurse/EventDetail';
 import { Link } from 'react-router-dom';
 import VaccinationBatch from './pages/nurse/VaccinationBatch';
+import ManagerHome from './pages/manager/Home';
 
 function App() {
   return (
@@ -151,6 +152,15 @@ function App() {
           } />
           <Route path="/nurse/vaccination-batch" element={<VaccinationBatch />} />
 
+          {/* Manager Routes */}
+          <Route path="/manager" element={<Navigate to="/manager/home" replace />} />
+          <Route path="/manager/home" element={
+            <ProtectedRoute allowedRoles={['QUAN_LY_NHA_TRUONG']}>
+              <ManagerHome />
+            </ProtectedRoute>
+          } />
+
+          {/* <Route path="/manager/logout" element={<Logout />} /> */}
           {/* Redirect root to login */}
           <Route path="/" element={<Navigate to="/login" replace />} />
         </Routes>
