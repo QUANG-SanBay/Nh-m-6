@@ -25,7 +25,7 @@ const Header = () => {
           <ul>
             <li>
               <Link to="/manager/home" className="nav-link">
-                <i className="fas fa-home"></i>Dashboard tổng quan
+                <i className="fas fa-home"></i>Tổng quan
               </Link>
             </li>
             <li>

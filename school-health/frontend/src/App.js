@@ -26,6 +26,9 @@ import EventDetail from './pages/nurse/EventDetail';
 import { Link } from 'react-router-dom';
 import VaccinationBatch from './pages/nurse/VaccinationBatch';
 import ManagerHome from './pages/manager/Home';
+import Statistics from './pages/manager/statistics';
+import Activity from './pages/manager/activity';
+import Alerts from './pages/manager/alerts';
 
 function App() {
   return (
@@ -159,8 +162,22 @@ function App() {
               <ManagerHome />
             </ProtectedRoute>
           } />
-
-          {/* <Route path="/manager/logout" element={<Logout />} /> */}
+          <Route path="/manager/statistics" element={
+            <ProtectedRoute allowedRoles={['QUAN_LY_NHA_TRUONG']}>
+              <Statistics /> 
+            </ProtectedRoute>
+          } />
+          <Route path="/manager/activity" element={
+            <ProtectedRoute allowedRoles={['QUAN_LY_NHA_TRUONG']}>
+              <Activity />
+            </ProtectedRoute>
+          } />
+          <Route path="/manager/alerts" element={
+            <ProtectedRoute allowedRoles={['QUAN_LY_NHA_TRUONG']}>
+              <Alerts />
+            </ProtectedRoute>
+          } />
+          <Route path="/manager/logout" element={<Logout />} />
           {/* Redirect root to login */}
           <Route path="/" element={<Navigate to="/login" replace />} />
         </Routes>

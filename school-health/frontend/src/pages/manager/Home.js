@@ -24,14 +24,9 @@ const Home = () => {
               <div className="stat-change negative">+3 sự kiện mới</div>
             </div>
             <div className="stat-card">
-              <h3>Thuốc cần bổ sung</h3>
-              <div className="stat-value">12</div>
+              <h3>Cảnh báo y tế</h3>
+              <div className="stat-value">0</div>
               <div className="stat-change">Cập nhật 2h trước</div>
-            </div>
-            <div className="stat-card">
-              <h3>Lịch hẹn hôm nay</h3>
-              <div className="stat-value">15</div>
-              <div className="stat-change">5 đã hoàn thành</div>
             </div>
           </div>
 

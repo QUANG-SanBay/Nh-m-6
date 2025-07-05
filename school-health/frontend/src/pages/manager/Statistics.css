@@ -1,0 +1,64 @@
+.statistics-main {
+  padding-top: 120px;
+  background-color: #f9fafa;
+  min-height: 100vh;
+}
+
+.statistics-container {
+  margin: 2rem auto;
+  padding: 2rem;
+  max-width: 800px;
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+.date-picker {
+  margin-bottom: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 1rem;
+}
+
+.date-picker input {
+  padding: 8px 12px;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+}
+
+/* Dùng chung cho cả bảng thống kê và bảng học sinh */
+.statistics-table,
+.student-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+  background-color: #fff;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+
+.statistics-table th,
+.statistics-table td,
+.student-table th,
+.student-table td {
+  padding: 12px 16px;
+  border: 1px solid #e0e0e0;
+  text-align: center;
+  font-size: 1rem;
+  color: #444;
+}
+
+.statistics-table th,
+.student-table th {
+  background-color: #f0f2f5;
+  font-weight: bold;
+  color: #333;
+}
+
+.student-detail-section h2 {
+  margin-top: 40px;
+  font-size: 1.2rem;
+}
