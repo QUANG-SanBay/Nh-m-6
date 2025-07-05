@@ -25,6 +25,10 @@ import EditStudentHealth from './pages/nurse/StudentHealth/EditStudentHealth';
 import EventDetail from './pages/nurse/EventDetail';
 import { Link } from 'react-router-dom';
 import VaccinationBatch from './pages/nurse/VaccinationBatch';
+import ParentStudentList from './pages/parent/StudentList';
+import StudentHome from './pages/Student/Home.jsx';
+import StudentProfile from './pages/Student/Profile';
+
 
 function App() {
   return (
@@ -46,10 +50,25 @@ function App() {
               <ParentProfile />
             </ProtectedRoute>
           } />
+          <Route path="/student/home" element={
+            <ProtectedRoute allowedRoles={['HOC_SINH']}>
+              <StudentHome />
+         </ProtectedRoute>
+          } />
+          <Route path="/student/profile"element={
+            <ProtectedRoute allowedRoles={['HOC_SINH']}>
+              <StudentProfile />
+            </ProtectedRoute>
+         }/>
           <Route path="/parent/medicine" element={
             <ProtectedRoute allowedRoles={['PHU_HUYNH']}>
               <Medicine />
             </ProtectedRoute>
+          } />
+          <Route path="/parent/students" element={
+            <ProtectedRoute allowedRoles={['PHU_HUYNH']}>
+              <ParentStudentList />
+          </ProtectedRoute>
           } />
           <Route path="/parent/health-info" element={
             <ProtectedRoute allowedRoles={['PHU_HUYNH']}>
