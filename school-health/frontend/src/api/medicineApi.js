@@ -121,3 +121,71 @@ export const getAllMedicines = async () => {
     throw error;
   }
 };
+
+export const getAllSupplies = async () => {
+  const response = await fetch('http://localhost:8080/api/thuoc');
+  if (!response.ok) throw new Error('Không thể lấy danh sách thuốc/vật tư');
+  return await response.json();
+};
+
+export const createSupply = async (supplyData) => {
+  try {
+    const response = await fetch(`${API_BASE}/thuoc`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(supplyData),
+    });
+    
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.error || 'Có lỗi xảy ra khi tạo thuốc/vật tư');
+    }
+    
+    return await response.json();
+  } catch (error) {
+    console.error('Error creating supply:', error);
+    throw error;
+  }
+};
+
+export const updateSupply = async (id, supplyData) => {
+  try {
+    const response = await fetch(`${API_BASE}/thuoc/${id}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(supplyData),
+    });
+    
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.error || 'Có lỗi xảy ra khi cập nhật thuốc/vật tư');
+    }
+    
+    return await response.json();
+  } catch (error) {
+    console.error('Error updating supply:', error);
+    throw error;
+  }
+};
+
+export const deleteSupply = async (id) => {
+  try {
+    const response = await fetch(`${API_BASE}/thuoc/${id}`, {
+      method: 'DELETE',
+    });
+    
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.error || 'Có lỗi xảy ra khi xóa thuốc/vật tư');
+    }
+    
+    return true;
+  } catch (error) {
+    console.error('Error deleting supply:', error);
+    throw error;
+  }
+};
