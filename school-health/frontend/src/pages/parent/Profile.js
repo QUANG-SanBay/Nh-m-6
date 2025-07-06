@@ -233,12 +233,6 @@ const Profile = () => {
         <div className="profile-container">
           <div className="profile-header">
             <h1>Thông tin cá nhân</h1>
-            {!isEditing && formData.maPhuHuynh && (
-              <button onClick={handleEdit} className="btn-edit">
-                <i className="fas fa-edit"></i>
-                Chỉnh sửa
-              </button>
-            )}
           </div>
 
           {message && (
@@ -320,7 +314,12 @@ const Profile = () => {
                 />
               </div>
             </div>
-
+            {!isEditing && formData.maPhuHuynh && (
+                  <button onClick={handleEdit} className="btn-edit">
+                    <i className="fas fa-edit"></i>
+                    Chỉnh sửa
+                  </button>
+                )}  
             {isEditing && (
               <div className="form-actions">
                 {formData.maPhuHuynh && (
@@ -340,6 +339,7 @@ const Profile = () => {
                 >
                   {loading ? 'Đang lưu...' : (formData.maPhuHuynh ? 'Cập nhật' : 'Tạo hồ sơ')}
                 </button>
+                              
               </div>
             )}
           </form>
