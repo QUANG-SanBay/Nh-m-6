@@ -1,10 +1,9 @@
-// src/pages/student/Home.jsx
-import React from 'react';
+import React, { useState } from 'react';
 import './Home.css';
 import Header from '../../components/student/Header';
 import Footer from '../../components/student/Footer';
 
-const StudentHome = () => {
+function StudentHome() {
   return (
     <div className="student-home">
       <Header activePage="home" />
@@ -31,6 +30,7 @@ const StudentHome = () => {
               <p>Xem các lịch khám và sự kiện y tế</p>
             </a>
           </div>
+
           <div className="action-card">
             <a className="action-link" href="/student/medical-history">
               <i className="fas fa-file-medical-alt"></i>
@@ -44,6 +44,6 @@ const StudentHome = () => {
       <Footer />
     </div>
   );
-};
+}
 
 export default StudentHome;

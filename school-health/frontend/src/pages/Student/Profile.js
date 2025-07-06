@@ -1,9 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './Profile.css';
 import Header from '../../components/student/Header';
 import Footer from '../../components/student/Footer';
+import { studentApi } from '../../api/studentApi';
 
 const StudentProfile = () => {
+  const maHocSinh = 'HS001';
+
   const [formData, setFormData] = useState({
     hoTen: '',
     lop: '',
@@ -14,125 +17,150 @@ const StudentProfile = () => {
     sdtNguoiLienHe: ''
   });
 
+  const [isEditing, setIsEditing] = useState(false); // ✅ sửa lại mặc định là false
+  const [loading, setLoading] = useState(true);
+
+  // ✅ Dữ liệu gốc để kiểm tra thay đổi
+  const [originalData, setOriginalData] = useState(null);
+
+  useEffect(() => {
+    const fetchStudent = async () => {
+      try {
+        const data = await studentApi.getStudentById(maHocSinh);
+        setFormData(data);
+        setOriginalData(data); // lưu bản gốc để so sánh
+      } catch (error) {
+        console.error('❌ Lỗi khi lấy dữ liệu học sinh:', error);
+        alert('Không thể tải dữ liệu hồ sơ học sinh');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchStudent();
+  }, [maHocSinh]);
+
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
       [name]: value
     }));
   };
-const handleSubmit = (e) => {
-  e.preventDefault();
-  alert('✅Hồ sơ đã lưu');
-  console.log('Dữ liệu:', formData);
-};
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      await studentApi.updateStudentProfile(maHocSinh, formData);
+      alert('✅ Hồ sơ đã được cập nhật');
+      setOriginalData(formData); // cập nhật lại bản gốc
+      setIsEditing(false);
+    } catch (error) {
+      console.error('❌ Lỗi khi cập nhật hồ sơ:', error);
+      alert('Không thể lưu hồ sơ học sinh');
+    }
+  };
+
+  const handleEdit = () => {
+    setIsEditing(true);
+  };
+
+  const handleCancel = () => {
+    setFormData(originalData); // khôi phục về dữ liệu gốc
+    setIsEditing(false);
+  };
+
+  const renderInput = (name, type = "text", isTextArea = false) => {
+    const commonProps = {
+      name,
+      value: formData[name],
+      onChange: handleChange,
+      required: true,
+      disabled: !isEditing
+    };
+
+    if (isTextArea) {
+      return <textarea {...commonProps} />;
+    }
+
+    if (type === "select") {
+      return (
+        <select {...commonProps}>
+          <option value="">-- Chọn giới tính --</option>
+          <option value="Nam">Nam</option>
+          <option value="Nữ">Nữ</option>
+        </select>
+      );
+    }
+
+    return <input type={type} {...commonProps} />;
+  };
+
+  if (loading) {
+    return (
+      <div className="profile-page">
+        <Header activePage="profile" />
+        <main className="profile-content">
+          <div className="loading">⏳ Đang tải thông tin học sinh...</div>
+        </main>
+        <Footer />
+      </div>
+    );
+  }
+
   return (
     <div className="profile-page">
       <Header activePage="profile" />
-
       <main className="profile-content">
         <div className="profile-container">
           <h1>Hồ sơ học sinh</h1>
           <form onSubmit={handleSubmit} className="profile-form">
-
             <div className="form-group">
-              <label htmlFor="hoTen">Họ và tên <span style={{ color: 'red' }}>*</span></label>
-              <input
-                type="text"
-                id="hoTen"
-                name="hoTen"
-                value={formData.hoTen}
-                onChange={handleChange}
-                required
-              />
+              <label>Họ và tên <span className="required">*</span></label>
+              {renderInput("hoTen")}
             </div>
-
             <div className="form-group">
-              <label htmlFor="lop">Lớp <span style={{ color: 'red' }}>*</span></label>
-              <input
-                type="text"
-                id="lop"
-                name="lop"
-                value={formData.lop}
-                onChange={handleChange}
-                required
-              />
+              <label>Lớp <span className="required">*</span></label>
+              {renderInput("lop")}
             </div>
-
             <div className="form-group">
-              <label htmlFor="gioiTinh">Giới tính <span style={{ color: 'red' }}>*</span></label>
-              <select
-                id="gioiTinh"
-                name="gioiTinh"
-                value={formData.gioiTinh}
-                onChange={handleChange}
-                required
-              >
-                <option value="">-- Chọn giới tính --</option>
-                <option value="Nam">Nam</option>
-                <option value="Nữ">Nữ</option>
-              </select>
+              <label>Giới tính <span className="required">*</span></label>
+              {renderInput("gioiTinh", "select")}
             </div>
-
             <div className="form-group">
-              <label htmlFor="ngaySinh">Ngày sinh <span style={{ color: 'red' }}>*</span></label>
-              <input
-                type="date"
-                id="ngaySinh"
-                name="ngaySinh"
-                value={formData.ngaySinh}
-                onChange={handleChange}
-                required
-              />
+              <label>Ngày sinh <span className="required">*</span></label>
+              {renderInput("ngaySinh", "date")}
             </div>
-
             <div className="form-group">
-              <label htmlFor="diaChi">Địa chỉ <span style={{ color: 'red' }}>*</span></label>
-              <textarea
-                id="diaChi"
-                name="diaChi"
-                value={formData.diaChi}
-                onChange={handleChange}
-                required
-              />
+              <label>Địa chỉ <span className="required">*</span></label>
+              {renderInput("diaChi", "text", true)}
             </div>
 
             <div className="form-section">
               <h3>Liên hệ khẩn cấp</h3>
-
               <div className="form-group">
-                <label htmlFor="tenNguoiLienHe">Tên người liên hệ <span style={{ color: 'red' }}>*</span></label>
-                <input
-                  type="text"
-                  id="tenNguoiLienHe"
-                  name="tenNguoiLienHe"
-                  value={formData.tenNguoiLienHe}
-                  onChange={handleChange}
-                  required
-                />
+                <label>Tên người liên hệ <span className="required">*</span></label>
+                {renderInput("tenNguoiLienHe")}
               </div>
-
               <div className="form-group">
-                <label htmlFor="sdtNguoiLienHe">Số điện thoại liên hệ <span style={{ color: 'red' }}>*</span></label>
-                <input
-                  type="tel"
-                  id="sdtNguoiLienHe"
-                  name="sdtNguoiLienHe"
-                  value={formData.sdtNguoiLienHe}
-                  onChange={handleChange}
-                  required
-                />
+                <label>Số điện thoại liên hệ <span className="required">*</span></label>
+                {renderInput("sdtNguoiLienHe", "tel")}
               </div>
             </div>
 
             <div className="form-actions">
-              <button type="submit" className="btn-save">Lưu thông tin</button>
-              <button type="button" className="btn-cancel">Hủy</button>
+              {isEditing ? (
+                <>
+                  <button type="submit" className="btn-save">Lưu thông tin</button>
+                  <button type="button" className="btn-cancel" onClick={handleCancel}>Hủy</button>
+                </>
+              ) : (
+                <button type="button" className="btn-edit" onClick={handleEdit}>Chỉnh sửa</button>
+              )}
             </div>
           </form>
         </div>
       </main>
-
       <Footer />
     </div>
   );

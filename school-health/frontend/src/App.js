@@ -26,7 +26,7 @@ import EventDetail from './pages/nurse/EventDetail';
 import { Link } from 'react-router-dom';
 import VaccinationBatch from './pages/nurse/VaccinationBatch';
 import ParentStudentList from './pages/parent/StudentList';
-import StudentHome from './pages/Student/Home.jsx';
+import StudentHome from './pages/Student/Home.js';
 import StudentProfile from './pages/Student/Profile';
 
 

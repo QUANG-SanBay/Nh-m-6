@@ -6,7 +6,7 @@ export const studentApi = {
   // Lấy thông tin học sinh theo mã học sinh
   getStudentById: async (maHocSinh) => {
     try {
-      const response = await fetch(`${API_BASE_URL}/hoc-sinh/${maHocSinh}`);
+      const response = await fetch(`${API_BASE_URL}/hocsinh/${maHocSinh}`);
       if (!response.ok) {
         throw new Error('Không thể lấy thông tin học sinh');
       }
@@ -20,7 +20,7 @@ export const studentApi = {
   // Cập nhật thông tin hồ sơ học sinh
   updateStudentProfile: async (maHocSinh, studentData) => {
     try {
-      const response = await fetch(`${API_BASE_URL}/hoc-sinh/${maHocSinh}`, {
+      const response = await fetch(`${API_BASE_URL}/hocsinh/${maHocSinh}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -40,7 +40,7 @@ export const studentApi = {
   // Tạo hồ sơ học sinh mới (nếu cần)
   createStudent: async (studentData) => {
     try {
-      const response = await fetch(`${API_BASE_URL}/hoc-sinh`, {
+      const response = await fetch(`${API_BASE_URL}/hocsinh`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -60,7 +60,7 @@ export const studentApi = {
   // Lấy toàn bộ danh sách học sinh
   getAllStudents: async () => {
     try {
-      const response = await fetch(`${API_BASE_URL}/hoc-sinh`);
+      const response = await fetch(`${API_BASE_URL}/hocsinh`);
       if (!response.ok) {
         throw new Error('Không thể lấy danh sách học sinh');
       }

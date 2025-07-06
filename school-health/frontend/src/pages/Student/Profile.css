@@ -211,3 +211,17 @@
     max-width: 200px;
   }
 } 
+
+.readonly-text {
+  padding: 0.75rem;
+  border: 2px solid #e1e5e9;
+  border-radius: 8px;
+  font-size: 1rem;
+  background-color: #f8f9fa;
+  color: #495057;
+  min-height: 48px;
+  display: flex;
+  align-items: center;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
