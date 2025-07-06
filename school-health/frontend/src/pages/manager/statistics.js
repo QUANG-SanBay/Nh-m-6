@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { students } from '../../data/students.js';
+import { students } from '../../data/studentsdata.js';
 import Header from '../../components/manager/Header';
 import Footer from '../../components/manager/Footer';
 import './Statistics.css';

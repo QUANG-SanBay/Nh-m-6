@@ -1,7 +1,12 @@
 package com.schoolhealth.entity;
 
-import jakarta.persistence.*;
 import java.time.LocalDateTime;
+
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "su_kien_y_te")
@@ -25,6 +30,10 @@ public class SuKienYTe {
     @ManyToOne
     @JoinColumn(name = "ma_nhan_vien_y_te", referencedColumnName = "maNhanVienYTe")
     private NhanVienYTe nhanVienYTe;
+
+    @ManyToOne
+    @JoinColumn(name = "ma_quan_ly") // tên cột foreign key trong bảng HoSoSucKhoeHocSinh
+    private QuanLyNhaTruong quanLyNhaTruong;
 
     public String getMaSuKien() { return maSuKien; }
     public void setMaSuKien(String maSuKien) { this.maSuKien = maSuKien; }
@@ -50,4 +59,11 @@ public class SuKienYTe {
     public void setHocSinh(HocSinh hocSinh) { this.hocSinh = hocSinh; }
     public NhanVienYTe getNhanVienYTe() { return nhanVienYTe; }
     public void setNhanVienYTe(NhanVienYTe nhanVienYTe) { this.nhanVienYTe = nhanVienYTe; }
+    public QuanLyNhaTruong getQuanLyNhaTruong() {
+        return quanLyNhaTruong;
+    }
+
+    public void setQuanLyNhaTruong(QuanLyNhaTruong quanLyNhaTruong) {
+        this.quanLyNhaTruong = quanLyNhaTruong;
+    }
 } 

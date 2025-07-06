@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import Header from '../../../components/nurse/Header';
 import Footer from '../../../components/nurse/Footer';
-import { students as defaultStudents } from '../../../data/students.js';
+import { students as defaultStudents } from '../../../data/studentsdata.js';
 import './StudentList.css';
 
 const StudentList = () => {

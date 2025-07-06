@@ -21,6 +21,8 @@ const ProtectedRoute = ({ children, allowedRoles = [] }) => {
           return <Navigate to="/nurse/home" replace />;
         case 'HOC_SINH':
           return <Navigate to="/student/home" replace />;
+        case 'QUAN_LY_NHA_TRUONG':
+          return <Navigate to="/manager/home" replace />;
         default:
           return <Navigate to="/login" replace />;
       }

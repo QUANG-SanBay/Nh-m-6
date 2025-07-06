@@ -29,7 +29,7 @@ import ManagerHome from './pages/manager/Home';
 import Statistics from './pages/manager/statistics';
 import Activity from './pages/manager/activity';
 import Alerts from './pages/manager/alerts';
-
+import ManagerProfile from './pages/manager/Profile';
 function App() {
   return (
     <Router>
@@ -160,6 +160,12 @@ function App() {
           <Route path="/manager/home" element={
             <ProtectedRoute allowedRoles={['QUAN_LY_NHA_TRUONG']}>
               <ManagerHome />
+            </ProtectedRoute>
+          } />
+
+          <Route path="/manager/profile" element={
+            <ProtectedRoute allowedRoles={['QUAN_LY_NHA_TRUONG']}>
+              <ManagerProfile />
             </ProtectedRoute>
           } />
           <Route path="/manager/statistics" element={
