@@ -1,0 +1,41 @@
+.student-home {
+  padding: 30px;
+  font-family: Arial, sans-serif;
+}
+
+.welcome-section {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.quick-actions {
+  display: flex;
+  justify-content: space-around;
+  flex-wrap: wrap;
+}
+
+.action-card {
+  background-color: #f2f2f2;
+  border-radius: 10px;
+  padding: 20px;
+  width: 220px;
+  margin: 10px;
+  text-align: center;
+  transition: transform 0.3s;
+}
+
+.action-card:hover {
+  transform: translateY(-5px);
+  background-color: #e0f7fa;
+}
+
+.action-link {
+  text-decoration: none;
+  color: #333;
+}
+
+.action-link i {
+  font-size: 30px;
+  margin-bottom: 10px;
+  color: #3498db;
+}
