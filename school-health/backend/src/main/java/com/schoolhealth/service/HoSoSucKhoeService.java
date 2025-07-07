@@ -1,18 +1,21 @@
 package com.schoolhealth.service;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.schoolhealth.entity.HoSoSucKhoeHocSinh;
 import com.schoolhealth.entity.HocSinh;
 import com.schoolhealth.entity.PhuHuynh;
 import com.schoolhealth.repository.HoSoSucKhoeHocSinhRepository;
 import com.schoolhealth.repository.HocSinhRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
 
 @Service
 @Transactional
@@ -46,7 +49,21 @@ public class HoSoSucKhoeService {
         
         return phuHuynh != null && phuHuynh.getMaPhuHuynh().equals(maPhuHuynh);
     }
-    
+    public List<HoSoSucKhoeHocSinh> getHoSoByDate(String dateStr) {
+    if (dateStr == null || dateStr.isEmpty()) {
+        return hoSoSucKhoeRepository.findAll(); // Nếu không chọn ngày, trả tất cả
+    }
+
+    try {
+        // Định dạng ngày từ chuỗi yyyy-MM-dd sang kiểu Date
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        Date parsedDate = sdf.parse(dateStr);
+        return hoSoSucKhoeRepository.findByNgayCapNhatCuoi(parsedDate);
+    } catch (ParseException e) {
+        throw new RuntimeException("Định dạng ngày không hợp lệ (yyyy-MM-dd).");
+    }
+}
+
     public HoSoSucKhoeHocSinh updateHoSoSucKhoe(HoSoSucKhoeHocSinh hoSoData) {
         try {
             // Validate ảnh base64

@@ -35,7 +35,7 @@ const Header = () => {
             </li>
             <li>
               <Link to="/manager/student-health" className="nav-link">
-                <i className="fas fa-notes-medical"></i>Hồ sơ sức khỏe
+                <i className="fas fa-notes-medical"></i>Danh sách sức khỏe học sinh
               </Link>
             </li>
             <li>
@@ -44,8 +44,8 @@ const Header = () => {
               </Link>
             </li>
             <li>
-              <Link to="/manager/nurse" className="nav-link">
-                <i className="fas fa-users"></i>Danh sách nhân viên y tế
+              <Link to="/manager/alerts" className="nav-link">
+                <i className="fas fa-users"></i>Cảnh báo y tế
               </Link>
             </li>
           </ul>

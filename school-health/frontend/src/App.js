@@ -179,6 +179,12 @@ function App() {
               <Statistics /> 
             </ProtectedRoute>
           } />
+          <Route path="/manager/events" element={
+            <ProtectedRoute allowedRoles={['QUAN_LY_NHA_TRUONG']}>
+              <div>Trang Lịch sử sự kiện</div>
+              <MedicalEventsManager />
+            </ProtectedRoute>
+          } />
           <Route path="/manager/medical-events" element={
             <ProtectedRoute allowedRoles={['QUAN_LY_NHA_TRUONG']}>
               <MedicalEventsManager />
@@ -232,6 +238,11 @@ function App() {
           <Route path="/manager/medical-events/:id" element={
             <ProtectedRoute allowedRoles={['QUAN_LY_NHA_TRUONG']}>
               <EventDetailManager />
+            </ProtectedRoute>
+          } />
+          <Route path="/manager/settings" element={
+            <ProtectedRoute allowedRoles={['QUAN_LY_NHA_TRUONG']}>
+              <div>Trang Cài đặt</div>
             </ProtectedRoute>
           } />
           <Route path="/manager/logout" element={<Logout />} />

@@ -38,15 +38,15 @@ const Home = () => {
                   <span className="action-icon">📝</span>
                   <span>Tạo hồ sơ mới</span>
                 </button>
-                <button className="action-button">
-                  <span className="action-icon">💊</span>
-                  <span>Quản lý thuốc</span>
-                </button>
-                <button className="action-button">
-                  <span className="action-icon">🏥</span>
-                  <span>Kiểm tra y tế</span>
-                </button>
-                <Link to="/nurse/events" className="action-button">
+                <Link to="/manager/statistics" className="action-button">
+                  <span className="action-icon">📅</span>
+                  <span>Báo cáo thống kê</span>
+                </Link>
+                <Link to="/manager/Student-Health" className="action-button">
+                  <span className="action-icon">📅</span>
+                  <span>Danh sách sức khỏe học sinh</span>
+                </Link>
+                <Link to="/manager/events" className="action-button">
                   <span className="action-icon">📅</span>
                   <span>Sự kiện y tế</span>
                 </Link>
