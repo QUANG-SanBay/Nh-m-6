@@ -9,7 +9,7 @@ import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "ma_quan_ly")
+@Table(name = "quan_ly_nha_truong")
 public class QuanLyNhaTruong extends NguoiDung {
     @Id
     // Loại bỏ @GeneratedValue để tránh xung đột

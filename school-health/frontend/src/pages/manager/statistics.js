@@ -1,22 +1,33 @@
-
-import React, { useState } from 'react';
-import { students } from '../../data/studentsdata.js';
+import React, { useEffect, useState } from 'react';
 import Header from '../../components/manager/Header';
 import Footer from '../../components/manager/Footer';
 import './Statistics.css';
 
 const Statistics = () => {
   const [selectedDate, setSelectedDate] = useState('');
+  const [students, setStudents] = useState([]);
 
-  // Lọc học sinh theo ngày được chọn
-  const filteredStudents = students.filter(
-    student => selectedDate === '' || student.createdAt === selectedDate
-  );
+useEffect(() => {
+  const fetchData = async () => {
+    try {
+      const res = await fetch(`http://localhost:8080/api/hoso-suckhoe/by-date?date=${selectedDate}`);
+      const data = await res.json();
+      console.log('Dữ liệu từ API:', data);
+      setStudents(data); // ✅ data phải là array
+    } catch (error) {
+      console.error('Lỗi fetch dữ liệu:', error);
+      setStudents([]); // fallback tránh lỗi filter
+    }
+  };
 
-  const total = filteredStudents.length;
-  const normal = filteredStudents.filter(s => s.healthStatus === 'Bình thường').length;
-  const monitoring = filteredStudents.filter(s => s.healthStatus === 'Cần theo dõi').length;
-  const treating = filteredStudents.filter(s => s.healthStatus === 'Đang điều trị').length;
+  fetchData();
+}, [selectedDate]);
+
+
+  const total = students.length;
+  const normal = students.filter(s => s.tinhTrangSucKhoe === 'Bình thường').length;
+  const monitoring = students.filter(s => s.tinhTrangSucKhoe === 'Cần theo dõi').length;
+  const treating = students.filter(s => s.tinhTrangSucKhoe === 'Đang điều trị').length;
 
   return (
     <div className="manager-layout">
@@ -25,7 +36,6 @@ const Statistics = () => {
         <div className="statistics-container">
           <h1>Thống kê hồ sơ sức khỏe học sinh</h1>
 
-          {/* Bộ chọn ngày */}
           <div className="date-picker">
             <label>Chọn ngày thống kê:</label>
             <input
@@ -35,7 +45,6 @@ const Statistics = () => {
             />
           </div>
 
-          {/* Bảng thống kê tổng */}
           <table className="statistics-table">
             <thead>
               <tr>
@@ -55,8 +64,7 @@ const Statistics = () => {
             </tbody>
           </table>
 
-          {/* Danh sách chi tiết học sinh trong ngày */}
-          {selectedDate && filteredStudents.length > 0 && (
+          {selectedDate && students.length > 0 && (
             <div className="student-detail-section">
               <h2>Danh sách học sinh ngày {selectedDate}</h2>
               <table className="student-table">
@@ -69,12 +77,12 @@ const Statistics = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {filteredStudents.map(student => (
-                    <tr key={student.id}>
-                      <td>{student.studentId}</td>
-                      <td>{student.name}</td>
-                      <td>{student.class}</td>
-                      <td>{student.healthStatus}</td>
+                  {students.map(student => (
+                    <tr key={student.maHoSo}>
+                      <td>{student.maHocSinh}</td>
+                      <td>{student.hoTen}</td>
+                      <td>{student.lop}</td>
+                      <td>{student.tinhTrangSucKhoe}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -82,8 +90,7 @@ const Statistics = () => {
             </div>
           )}
 
-          {/* Nếu không có học sinh cho ngày đó */}
-          {selectedDate && filteredStudents.length === 0 && (
+          {selectedDate && students.length === 0 && (
             <p style={{ marginTop: '20px' }}>
               Không có học sinh nào trong ngày {selectedDate}.
             </p>

@@ -43,11 +43,6 @@ const Header = () => {
                 <i className="fas fa-calendar-alt"></i>Sự kiện y tế
               </Link>
             </li>
-            <li>
-              <Link to="/manager/alerts" className="nav-link">
-                <i className="fas fa-users"></i>Cảnh báo y tế
-              </Link>
-            </li>
           </ul>
         </nav>
 
