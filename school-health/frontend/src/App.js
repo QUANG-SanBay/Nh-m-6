@@ -25,11 +25,17 @@ import EditStudentHealth from './pages/nurse/StudentHealth/EditStudentHealth';
 import EventDetail from './pages/nurse/EventDetail';
 import { Link } from 'react-router-dom';
 import VaccinationBatch from './pages/nurse/VaccinationBatch';
+
 import ManagerHome from './pages/manager/Home';
 import Statistics from './pages/manager/statistics';
-import Activity from './pages/manager/activity';
-import Alerts from './pages/manager/alerts';
 import ManagerProfile from './pages/manager/Profile';
+import MedicalEventsManager from './pages/manager/MedicalEventsManager';
+import StudentListManager from './pages/manager/StudentHealth/StudentListManager';
+import StudentHealthDetailManager from './pages/manager/StudentHealth/StudentHealthDetailManager';
+import EditStudentHealthManager from './pages/manager/StudentHealth/EditStudentHealthManager';
+import EditEventManager from './pages/manager/EditEventManager';
+import EventDetailManager from './pages/manager/EventDetailManager';
+import MedicalExamManager from './pages/manager/MedicalExamManager';
 function App() {
   return (
     <Router>
@@ -173,14 +179,59 @@ function App() {
               <Statistics /> 
             </ProtectedRoute>
           } />
-          <Route path="/manager/activity" element={
+          <Route path="/manager/medical-events" element={
             <ProtectedRoute allowedRoles={['QUAN_LY_NHA_TRUONG']}>
-              <Activity />
+              <MedicalEventsManager />
             </ProtectedRoute>
           } />
-          <Route path="/manager/alerts" element={
+          <Route path="/manager/student-health" element={
             <ProtectedRoute allowedRoles={['QUAN_LY_NHA_TRUONG']}>
-              <Alerts />
+              <StudentListManager />
+            </ProtectedRoute>
+          } />
+          <Route path="/manager/student-health/:id" element={
+            <ProtectedRoute allowedRoles={['QUAN_LY_NHA_TRUONG']}>
+              <StudentHealthDetailManager />
+            </ProtectedRoute>
+          } />
+          <Route path="/manager/student-health/:id/edit" element={
+            <ProtectedRoute allowedRoles={['QUAN_LY_NHA_TRUONG']}>
+              <EditStudentHealthManager />
+            </ProtectedRoute>
+          } />
+          <Route path="/manager/edit-event/:eventId" element={
+            <ProtectedRoute allowedRoles={['QUAN_LY_NHA_TRUONG']}>
+              <EditEventManager />
+            </ProtectedRoute>
+          } />
+          <Route path="/manager/events/:id/detail" element={
+            <ProtectedRoute allowedRoles={['QUAN_LY_NHA_TRUONG']}>
+              <EventDetailManager />
+            </ProtectedRoute>
+          } />
+          <Route path="/manager/medical-exam" element={
+            <ProtectedRoute allowedRoles={['QUAN_LY_NHA_TRUONG']}>
+              <MedicalExamManager />
+            </ProtectedRoute>
+          } />
+          <Route path="/manager/events/:id/edit" element={
+            <ProtectedRoute allowedRoles={['QUAN_LY_NHA_TRUONG']}>
+              <EditEventManager />
+            </ProtectedRoute>
+          } />
+          <Route path="/manager/medical-events/:id/detail" element={
+            <ProtectedRoute allowedRoles={['QUAN_LY_NHA_TRUONG']}>
+              <EventDetailManager />
+            </ProtectedRoute>
+          } />
+          <Route path="/manager/medical-events/:id/edit" element={
+            <ProtectedRoute allowedRoles={['QUAN_LY_NHA_TRUONG']}>
+              <EditEventManager />
+            </ProtectedRoute>
+          } />
+          <Route path="/manager/medical-events/:id" element={
+            <ProtectedRoute allowedRoles={['QUAN_LY_NHA_TRUONG']}>
+              <EventDetailManager />
             </ProtectedRoute>
           } />
           <Route path="/manager/logout" element={<Logout />} />

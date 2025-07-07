@@ -34,13 +34,13 @@ const Header = () => {
               </Link>
             </li>
             <li>
-              <Link to="/manager/activity" className="nav-link">
-                <i className="fas fa-briefcase-medical"></i>Hoạt động y tế
+              <Link to="/manager/student-health" className="nav-link">
+                <i className="fas fa-notes-medical"></i>Hồ sơ sức khỏe
               </Link>
             </li>
             <li>
-              <Link to="/manager/alerts" className="nav-link">
-                <i className="fas fa-exclamation-triangle"></i>Cảnh báo y tế
+              <Link to="/manager/events" className="nav-link">
+                <i className="fas fa-calendar-alt"></i>Sự kiện y tế
               </Link>
             </li>
             <li>
