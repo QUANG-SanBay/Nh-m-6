@@ -19,6 +19,10 @@ const Profile = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [originalData, setOriginalData] = useState({});
 
+  // Thêm state mới cho danh sách học sinh
+  const [studentList, setStudentList] = useState([]);
+  const [loadingStudents, setLoadingStudents] = useState(false);
+
   useEffect(() => {
     // Lấy thông tin từ localStorage
     const userName = localStorage.getItem("userName");
@@ -63,6 +67,11 @@ const Profile = () => {
         setMessage("");
         setMessageType("");
         
+        // Tải danh sách học sinh nếu có maPhuHuynh
+        if (data.maPhuHuynh) {
+          loadStudentList(data.maPhuHuynh);
+        }
+        
       } catch (error) {
         // Nếu không tìm thấy, tạo form trống với thông tin từ localStorage
         const profileData = {
@@ -86,6 +95,20 @@ const Profile = () => {
       setMessageType("error");
     } finally {
       setLoading(false);
+    }
+  };
+
+  // Thêm hàm tải danh sách học sinh
+  const loadStudentList = async (maPhuHuynh) => {
+    try {
+      setLoadingStudents(true);
+      const students = await parentApi.getHocSinhByPhuHuynh(maPhuHuynh);
+      setStudentList(students || []);
+    } catch (error) {
+      console.error('Error loading students:', error);
+      setStudentList([]);
+    } finally {
+      setLoadingStudents(false);
     }
   };
 
@@ -314,12 +337,60 @@ const Profile = () => {
                 />
               </div>
             </div>
+
+            {/* Thêm section mới cho thông tin học sinh */}
+            {formData.maPhuHuynh && (
+              <div className="form-section">
+                <h3>Thông tin học sinh</h3>
+                
+                {loadingStudents ? (
+                  <div className="loading-students">
+                    <div className="loading-spinner"></div>
+                    <p>Đang tải danh sách học sinh...</p>
+                  </div>
+                ) : (
+                  <div className="student-list-section">
+                    {studentList.length > 0 ? (
+                      <div className="student-cards">
+                        {studentList.map((student, index) => (
+                          <div key={student.maHocSinh || index} className="student-card">
+                            <div className="student-info">
+                              <div className="student-detail">
+                                <label>Tên học sinh:</label>
+                                <span>{student.hoTen}</span>
+                              </div>
+                              <div className="student-detail">
+                                <label>Mã học sinh:</label>
+                                <span>{student.maHocSinh}</span>
+                              </div>
+                              {student.lop && (
+                                <div className="student-detail">
+                                  <label>Lớp:</label>
+                                  <span>{student.lop}</span>
+                                </div>
+                              )}
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    ) : (
+                      <div className="no-students">
+                        <i className="fas fa-user-graduate"></i>
+                        <p>Chưa có học sinh nào được liên kết với tài khoản này</p>
+                        <small>Vui lòng liên hệ nhà trường để liên kết thông tin học sinh</small>
+                      </div>
+                    )}
+                  </div>
+                )}
+              </div>
+            )}
+
             {!isEditing && formData.maPhuHuynh && (
-                  <button onClick={handleEdit} className="btn-edit">
-                    <i className="fas fa-edit"></i>
-                    Chỉnh sửa
-                  </button>
-                )}  
+              <button type="button" onClick={handleEdit} className="btn-edit">
+                <i className="fas fa-edit"></i>
+                Chỉnh sửa
+              </button>
+            )}  
             {isEditing && (
               <div className="form-actions">
                 {formData.maPhuHuynh && (
@@ -339,7 +410,6 @@ const Profile = () => {
                 >
                   {loading ? 'Đang lưu...' : (formData.maPhuHuynh ? 'Cập nhật' : 'Tạo hồ sơ')}
                 </button>
-                              
               </div>
             )}
           </form>
