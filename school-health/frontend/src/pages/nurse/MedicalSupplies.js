@@ -38,9 +38,7 @@ const MedicalSupplies = () => {
     if (window.confirm('Bạn có chắc chắn muốn xóa sản phẩm này?')) {
       try {
         await deleteSupply(id);
-        // Sau khi xóa thành công, load lại danh sách từ backend
-        const medicinesFromServer = await getAllMedicines();
-        setSupplies(medicinesFromServer);
+        setSupplies(prev => prev.filter(supply => supply.id !== id));
       } catch (error) {
         alert(error.message || 'Có lỗi khi xóa thuốc/vật tư');
       }
@@ -68,12 +66,24 @@ const MedicalSupplies = () => {
         ten: newSupplyData.name,
         lieuLuong: '', // hoặc lấy từ form nếu muốn
         donVi: newSupplyData.unit,
-        moTa: newSupplyData.category, // hoặc gán đúng ý nghĩa
+        moTa: newSupplyData.category,
+        soLuong: Number(newSupplyData.quantity), // thêm số lượng
+        hanSuDung: newSupplyData.expiryDate, // thêm hạn sử dụng
       };
-      await createSupply(newSupply);
-      // Sau khi thêm mới, load lại danh sách từ backend
-      const medicinesFromServer = await getAllMedicines();
-      setSupplies(medicinesFromServer.map(mapBackendToFrontend));
+      const created = await createSupply(newSupply);
+
+      // Nếu backend trả về bản ghi vừa tạo, map lại và thêm vào danh sách
+      // Nếu không, tự tạo object mới từ newSupplyData
+      const newSupplyFrontend = {
+        id: created?.maThuoc || Math.random().toString(36).substr(2, 9),
+        name: newSupplyData.name,
+        category: newSupplyData.category,
+        quantity: Number(newSupplyData.quantity),
+        unit: newSupplyData.unit,
+        expiryDate: newSupplyData.expiryDate,
+      };
+
+      setSupplies(prev => [...prev, newSupplyFrontend]);
       handleCloseAddModal();
     } catch (error) {
       alert(error.message || 'Có lỗi khi thêm mới thuốc/vật tư');
@@ -106,9 +116,12 @@ const MedicalSupplies = () => {
         lieuLuong: '', // hoặc lấy từ form nếu muốn
         donVi: editingSupply.unit,
         moTa: editingSupply.category,
+        soLuong: Number(editingSupply.quantity), // thêm số lượng
+        hanSuDung: editingSupply.expiryDate, // thêm hạn sử dụng
       };
       await updateSupply(editingSupply.id, updatedSupply);
-      // Sau khi cập nhật thành công, load lại danh sách từ backend
+
+      // Cập nhật lại danh sách trên frontend (cách 1: reload lại toàn bộ)
       const medicinesFromServer = await getAllMedicines();
       setSupplies(medicinesFromServer.map(mapBackendToFrontend));
       handleCloseEditModal();
@@ -177,9 +190,9 @@ const MedicalSupplies = () => {
       id: thuoc.maThuoc,
       name: thuoc.ten,
       category: thuoc.moTa,
-      quantity: 0, // Nếu backend có trường số lượng thì map vào đây
+      quantity: thuoc.soLuong,
       unit: thuoc.donVi,
-      expiryDate: '', // Nếu backend có trường hạn sử dụng thì map vào đây
+      expiryDate: thuoc.hanSuDung,
     };
   }
 
@@ -384,3 +397,10 @@ const MedicalSupplies = () => {
 };
 
 export default MedicalSupplies;
+
+
+
+
+
+
+
