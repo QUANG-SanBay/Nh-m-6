@@ -12,7 +12,7 @@ const Header = () => {
     <header className="header">
       <div className="header-container">
         <div className="logo-section">
-          <Link to="/admin/home">
+          <Link to="/nurse/home">
             <div className="logo">
               <img src="/logo192.png" alt="Logo" />
               <span>School Health</span>
@@ -25,24 +25,22 @@ const Header = () => {
             <li><Link to="/nurse/home" className="nav-link">
               <i className="fas fa-home"></i>Home
             </Link></li>
-            <li><Link to="/nurse/prescription-requests" className="nav-link">
-              <i className="fas fa-prescription-bottle-alt"></i>Nhận thuốc
+            <li><Link to="/admin/manage_account" className="nav-link">
+              <i className=""></i>Quản lí tài khoản
             </Link></li>
-            <li><Link to="/nurse/student-health" className="nav-link">
-              <i className="fas fa-notes-medical"></i>Hồ sơ sức khỏe
+            <li><Link to="" className="nav-link">
+              <i className="fas fa-notes-medical"></i>
             </Link></li>
-            <li><Link to="/nurse/medical-supplies" className="nav-link">
-              <i className="fas fa-medkit"></i>Kho thuốc
+            <li><Link to="" className="nav-link">
+              <i className="fas fa-medkit"></i>
             </Link></li>
             <li><Link to="/nurse/vaccination-management" className="nav-link">
-              <i className="fas fa-clipboard-list"></i>Quản lý tiêm chủng
+              <i className=""></i>
             </Link></li>
-            <li><Link to="/nurse/medical-exam" className="nav-link">
-              <i className="fas fa-stethoscope"></i>Kiểm tra y tế
+            <li><Link to="" className="nav-link">
+              <i className="fas fa-stethoscope"></i>
             </Link></li>
-            <li><Link to="/nurse/events" className="nav-link">
-              <i className="fas fa-calendar-alt"></i>Sự kiện
-            </Link></li>
+            
           </ul>
         </nav>
 
@@ -60,8 +58,8 @@ const Header = () => {
           </div>
 
           <div className="user-profile" onClick={toggleProfile}>
-            <img src="/nurse-avatar.png" alt="Avatar" className="avatar" />
-            <span className="user-name">Nurse Name</span>
+            <img src="/admin-avatar.png" alt="Avatar" className="avatar" />
+            <span className="user-name">Admin Name</span>
             <i className={`fas fa-chevron-down ${isProfileOpen ? 'rotate' : ''}`}></i>
             
             {isProfileOpen && (
@@ -69,22 +67,22 @@ const Header = () => {
                 <div className="dropdown-header">
                   <img src="/nurse-avatar.png" alt="Avatar" className="dropdown-avatar" />
                   <div className="dropdown-user-info">
-                    <h4>Nurse Name</h4>
-                    <p>nurse@email.com</p>
+                    <h4>Admin Name</h4>
+                    <p>admin@email.com</p>
                   </div>
                 </div>
                 <div className="dropdown-divider"></div>
                 <Link to="/nurse/profile" className="dropdown-item">
-                  <i className="fas fa-user"></i>
+                  <i className=""></i>
                   Thông tin cá nhân
                 </Link>
                 <Link to="/nurse/settings" className="dropdown-item">
-                  <i className="fas fa-cog"></i>
+                  <i className=""></i>
                   Cài đặt
                 </Link>
                 <div className="dropdown-divider"></div>
                 <Link to="/nurse/logout" className="dropdown-item text-danger">
-                  <i className="fas fa-sign-out-alt"></i>
+                  <i className=""></i>
                   Đăng xuất
                 </Link>
               </div>

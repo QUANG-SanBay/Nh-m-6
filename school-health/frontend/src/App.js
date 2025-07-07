@@ -1,3 +1,4 @@
+// src/App.js
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import Login from './pages/Login';
@@ -23,12 +24,12 @@ import MedicalExam from './pages/nurse/MedicalExam';
 import VaccinationManagement from './pages/nurse/VaccinationManagement';
 import EditStudentHealth from './pages/nurse/StudentHealth/EditStudentHealth';
 import EventDetail from './pages/nurse/EventDetail';
-import { Link } from 'react-router-dom';
 import VaccinationBatch from './pages/nurse/VaccinationBatch';
 import ParentStudentList from './pages/parent/StudentList';
 import StudentHome from './pages/Student/Home.jsx';
 import StudentProfile from './pages/Student/Profile';
-
+import AdminHome from './pages/admin/Home';
+import ManageAccount from './pages/admin/ManageAccount';
 
 function App() {
   return (
@@ -53,13 +54,13 @@ function App() {
           <Route path="/student/home" element={
             <ProtectedRoute allowedRoles={['HOC_SINH']}>
               <StudentHome />
-         </ProtectedRoute>
+            </ProtectedRoute>
           } />
-          <Route path="/student/profile"element={
+          <Route path="/student/profile" element={
             <ProtectedRoute allowedRoles={['HOC_SINH']}>
               <StudentProfile />
             </ProtectedRoute>
-         }/>
+          } />
           <Route path="/parent/medicine" element={
             <ProtectedRoute allowedRoles={['PHU_HUYNH']}>
               <Medicine />
@@ -68,7 +69,7 @@ function App() {
           <Route path="/parent/students" element={
             <ProtectedRoute allowedRoles={['PHU_HUYNH']}>
               <ParentStudentList />
-          </ProtectedRoute>
+            </ProtectedRoute>
           } />
           <Route path="/parent/health-info" element={
             <ProtectedRoute allowedRoles={['PHU_HUYNH']}>
@@ -132,7 +133,6 @@ function App() {
           } />
           <Route path="/nurse/events" element={
             <ProtectedRoute allowedRoles={['NHAN_VIEN_Y_TE']}>
-              <div>Trang Lịch sử sự kiện</div>
               <MedicalEvents />
             </ProtectedRoute>
           } />
@@ -169,6 +169,19 @@ function App() {
             </ProtectedRoute>
           } />
           <Route path="/nurse/vaccination-batch" element={<VaccinationBatch />} />
+
+          {/* Admin Route */}
+          <Route path="/admin/home" element={
+            <ProtectedRoute allowedRoles={['QUAN_TRI_VIEN']}>
+              <AdminHome />
+            </ProtectedRoute>
+          } />
+
+          <Route path="/admin/manage_account" element={
+            <ProtectedRoute allowedRoles={['QUAN_TRI_VIEN']}>
+              <ManageAccount />
+            </ProtectedRoute>
+          } />
 
           {/* Redirect root to login */}
           <Route path="/" element={<Navigate to="/login" replace />} />
