@@ -98,15 +98,32 @@ const Profile = () => {
     }
   };
 
-  // Thêm hàm tải danh sách học sinh
+  // Thêm hàm tải danh sách học sinh với thông tin chi tiết
   const loadStudentList = async (maPhuHuynh) => {
     try {
       setLoadingStudents(true);
-      const students = await parentApi.getHocSinhByPhuHuynh(maPhuHuynh);
+      
+      // Sử dụng API mới để lấy thông tin chi tiết
+      const students = await parentApi.getHocSinhDetailByPhuHuynh ? 
+        await parentApi.getHocSinhDetailByPhuHuynh(maPhuHuynh) :
+        await parentApi.getHocSinhByPhuHuynh(maPhuHuynh);
+        
       setStudentList(students || []);
+      
+      // Log để debug
+      console.log('Loaded students:', students);
+      
     } catch (error) {
       console.error('Error loading students:', error);
       setStudentList([]);
+      
+      // Fallback về API cũ nếu API mới lỗi
+      try {
+        const students = await parentApi.getHocSinhByPhuHuynh(maPhuHuynh);
+        setStudentList(students || []);
+      } catch (fallbackError) {
+        console.error('Fallback API also failed:', fallbackError);
+      }
     } finally {
       setLoadingStudents(false);
     }

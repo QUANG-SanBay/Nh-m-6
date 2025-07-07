@@ -2,6 +2,7 @@ package com.schoolhealth.controller;
 
 import com.schoolhealth.entity.HocSinh;
 import com.schoolhealth.entity.PhuHuynh;
+import com.schoolhealth.dto.HocSinhInfoDTO;
 import com.schoolhealth.service.PhuHuynhHocSinhService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -79,6 +80,21 @@ public class PhuHuynhHocSinhController {
         }
     }
     
+    // Lấy danh sách học sinh với thông tin chi tiết của phụ huynh
+    @GetMapping("/phu-huynh/{maPhuHuynh}/hoc-sinh-detail")
+    public ResponseEntity<?> getHocSinhDetailByPhuHuynh(@PathVariable String maPhuHuynh) {
+        try {
+            List<HocSinhInfoDTO> hocSinhDetailList = phuHuynhHocSinhService.getHocSinhInfoByPhuHuynh(maPhuHuynh);
+            return ResponseEntity.ok(Map.of(
+                "message", "Lấy thông tin chi tiết học sinh thành công",
+                "data", hocSinhDetailList,
+                "count", hocSinhDetailList.size()
+            ));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
+        }
+    }
+    
     // Hủy liên kết
     @DeleteMapping("/unlink/{maHocSinh}")
     public ResponseEntity<?> unlinkPhuHuynhFromHocSinh(@PathVariable String maHocSinh) {
@@ -87,6 +103,34 @@ public class PhuHuynhHocSinhController {
             return ResponseEntity.ok(Map.of(
                 "message", "Hủy liên kết thành công",
                 "data", result
+            ));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
+        }
+    }
+    
+    // Lấy thống kê học sinh của phụ huynh
+    @GetMapping("/phu-huynh/{maPhuHuynh}/thong-ke")
+    public ResponseEntity<?> getThongKeHocSinh(@PathVariable String maPhuHuynh) {
+        try {
+            List<HocSinh> hocSinhList = phuHuynhHocSinhService.getHocSinhByPhuHuynh(maPhuHuynh);
+            
+            // Thống kê cơ bản
+            int totalStudents = hocSinhList.size();
+            int studentsWithHealthRecords = (int) hocSinhList.stream()
+                .mapToLong(hs -> hs.getHoSoSucKhoeList() != null ? hs.getHoSoSucKhoeList().size() : 0)
+                .count();
+            
+            Map<String, Object> thongKe = Map.of(
+                "tongSoHocSinh", totalStudents,
+                "soHocSinhCoHoSo", studentsWithHealthRecords,
+                "soHocSinhChuaCoHoSo", totalStudents - studentsWithHealthRecords,
+                "danhSachHocSinh", hocSinhList
+            );
+            
+            return ResponseEntity.ok(Map.of(
+                "message", "Lấy thống kê thành công",
+                "data", thongKe
             ));
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));

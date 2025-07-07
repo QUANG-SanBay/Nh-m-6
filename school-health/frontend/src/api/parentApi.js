@@ -124,6 +124,50 @@ export const parentApi = {
       console.error('Error in createParent:', error);
       throw error;
     }
+  },
+
+  // Lấy danh sách học sinh của phụ huynh
+  getHocSinhByPhuHuynh: async (maPhuHuynh) => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/phu-huynh-hoc-sinh/phu-huynh/${maPhuHuynh}/hoc-sinh`);
+      if (!response.ok) {
+        throw new Error('Không thể lấy danh sách học sinh');
+      }
+      return await response.json();
+    } catch (error) {
+      console.error('Error fetching students:', error);
+      throw error;
+    }
+  },
+
+  // Lấy danh sách học sinh với thông tin chi tiết của phụ huynh
+  getHocSinhDetailByPhuHuynh: async (maPhuHuynh) => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/phu-huynh-hoc-sinh/phu-huynh/${maPhuHuynh}/hoc-sinh-detail`);
+      if (!response.ok) {
+        throw new Error('Không thể lấy thông tin chi tiết học sinh');
+      }
+      const result = await response.json();
+      return result.data || result;
+    } catch (error) {
+      console.error('Error fetching detailed students:', error);
+      throw error;
+    }
+  },
+
+  // Lấy thống kê học sinh của phụ huynh
+  getThongKeHocSinh: async (maPhuHuynh) => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/phu-huynh-hoc-sinh/phu-huynh/${maPhuHuynh}/thong-ke`);
+      if (!response.ok) {
+        throw new Error('Không thể lấy thống kê học sinh');
+      }
+      const result = await response.json();
+      return result.data || result;
+    } catch (error) {
+      console.error('Error fetching student statistics:', error);
+      throw error;
+    }
   }
 };
 export const sendMedicineRequest = async (data) => {
@@ -263,6 +307,36 @@ export const getHocSinhByPhuHuynh = async (maPhuHuynh) => {
     return await response.json();
   } catch (error) {
     console.error('Error fetching students:', error);
+    throw error;
+  }
+};
+
+// Lấy danh sách học sinh với thông tin chi tiết của phụ huynh
+export const getHocSinhDetailByPhuHuynh = async (maPhuHuynh) => {
+  try {
+    const response = await fetch(`${API_BASE_URL}/phu-huynh-hoc-sinh/phu-huynh/${maPhuHuynh}/hoc-sinh-detail`);
+    if (!response.ok) {
+      throw new Error('Không thể lấy thông tin chi tiết học sinh');
+    }
+    const result = await response.json();
+    return result.data || result;
+  } catch (error) {
+    console.error('Error fetching detailed students:', error);
+    throw error;
+  }
+};
+
+// Lấy thống kê học sinh của phụ huynh
+export const getThongKeHocSinh = async (maPhuHuynh) => {
+  try {
+    const response = await fetch(`${API_BASE_URL}/phu-huynh-hoc-sinh/phu-huynh/${maPhuHuynh}/thong-ke`);
+    if (!response.ok) {
+      throw new Error('Không thể lấy thống kê học sinh');
+    }
+    const result = await response.json();
+    return result.data || result;
+  } catch (error) {
+    console.error('Error fetching student statistics:', error);
     throw error;
   }
 };
