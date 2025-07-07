@@ -26,6 +26,20 @@ const VaccinationManagement = () => {
     }
   }, [view]);
 
+  const handleDeleteBatch = async (id) => {
+    if (window.confirm('Bạn có chắc chắn muốn xóa đợt tiêm chủng này?')) {
+      const res = await fetch(`http://localhost:8080/api/vaccination-batches/${id}`, {
+        method: 'DELETE'
+      });
+      if (res.ok) {
+        setBatches(prev => prev.filter(batch => batch.maChienDich !== id));
+        alert('Đã xóa thành công!');
+      } else {
+        alert('Xóa thất bại!');
+      }
+    }
+  };
+
   return (
     <div className="nurse-layout">
       <Header />
@@ -49,7 +63,7 @@ const VaccinationManagement = () => {
                     <th>Loại vắc-xin</th>
                     <th>Ngày diễn ra</th>
                     <th>Địa điểm</th>
-                    <th></th>
+                    <th>Hành động</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -61,6 +75,9 @@ const VaccinationManagement = () => {
                       <td>{batch.diaDiem}</td>
                       <td>
                         <button className="btn-blue" onClick={() => handleShowDetail(batch)}>Xem chi tiết</button>
+                      </td>
+                      <td>
+                        <button className="btn-red" onClick={() => handleDeleteBatch(batch.maChienDich)}>Xóa</button>
                       </td>
                     </tr>
                   ))}

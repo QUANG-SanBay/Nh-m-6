@@ -40,4 +40,20 @@ public class ChienDichTiemChungController {
     public ResponseEntity<?> getAllBatches() {
         return ResponseEntity.ok(repo.findAll());
     }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<?> getBatchById(@PathVariable String id) {
+        return repo.findById(id)
+            .map(ResponseEntity::ok)
+            .orElse(ResponseEntity.notFound().build());
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deleteBatch(@PathVariable String id) {
+        if (!repo.existsById(id)) {
+            return ResponseEntity.notFound().build();
+        }
+        repo.deleteById(id);
+        return ResponseEntity.ok().build();
+    }
 }
