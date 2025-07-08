@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { studentApi } from '../../api/studentApi';
+import { fetchStudentHealthRecord } from '../../api/studentApi';
 import './StudentHealth.css';
 
 const StudentHealthInfo = () => {
@@ -15,7 +15,7 @@ const StudentHealthInfo = () => {
 
     const fetchHealth = async () => {
       try {
-        const data = await studentApi.getStudentHealth(maHocSinh); // dùng getStudentHealth nếu đã có
+        const data = await fetchStudentHealthRecord(maHocSinh); // dùng getStudentHealth nếu đã có
         if (data) {
           setHealthInfo(data);
         } else {

@@ -253,7 +253,7 @@ const Profile = () => {
       <div className="profile-page">
         <Header activePage="profile" />
         <main className="profile-content">
-          <div className="profile-container">
+          <div className="profile-container-parent">
             <div className="loading-container">
               <div className="loading-spinner"></div>
               <p>Đang tải thông tin...</p>
@@ -270,7 +270,7 @@ const Profile = () => {
       <Header activePage="profile" />
 
       <main className="profile-content">
-        <div className="profile-container">
+        <div className="profile-container-parent">
           <div className="profile-header">
             <h1>Thông tin cá nhân</h1>
           </div>
@@ -282,7 +282,7 @@ const Profile = () => {
           )}
 
           <form onSubmit={handleSubmit} className="profile-form">
-            <div className="form-section">
+            <div className="form-section-parent">
               <h3>Thông tin cơ bản</h3>
               
               <div className="form-group">
@@ -357,7 +357,7 @@ const Profile = () => {
 
             {/* Thêm section mới cho thông tin học sinh */}
             {formData.maPhuHuynh && (
-              <div className="form-section">
+              <div className="form-section-parent">
                 <h3>Thông tin học sinh</h3>
                 
                 {loadingStudents ? (

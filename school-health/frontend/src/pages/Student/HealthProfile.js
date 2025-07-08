@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Header from '../../components/student/Header';
 import Footer from '../../components/student/Footer';
-import { studentApi } from '../../api/studentApi';
+import { fetchStudentHealthRecord, updateStudentHealthRecordByStudentId } from '../../api/studentApi';
 import { getUserRole, getToken } from '../../utils/auth';
 import './HealthProfile.css';
 import { useNavigate } from 'react-router-dom';
@@ -30,7 +30,7 @@ function HealthProfile() {
   useEffect(() => {
     const fetchHealth = async () => {
       try {
-        const data = await studentApi.getStudentHealth(maHocSinh);
+        const data = await fetchStudentHealthRecord(maHocSinh);
         const filledData = {
           maHoSo: data.maHoSo || '',
           chieuCao: data.chieuCao || '',
@@ -105,7 +105,7 @@ function HealthProfile() {
     }
 
     try {
-      const response = await studentApi.updateStudentHealth(cleanedData);
+      const response = await updateStudentHealthRecordByStudentId(maHocSinh, cleanedData);
       if (response?.data) {
         cleanedData.maHoSo = response.data.maHoSo;
       }

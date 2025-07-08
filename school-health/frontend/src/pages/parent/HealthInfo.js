@@ -224,7 +224,7 @@ const HealthInfo = () => {
   };
 
   return (
-    <div className="health-info-page">
+    <div className="health-info-page-parent">
       <Header activePage="health-info" />
       
       {loading && (

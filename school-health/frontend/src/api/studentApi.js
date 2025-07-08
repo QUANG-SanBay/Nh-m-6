@@ -28,6 +28,26 @@ export const fetchStudentById = async (studentId) => {
   }
 };
 
+// Update student by ID
+export const updateStudentById = async (studentId, studentData) => {
+  try {
+    const response = await fetch(`${API_URL}/hocsinh/${studentId}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(studentData)
+    });
+    if (!response.ok) {
+      throw new Error('Lỗi cập nhật thông tin học sinh');
+    }
+    return await response.json();
+  } catch (error) {
+    console.error("Lỗi gọi API:", error);
+    throw error;
+  }
+};
+
 // Fetch student health record by student ID
 export const fetchStudentHealthRecord = async (studentId) => {
   try {
@@ -62,11 +82,10 @@ export const updateStudentHealthRecordByStudentId = async (studentId, healthData
   }
 };
 
-
 // Create new student health record for a specific student
-export const createStudentHealthRecordForStudent = async (studentId, healthData) => {
+export const createStudentHealthRecord = async (healthData) => {
   try {
-    const response = await fetch(`${API_URL}/hoso-suckhoe/hocsinh/${studentId}/create`, {
+    const response = await fetch(`${API_URL}/hoso-suckhoe`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

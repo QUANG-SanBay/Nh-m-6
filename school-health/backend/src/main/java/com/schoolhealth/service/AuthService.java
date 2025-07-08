@@ -15,6 +15,7 @@ import com.schoolhealth.entity.NhanVienYTe;
 import com.schoolhealth.entity.PhuHuynh;
 import com.schoolhealth.entity.QuanLyNhaTruong;
 import com.schoolhealth.entity.QuanTriVien;
+import com.schoolhealth.repository.HoSoSucKhoeHocSinhRepository;
 import com.schoolhealth.repository.HocSinhRepository;
 import com.schoolhealth.repository.NhanVienYTeRepository;
 import com.schoolhealth.repository.PhuHuynhRepository;
@@ -29,13 +30,13 @@ public class AuthService {
     @Autowired private NhanVienYTeRepository nhanVienYTeRepository;
     @Autowired private QuanLyNhaTruongRepository quanLyNhaTruongRepository;
     @Autowired private QuanTriVienRepository quanTriVienRepository;
+    @Autowired private HoSoSucKhoeHocSinhRepository hoSoSucKhoeRepository;
 
     @Autowired private HocSinhService hocSinhService;
     @Autowired private PhuHuynhService phuHuynhService;
     @Autowired private NhanVienYTeService nhanVienYTeService;
     @Autowired private QuanLyNhaTruongService quanLyNhaTruongService;
     @Autowired private QuanTriVienService quanTriVienService;
-    @Autowired private HoSoSucKhoeService hoSoSucKhoeService;
 
     public AuthResponse login(LoginRequest request) {
         String tenDangNhap = request.getTenDangNhap();
@@ -103,7 +104,7 @@ public class AuthService {
                     HoSoSucKhoeHocSinh hoSo = new HoSoSucKhoeHocSinh();
                     hoSo.setHocSinh(hs); // Gán đối tượng HocSinh
                     hoSo.setNgayCapNhatCuoi(new Date());
-                    hoSoSucKhoeService.save(hoSo);
+                    hoSoSucKhoeRepository.save(hoSo);
 
                     return new AuthResponse(token, vaiTro, hs.getHoTen(), "Đăng ký thành công", true, hs.getMaHocSinh());
 

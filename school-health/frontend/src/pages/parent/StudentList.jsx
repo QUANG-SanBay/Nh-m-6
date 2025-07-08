@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { studentApi } from '../../api/studentApi';
+import { fetchStudents } from '../../api/studentApi';
 
 function StudentList() {
   const [students, setStudents] = useState([]);
@@ -8,7 +8,7 @@ function StudentList() {
   useEffect(() => {
     const load = async () => {
       try {
-        const data = await studentApi.getAllStudents();
+        const data = await fetchStudents();
         setStudents(data);
       } catch (error) {
         alert("Không thể tải dữ liệu.");

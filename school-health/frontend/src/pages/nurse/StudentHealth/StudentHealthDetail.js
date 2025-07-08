@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import Header from '../../../components/nurse/Header';
 import Footer from '../../../components/nurse/Footer';
-import { fetchStudentById, fetchStudentHealthRecord, updateStudentHealthRecord, createStudentHealthRecordForStudent } from '../../../api/studentApi';
+import { fetchStudentById, fetchStudentHealthRecord, updateStudentHealthRecordByStudentId, createStudentHealthRecord } from '../../../api/studentApi';
 import './StudentHealthDetail.css';
 
 const StudentHealthDetail = () => {
@@ -24,8 +24,13 @@ const StudentHealthDetail = () => {
         const studentData = await fetchStudentById(id);
         
         // Fetch health record
-        const healthRecords = await fetchStudentHealthRecord(id);
-        const latestHealthRecord = healthRecords && healthRecords.length > 0 ? healthRecords[0] : null;
+        let healthRecordData = null;
+        try {
+          healthRecordData = await fetchStudentHealthRecord(id);
+        } catch (healthError) {
+          // Health record might not exist, which is a valid case
+          console.log(`No health record found for student ${id}. A new one can be created.`);
+        }
         
         // Combine student data with health record
         const combinedData = {
@@ -36,24 +41,24 @@ const StudentHealthDetail = () => {
           dateOfBirth: studentData.ngaySinh,
           gender: studentData.gioiTinh,
           address: studentData.diaChi,
-          height: latestHealthRecord?.chieuCao || 0,
-          weight: latestHealthRecord?.canNang || 0,
-          bloodType: latestHealthRecord?.nhomMau || 'Chưa xác định',
-          vision: latestHealthRecord?.thiLuc || 'Chưa kiểm tra',
-          hearing: latestHealthRecord?.thinhLuc || 'Chưa kiểm tra',
-          teethCondition: latestHealthRecord?.ketQuaRangMieng || 'Chưa kiểm tra',
-          generalHealth: latestHealthRecord?.tinhTrangSucKhoe || 'Chưa đánh giá',
-          allergies: latestHealthRecord?.diUng || 'Không có',
-          chronicDiseases: latestHealthRecord?.benhManTinh || 'Không có',
-          medicalHistory: latestHealthRecord?.tienSuDieuTri || 'Không có',
-          vaccinationHistory: latestHealthRecord?.lichSuTiemChung || 'Chưa cập nhật',
-          notes: latestHealthRecord?.ghiChu || '',
-          lastExamDate: latestHealthRecord?.ngayCapNhatCuoi || 'Chưa cập nhật',
-          avatar: latestHealthRecord?.anhHocSinh || 'https://via.placeholder.com/150'
+          height: healthRecordData?.chieuCao || 0,
+          weight: healthRecordData?.canNang || 0,
+          bloodType: healthRecordData?.nhomMau || 'Chưa xác định',
+          vision: healthRecordData?.thiLuc || 'Chưa kiểm tra',
+          hearing: healthRecordData?.thinhLuc || 'Chưa kiểm tra',
+          teethCondition: healthRecordData?.ketQuaRangMieng || 'Chưa kiểm tra',
+          generalHealth: healthRecordData?.tinhTrangSucKhoe || 'Chưa đánh giá',
+          allergies: healthRecordData?.diUng || 'Không có',
+          chronicDiseases: healthRecordData?.benhManTinh || 'Không có',
+          medicalHistory: healthRecordData?.tienSuDieuTri || 'Không có',
+          vaccinationHistory: healthRecordData?.lichSuTiemChung || 'Chưa cập nhật',
+          notes: healthRecordData?.ghiChu || '',
+          lastExamDate: healthRecordData?.ngayCapNhatCuoi || 'Chưa cập nhật',
+          avatar: healthRecordData?.anhHocSinh || 'https://via.placeholder.com/150'
         };
         
         setStudentHealth(combinedData);
-        setHealthRecord(latestHealthRecord);
+        setHealthRecord(healthRecordData);
         
       } catch (error) {
         console.error('Error loading student data:', error);
@@ -86,29 +91,40 @@ const StudentHealthDetail = () => {
         anhHocSinh: studentHealth.avatar
       };
       
-      if (healthRecord) {
+      if (healthRecord && healthRecord.maHoSo) {
         // Update existing health record
         const updatedRecord = {
           ...healthRecord,
           ...healthData
         };
         
-        await updateStudentHealthRecord(healthRecord.maHoSo, updatedRecord);
+        await updateStudentHealthRecordByStudentId(id, updatedRecord);
         alert('Cập nhật hồ sơ sức khỏe thành công!');
       } else {
         // Create new health record
-        const result = await createStudentHealthRecordForStudent(id, healthData);
-        if (result.data) {
-          setHealthRecord(result.data);
-          alert('Tạo hồ sơ sức khỏe thành công!');
-        }
+        const healthDataForCreation = {
+            ...healthData,
+            maHocSinh: id
+        };
+        const result = await createStudentHealthRecord(healthDataForCreation);
+        setHealthRecord(result); // Save the newly created record info
+        alert('Tạo mới hồ sơ sức khỏe thành công!');
       }
       
       setIsEditing(false);
+      // Reload data to show the latest updates
+      loadStudentData();
+
     } catch (error) {
-      console.error('Error saving health record:', error);
-      alert('Có lỗi xảy ra khi lưu hồ sơ sức khỏe. Vui lòng thử lại.');
+      console.error('Error saving student health data:', error);
+      setError('Không thể lưu thông tin sức khỏe. Vui lòng thử lại.');
     }
+  };
+
+  const handleCancel = () => {
+    setIsEditing(false);
+    // Optionally, you can reload the data to discard unsaved changes
+    // loadStudentData();
   };
 
   const handleInputChange = (e) => {
@@ -522,4 +538,4 @@ const StudentHealthDetail = () => {
   );
 };
 
-export default StudentHealthDetail; 
+export default StudentHealthDetail;

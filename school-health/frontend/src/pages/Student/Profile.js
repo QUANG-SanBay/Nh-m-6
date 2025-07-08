@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import './Profile.css';
 import Header from '../../components/student/Header';
 import Footer from '../../components/student/Footer';
-import { studentApi } from '../../api/studentApi';
+import { fetchStudentById, updateStudentById } from '../../api/studentApi';
 import { getUserId } from '../../utils/auth';
 const StudentProfile = () => {
   const maHocSinh = getUserId();
@@ -26,7 +26,7 @@ const StudentProfile = () => {
   useEffect(() => {
     const fetchStudent = async () => {
       try {
-        const data = await studentApi.getStudentById(maHocSinh);
+        const data = await fetchStudentById(maHocSinh);
         setFormData(data);
         setOriginalData(data); // lưu bản gốc để so sánh
       } catch (error) {
@@ -51,7 +51,7 @@ const StudentProfile = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await studentApi.updateStudentProfile(maHocSinh, formData);
+      await updateStudentById(maHocSinh, formData);
       alert('✅ Hồ sơ đã được cập nhật');
       setOriginalData(formData); // cập nhật lại bản gốc
       setIsEditing(false);

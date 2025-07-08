@@ -1,7 +1,6 @@
 package com.schoolhealth.controller;
 
 import java.util.Map;
-import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -12,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.schoolhealth.dto.HoSoSucKhoeDTO;
+import com.schoolhealth.entity.HoSoSucKhoeHocSinh;
 import com.schoolhealth.service.HoSoSucKhoeService;
 
 @RestController
@@ -23,11 +22,10 @@ public class StudentHealthController {
     @Autowired
     private HoSoSucKhoeService hoSoSucKhoeService;
 
-    @PutMapping("/{maHoSo}")
-    public ResponseEntity<?> updateHealthFromStudent(@PathVariable String maHoSo, @RequestBody HoSoSucKhoeDTO dto) {
+    @PutMapping("/hocsinh/{maHocSinh}/update")
+    public ResponseEntity<?> updateHealthFromStudent(@PathVariable String maHocSinh, @RequestBody HoSoSucKhoeHocSinh hoSoData) {
         try {
-            dto.setMaHoSo(UUID.fromString(maHoSo));
-            HoSoSucKhoeDTO updated = hoSoSucKhoeService.updateFromStudent(dto);
+            HoSoSucKhoeHocSinh updated = hoSoSucKhoeService.updateHoSoSucKhoeByStudentId(maHocSinh, hoSoData);
             return ResponseEntity.ok(Map.of(
                 "message", "✅ Cập nhật từ học sinh thành công",
                 "data", updated
@@ -36,4 +34,4 @@ public class StudentHealthController {
             return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
         }
     }
-} 
+}
