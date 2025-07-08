@@ -1,37 +1,103 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import Header from '../../../components/nurse/Header';
 import Footer from '../../../components/nurse/Footer';
+import { fetchStudentById, fetchStudentHealthRecord, updateStudentHealthRecord } from '../../../api/studentApi';
 import './StudentHealthDetail.css';
 
 const StudentHealthDetail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const [isEditing, setIsEditing] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [studentHealth, setStudentHealth] = useState(null);
+  const [healthRecord, setHealthRecord] = useState(null);
 
-  // Mock data - replace with API call
-  const [studentHealth, setStudentHealth] = useState({
-    id: id,
-    name: 'Nguyễn Văn A',
-    studentId: 'HS001',
-    class: '10A1',
-    dateOfBirth: '2008-05-15',
-    gender: 'Nam',
-    address: '123 Đường ABC, Quận 1, TP.HCM',
-    height: 165,
-    weight: 55,
-    bloodType: 'A+',
-    vision: '20/20',
-    teethCondition: 'Tốt',
-    generalHealth: 'Bình thường',
-    specialConditions: 'Không có',
-    lastExamDate: '2024-01-15',
-    avatar: 'https://via.placeholder.com/150' // Thêm avatar mặc định
-  });
+  // Load student and health record data
+  useEffect(() => {
+    const loadStudentData = async () => {
+      try {
+        setLoading(true);
+        
+        // Fetch student basic info
+        const studentData = await fetchStudentById(id);
+        
+        // Fetch health record
+        const healthRecords = await fetchStudentHealthRecord(id);
+        const latestHealthRecord = healthRecords && healthRecords.length > 0 ? healthRecords[0] : null;
+        
+        // Combine student data with health record
+        const combinedData = {
+          id: studentData.maHocSinh,
+          name: studentData.hoTen,
+          studentId: studentData.maHocSinh,
+          class: studentData.lop,
+          dateOfBirth: studentData.ngaySinh,
+          gender: studentData.gioiTinh,
+          address: studentData.diaChi,
+          height: latestHealthRecord?.chieuCao || 0,
+          weight: latestHealthRecord?.canNang || 0,
+          bloodType: latestHealthRecord?.nhomMau || 'Chưa xác định',
+          vision: latestHealthRecord?.thiLuc || 'Chưa kiểm tra',
+          hearing: latestHealthRecord?.thinhLuc || 'Chưa kiểm tra',
+          teethCondition: latestHealthRecord?.ketQuaRangMieng || 'Chưa kiểm tra',
+          generalHealth: latestHealthRecord?.tinhTrangSucKhoe || 'Chưa đánh giá',
+          allergies: latestHealthRecord?.diUng || 'Không có',
+          chronicDiseases: latestHealthRecord?.benhManTinh || 'Không có',
+          medicalHistory: latestHealthRecord?.tienSuDieuTri || 'Không có',
+          vaccinationHistory: latestHealthRecord?.lichSuTiemChung || 'Chưa cập nhật',
+          notes: latestHealthRecord?.ghiChu || '',
+          lastExamDate: latestHealthRecord?.ngayCapNhatCuoi || 'Chưa cập nhật',
+          avatar: latestHealthRecord?.anhHocSinh || 'https://via.placeholder.com/150'
+        };
+        
+        setStudentHealth(combinedData);
+        setHealthRecord(latestHealthRecord);
+        
+      } catch (error) {
+        console.error('Error loading student data:', error);
+        setError('Không thể tải thông tin học sinh. Vui lòng thử lại.');
+      } finally {
+        setLoading(false);
+      }
+    };
 
-  const handleSave = () => {
-    // API call to save changes
-    setIsEditing(false);
+    if (id) {
+      loadStudentData();
+    }
+  }, [id]);
+
+  const handleSave = async () => {
+    try {
+      if (healthRecord) {
+        // Update existing health record
+        const updatedRecord = {
+          ...healthRecord,
+          chieuCao: parseFloat(studentHealth.height) || 0,
+          canNang: parseFloat(studentHealth.weight) || 0,
+          nhomMau: studentHealth.bloodType,
+          thiLuc: studentHealth.vision,
+          thinhLuc: studentHealth.hearing,
+          ketQuaRangMieng: studentHealth.teethCondition,
+          tinhTrangSucKhoe: studentHealth.generalHealth,
+          diUng: studentHealth.allergies,
+          benhManTinh: studentHealth.chronicDiseases,
+          tienSuDieuTri: studentHealth.medicalHistory,
+          lichSuTiemChung: studentHealth.vaccinationHistory,
+          ghiChu: studentHealth.notes,
+          anhHocSinh: studentHealth.avatar
+        };
+        
+        await updateStudentHealthRecord(healthRecord.maHoSo, updatedRecord);
+        alert('Cập nhật hồ sơ sức khỏe thành công!');
+      }
+      
+      setIsEditing(false);
+    } catch (error) {
+      console.error('Error saving health record:', error);
+      alert('Có lỗi xảy ra khi cập nhật hồ sơ sức khỏe. Vui lòng thử lại.');
+    }
   };
 
   const handleInputChange = (e) => {
@@ -41,6 +107,116 @@ const StudentHealthDetail = () => {
       [name]: value
     }));
   };
+
+  if (loading) {
+    return (
+      <div className="nurse-layout">
+        <Header />
+        <main className="health-detail-main">
+          <div className="loading-container">
+            <div className="loading-spinner"></div>
+            <p>Đang tải thông tin học sinh...</p>
+          </div>
+        </main>
+        <Footer />
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="nurse-layout">
+        <Header />
+        <main className="health-detail-main">
+          <div className="error-container">
+            <div className="error-message">
+              <i className="fas fa-exclamation-triangle"></i>
+              <p>{error}</p>
+              <button onClick={() => window.location.reload()} className="retry-button">
+                Thử lại
+              </button>
+            </div>
+          </div>
+        </main>
+        <Footer />
+      </div>
+    );
+  }
+
+  if (!studentHealth) {
+    return (
+      <div className="nurse-layout">
+        <Header />
+        <main className="health-detail-main">
+          <div className="error-container">
+            <div className="error-message">
+              <i className="fas fa-exclamation-triangle"></i>
+              <p>Không tìm thấy thông tin học sinh.</p>
+              <button onClick={() => navigate('/nurse/student-health')} className="retry-button">
+                Quay lại danh sách
+              </button>
+            </div>
+          </div>
+        </main>
+        <Footer />
+      </div>
+    );
+  }
+
+  if (loading) {
+    return (
+      <div className="nurse-layout">
+        <Header />
+        <main className="health-detail-main">
+          <div className="loading-container">
+            <div className="loading-spinner"></div>
+            <p>Đang tải thông tin học sinh...</p>
+          </div>
+        </main>
+        <Footer />
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="nurse-layout">
+        <Header />
+        <main className="health-detail-main">
+          <div className="error-container">
+            <div className="error-message">
+              <i className="fas fa-exclamation-triangle"></i>
+              <p>{error}</p>
+              <button onClick={() => navigate('/nurse/student-health')} className="retry-button">
+                Quay lại danh sách
+              </button>
+            </div>
+          </div>
+        </main>
+        <Footer />
+      </div>
+    );
+  }
+
+  if (!studentHealth) {
+    return (
+      <div className="nurse-layout">
+        <Header />
+        <main className="health-detail-main">
+          <div className="error-container">
+            <div className="error-message">
+              <i className="fas fa-user-slash"></i>
+              <p>Không tìm thấy thông tin học sinh</p>
+              <button onClick={() => navigate('/nurse/student-health')} className="retry-button">
+                Quay lại danh sách
+              </button>
+            </div>
+          </div>
+        </main>
+        <Footer />
+      </div>
+    );
+  }
 
   return (
     <div className="nurse-layout">
@@ -224,6 +400,19 @@ const StudentHealthDetail = () => {
                   )}
                 </div>
                 <div className="info-group">
+                  <label>Thính lực</label>
+                  {isEditing ? (
+                    <input
+                      type="text"
+                      name="hearing"
+                      value={studentHealth.hearing}
+                      onChange={handleInputChange}
+                    />
+                  ) : (
+                    <span>{studentHealth.hearing}</span>
+                  )}
+                </div>
+                <div className="info-group">
                   <label>Tình trạng răng miệng</label>
                   {isEditing ? (
                     <input
@@ -249,29 +438,68 @@ const StudentHealthDetail = () => {
                   )}
                 </div>
                 <div className="info-group full-width">
-                  <label>Bệnh đặc biệt</label>
+                  <label>Dị ứng</label>
                   {isEditing ? (
                     <textarea
-                      name="specialConditions"
-                      value={studentHealth.specialConditions}
+                      name="allergies"
+                      value={studentHealth.allergies}
                       onChange={handleInputChange}
                     />
                   ) : (
-                    <span>{studentHealth.specialConditions}</span>
+                    <span>{studentHealth.allergies}</span>
+                  )}
+                </div>
+                <div className="info-group full-width">
+                  <label>Bệnh mãn tính</label>
+                  {isEditing ? (
+                    <textarea
+                      name="chronicDiseases"
+                      value={studentHealth.chronicDiseases}
+                      onChange={handleInputChange}
+                    />
+                  ) : (
+                    <span>{studentHealth.chronicDiseases}</span>
+                  )}
+                </div>
+                <div className="info-group full-width">
+                  <label>Tiền sử điều trị</label>
+                  {isEditing ? (
+                    <textarea
+                      name="medicalHistory"
+                      value={studentHealth.medicalHistory}
+                      onChange={handleInputChange}
+                    />
+                  ) : (
+                    <span>{studentHealth.medicalHistory}</span>
+                  )}
+                </div>
+                <div className="info-group full-width">
+                  <label>Lịch sử tiêm chủng</label>
+                  {isEditing ? (
+                    <textarea
+                      name="vaccinationHistory"
+                      value={studentHealth.vaccinationHistory}
+                      onChange={handleInputChange}
+                    />
+                  ) : (
+                    <span>{studentHealth.vaccinationHistory}</span>
+                  )}
+                </div>
+                <div className="info-group full-width">
+                  <label>Ghi chú</label>
+                  {isEditing ? (
+                    <textarea
+                      name="notes"
+                      value={studentHealth.notes}
+                      onChange={handleInputChange}
+                    />
+                  ) : (
+                    <span>{studentHealth.notes}</span>
                   )}
                 </div>
                 <div className="info-group">
-                  <label>Ngày khám gần nhất</label>
-                  {isEditing ? (
-                    <input
-                      type="date"
-                      name="lastExamDate"
-                      value={studentHealth.lastExamDate}
-                      onChange={handleInputChange}
-                    />
-                  ) : (
-                    <span>{new Date(studentHealth.lastExamDate).toLocaleDateString('vi-VN')}</span>
-                  )}
+                  <label>Ngày cập nhật cuối</label>
+                  <span>{studentHealth.lastExamDate ? new Date(studentHealth.lastExamDate).toLocaleDateString('vi-VN') : 'Chưa cập nhật'}</span>
                 </div>
               </div>
             </div>

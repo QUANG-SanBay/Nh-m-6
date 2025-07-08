@@ -1,6 +1,8 @@
 package com.schoolhealth.entity;
 
 import jakarta.persistence.*;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import java.util.Date;
 import java.util.List;
 
@@ -19,18 +21,23 @@ public class HocSinh extends NguoiDung {
 
     @ManyToOne
     @JoinColumn(name = "ma_phu_huynh", referencedColumnName = "maPhuHuynh")
+    @JsonIgnore
     private PhuHuynh phuHuynh;
 
     @OneToMany(mappedBy = "hocSinh")
+    @JsonIgnore
     private List<HoSoSucKhoeHocSinh> hoSoSucKhoeList;
 
     @OneToMany(mappedBy = "hocSinh")
+    @JsonIgnore
     private List<SuKienYTe> suKienYTeList;
 
     @OneToMany(mappedBy = "hocSinh")
+    @JsonIgnore
     private List<HoSoTiemChung> hoSoTiemChungList;
 
     @OneToMany(mappedBy = "hocSinh")
+    @JsonIgnore
     private List<HoSoKiemTraYTe> hoSoKiemTraYTeList;
 
     public String getMaHocSinh() { return maHocSinh; }

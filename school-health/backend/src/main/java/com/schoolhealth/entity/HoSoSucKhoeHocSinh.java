@@ -1,6 +1,7 @@
 package com.schoolhealth.entity;
 
 import jakarta.persistence.*;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.Date;
 import java.util.UUID;
 
@@ -19,6 +20,8 @@ public class HoSoSucKhoeHocSinh {
     private double chieuCao;  // Thêm trường chiều cao
     private double canNang;   // Thêm trường cân nặng
     private String ketQuaRangMieng; // Thêm trường kết quả răng miệng
+    private String nhomMau;   // Thêm trường nhóm máu
+    private String tinhTrangSucKhoe; // Thêm trường tình trạng sức khỏe
     @Lob
     @Column(columnDefinition = "TEXT")
     private String anhHocSinh; // Thêm trường ảnh học sinh
@@ -28,10 +31,12 @@ public class HoSoSucKhoeHocSinh {
 
     @ManyToOne
     @JoinColumn(name = "ma_hoc_sinh", referencedColumnName = "maHocSinh")
+    @JsonIgnore
     private HocSinh hocSinh;
 
     @ManyToOne
     @JoinColumn(name = "ma_nhan_vien_y_te", referencedColumnName = "maNhanVienYTe")
+    @JsonIgnore
     private NhanVienYTe nhanVienYTe;
 
     // Constructor tạo ID mới nếu cần
@@ -75,4 +80,8 @@ public class HoSoSucKhoeHocSinh {
     public void setKetQuaRangMieng(String ketQuaRangMieng) { this.ketQuaRangMieng = ketQuaRangMieng; }
     public String getAnhHocSinh() { return anhHocSinh; }
     public void setAnhHocSinh(String anhHocSinh) { this.anhHocSinh = anhHocSinh; }
+    public String getNhomMau() { return nhomMau; }
+    public void setNhomMau(String nhomMau) { this.nhomMau = nhomMau; }
+    public String getTinhTrangSucKhoe() { return tinhTrangSucKhoe; }
+    public void setTinhTrangSucKhoe(String tinhTrangSucKhoe) { this.tinhTrangSucKhoe = tinhTrangSucKhoe; }
 }
