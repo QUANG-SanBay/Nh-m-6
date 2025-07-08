@@ -29,16 +29,16 @@ const Header = () => {
               <i className=""></i>Quản lí tài khoản
             </Link></li>
             <li><Link to="" className="nav-link">
-              <i className="fas fa-notes-medical"></i>
+              <i className=""></i>
             </Link></li>
             <li><Link to="" className="nav-link">
-              <i className="fas fa-medkit"></i>
+              <i className=""></i>
             </Link></li>
             <li><Link to="/nurse/vaccination-management" className="nav-link">
               <i className=""></i>
             </Link></li>
             <li><Link to="" className="nav-link">
-              <i className="fas fa-stethoscope"></i>
+              <i className=""></i>
             </Link></li>
             
           </ul>

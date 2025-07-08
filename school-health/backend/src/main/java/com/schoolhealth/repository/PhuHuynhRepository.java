@@ -19,4 +19,6 @@ public interface PhuHuynhRepository extends JpaRepository<PhuHuynh, String> {
     PhuHuynh findByHoTen(@Param("hoTen") String hoTen);
     
     boolean existsById(String maPhuHuynh);
+    void deleteByTenDangNhap(String tenDangNhap);
+
 }

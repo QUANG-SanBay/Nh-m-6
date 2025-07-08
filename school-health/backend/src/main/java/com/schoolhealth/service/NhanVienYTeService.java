@@ -83,4 +83,18 @@ public class NhanVienYTeService {
     public void deleteNhanVienYTe(String maNhanVienYTe) {
         nhanVienYTeRepository.deleteById(maNhanVienYTe);
     }
+  
+
+    public List<NhanVienYTe> findAll() {
+        return getAllNhanVienYTe();
+    }
+
+    public Optional<NhanVienYTe> findById(String id) {
+        return getNhanVienYTeById(id);
+    }
+
+    public void deleteById(String id) {
+        deleteNhanVienYTe(id);
+    }
+
 }

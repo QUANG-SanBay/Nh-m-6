@@ -63,4 +63,9 @@ public class HocSinh extends NguoiDung {
             System.out.println("Warning: HocSinh ID was not set before persist!");
         }
     }
+    @Transient
+    public String getId() {
+        return this.maHocSinh;
+    }
+
 } 

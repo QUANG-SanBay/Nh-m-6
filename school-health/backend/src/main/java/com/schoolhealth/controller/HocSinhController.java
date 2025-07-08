@@ -3,6 +3,7 @@ package com.schoolhealth.controller;
 import com.schoolhealth.entity.HocSinh;
 import com.schoolhealth.service.HocSinhService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -37,7 +38,12 @@ public class HocSinhController {
     }
 
     @DeleteMapping("/{id}")
-    public void delete(@PathVariable String id) {
-        hocSinhService.deleteById(id);
+    public ResponseEntity<?> delete(@PathVariable String id) {
+        try {
+            hocSinhService.deleteById(id);
+            return ResponseEntity.ok().body("Xoá học sinh thành công");
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Không thể xoá học sinh: " + e.getMessage());
+        }
     }
-} 
+}

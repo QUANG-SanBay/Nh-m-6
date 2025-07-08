@@ -9,4 +9,6 @@ public interface HocSinhRepository extends JpaRepository<HocSinh, String> {
     HocSinh findByTenDangNhap(String tenDangNhap);
     List<HocSinh> findByPhuHuynh_MaPhuHuynh(String maPhuHuynh);
     List<HocSinh> findByPhuHuynhIsNull(); // Tìm học sinh chưa có phụ huynh
+    void deleteByTenDangNhap(String tenDangNhap);
+
 }

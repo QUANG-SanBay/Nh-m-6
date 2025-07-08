@@ -22,31 +22,31 @@ import java.util.UUID;
 public class AuthService {
     @Autowired
     private HocSinhRepository hocSinhRepository;
-    
+
     @Autowired
     private PhuHuynhRepository phuHuynhRepository;
-    
+
     @Autowired
     private NhanVienYTeRepository nhanVienYTeRepository;
-    
+
     @Autowired
     private QuanLyNhaTruongRepository quanLyNhaTruongRepository;
-    
+
     @Autowired
     private QuanTriVienRepository quanTriVienRepository;
 
     @Autowired
     private HocSinhService hocSinhService;
-    
+
     @Autowired
     private PhuHuynhService phuHuynhService;
-    
+
     @Autowired
     private NhanVienYTeService nhanVienYTeService;
-    
+
     @Autowired
     private QuanLyNhaTruongService quanLyNhaTruongService;
-    
+
     @Autowired
     private QuanTriVienService quanTriVienService;
 
@@ -105,7 +105,7 @@ public class AuthService {
                     hocSinh.setSoDienThoai(request.getSoDienThoai());
                     hocSinh.setVaiTro(request.getVaiTro());
                     hocSinh.setHoTen(request.getHoTen());
-                    
+
                     hocSinhService.save(hocSinh);
                     return new AuthResponse("token-" + UUID.randomUUID(), "HOC_SINH", hocSinh.getHoTen(), "Đăng ký thành công", true);
 
@@ -117,7 +117,7 @@ public class AuthService {
                     phuHuynh.setSoDienThoai(request.getSoDienThoai());
                     phuHuynh.setVaiTro(request.getVaiTro());
                     phuHuynh.setHoTen(request.getHoTen());
-                    
+
                     phuHuynhService.save(phuHuynh);
                     return new AuthResponse("token-" + UUID.randomUUID(), "PHU_HUYNH", phuHuynh.getHoTen(), "Đăng ký thành công", true);
 
@@ -129,7 +129,7 @@ public class AuthService {
                     nhanVienYTe.setSoDienThoai(request.getSoDienThoai());
                     nhanVienYTe.setVaiTro(request.getVaiTro());
                     nhanVienYTe.setHoTen(request.getHoTen());
-                    
+
                     nhanVienYTeService.save(nhanVienYTe);
                     return new AuthResponse("token-" + UUID.randomUUID(), "NHAN_VIEN_Y_TE", nhanVienYTe.getHoTen(), "Đăng ký thành công", true);
 
@@ -141,7 +141,7 @@ public class AuthService {
                     quanLyNhaTruong.setSoDienThoai(request.getSoDienThoai());
                     quanLyNhaTruong.setVaiTro(request.getVaiTro());
                     quanLyNhaTruong.setHoTen(request.getHoTen());
-                    
+
                     quanLyNhaTruongService.save(quanLyNhaTruong);
                     return new AuthResponse("token-" + UUID.randomUUID(), "QUAN_LY_NHA_TRUONG", quanLyNhaTruong.getHoTen(), "Đăng ký thành công", true);
 
@@ -153,7 +153,7 @@ public class AuthService {
                     quanTriVien.setSoDienThoai(request.getSoDienThoai());
                     quanTriVien.setVaiTro(request.getVaiTro());
                     quanTriVien.setHoTen(request.getHoTen());
-                    
+
                     quanTriVienService.save(quanTriVien);
                     return new AuthResponse("token-" + UUID.randomUUID(), "QUAN_TRI_VIEN", quanTriVien.getHoTen(), "Đăng ký thành công", true);
 
