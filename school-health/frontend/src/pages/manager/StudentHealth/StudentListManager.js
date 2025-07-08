@@ -1,23 +1,76 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import Header from '../../../components/manager/Header.js';
-import Footer from '../../../components/manager/Footer.js';
-import { students as defaultStudents } from '../../../data/studentsdata.js';
+import Header from '../../../components/manager/Header';
+import Footer from '../../../components/manager/Footer';
+import { fetchStudents, fetchStudentHealthRecord } from '../../../api/studentApi';
 import './StudentList.css';
 
-const StudentList = () => {
+const StudentListManager = () => {
   const [searchTerm, setSearchTerm] = useState('');
+  const [students, setStudents] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const location = useLocation();
 
-  const [students, setStudents] = useState(defaultStudents);
+  // Load students from API
+  useEffect(() => {
+    const loadStudents = async () => {
+      try {
+        setLoading(true);
+        const studentsData = await fetchStudents();
+        
+        // For each student, try to get their health record to determine status
+        const studentsWithHealthInfo = await Promise.all(
+          studentsData.map(async (student) => {
+            try {
+              const healthRecords = await fetchStudentHealthRecord(student.maHocSinh);
+              const latestHealthRecord = healthRecords && healthRecords.length > 0 ? healthRecords[0] : null;
+              
+              // Determine health status based on health record
+              let healthStatus = 'Chưa có thông tin';
+              if (latestHealthRecord) {
+                if (latestHealthRecord.benhManTinh && latestHealthRecord.benhManTinh.trim() !== '') {
+                  healthStatus = 'Cần theo dõi';
+                } else if (latestHealthRecord.diUng && latestHealthRecord.diUng.trim() !== '') {
+                  healthStatus = 'Cần lưu ý';
+                } else {
+                  healthStatus = 'Bình thường';
+                }
+              }
+              
+              return {
+                id: student.maHocSinh,
+                name: student.hoTen,
+                class: student.lop,
+                studentId: student.maHocSinh,
+                healthStatus: healthStatus,
+                healthRecord: latestHealthRecord
+              };
+            } catch (error) {
+              console.error(`Error loading health record for student ${student.maHocSinh}:`, error);
+              return {
+                id: student.maHocSinh,
+                name: student.hoTen,
+                class: student.lop,
+                studentId: student.maHocSinh,
+                healthStatus: 'Chưa có thông tin',
+                healthRecord: null
+              };
+            }
+          })
+        );
+        
+        setStudents(studentsWithHealthInfo);
+      } catch (error) {
+        console.error('Error loading students:', error);
+        setError('Không thể tải danh sách học sinh. Vui lòng thử lại.');
+      } finally {
+        setLoading(false);
+      }
+    };
 
-  // // Mock data - replace with API call later
-  // const [students, setStudents] = useState([
-  //   { id: 1, name: 'Nguyễn Văn A', class: '10A1', studentId: 'HS001', healthStatus: 'Bình thường', height: 165, weight: 55, bloodType: 'O+', allergies: ['Hải sản'], medicalHistory: ['Đau dạ dày'] },
-  //   { id: 2, name: 'Trần Thị B', class: '10A2', studentId: 'HS002', healthStatus: 'Cần theo dõi', height: 160, weight: 50, bloodType: 'A+', allergies: [], medicalHistory: ['Hen suyễn'] },
-  //   { id: 3, name: 'Phạm Văn C', class: '10A1', studentId: 'HS003', healthStatus: 'Bình thường', height: 170, weight: 60, bloodType: 'B+', allergies: [], medicalHistory: [] },
-  //   { id: 4, name: 'Lê Thị D', class: '10A3', studentId: 'HS004', healthStatus: 'Đang điều trị', height: 155, weight: 48, bloodType: 'AB+', allergies: ['Phấn hoa'], medicalHistory: [] },
-  // ]);
+    loadStudents();
+  }, []);
 
   useEffect(() => {
     // Nhận và cập nhật học sinh từ trang Edit
@@ -38,6 +91,41 @@ const StudentList = () => {
     student.class.toLowerCase().includes(searchTerm.toLowerCase()) ||
     student.studentId.toLowerCase().includes(searchTerm.toLowerCase())
   );
+
+  if (loading) {
+    return (
+      <div className="nurse-layout">
+        <Header />
+        <main className="student-list-main">
+          <div className="loading-container">
+            <div className="loading-spinner"></div>
+            <p>Đang tải danh sách học sinh...</p>
+          </div>
+        </main>
+        <Footer />
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="nurse-layout">
+        <Header />
+        <main className="student-list-main">
+          <div className="error-container">
+            <div className="error-message">
+              <i className="fas fa-exclamation-triangle"></i>
+              <p>{error}</p>
+              <button onClick={() => window.location.reload()} className="retry-button">
+                Thử lại
+              </button>
+            </div>
+          </div>
+        </main>
+        <Footer />
+      </div>
+    );
+  }
 
   return (
     <div className="nurse-layout">
@@ -101,4 +189,4 @@ const StudentList = () => {
   );
 };
 
-export default StudentList; 
+export default StudentListManager;
