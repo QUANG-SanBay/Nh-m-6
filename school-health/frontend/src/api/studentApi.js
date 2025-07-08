@@ -1,6 +1,6 @@
 const API_URL = 'http://localhost:8080/api';
 
-// Fetch all students
+// ✅ Lấy danh sách học sinh
 export const fetchStudents = async () => {
   try {
     const response = await fetch(`${API_URL}/hocsinh`);
@@ -14,7 +14,7 @@ export const fetchStudents = async () => {
   }
 };
 
-// Fetch student by ID
+// ✅ Lấy thông tin học sinh theo ID
 export const fetchStudentById = async (studentId) => {
   try {
     const response = await fetch(`${API_URL}/hocsinh/${studentId}`);
@@ -28,7 +28,7 @@ export const fetchStudentById = async (studentId) => {
   }
 };
 
-// Update student by ID
+// ✅ Cập nhật thông tin học sinh
 export const updateStudentById = async (studentId, studentData) => {
   try {
     const response = await fetch(`${API_URL}/hocsinh/${studentId}`, {
@@ -48,10 +48,10 @@ export const updateStudentById = async (studentId, studentData) => {
   }
 };
 
-// Fetch student health record by student ID
+// ✅ Lấy hồ sơ sức khỏe học sinh (route riêng cho học sinh)
 export const fetchStudentHealthRecord = async (studentId) => {
   try {
-    const response = await fetch(`${API_URL}/hoso-suckhoe/hocsinh/${studentId}`);
+    const response = await fetch(`${API_URL}/student/health-profile/${studentId}`);
     if (!response.ok) {
       throw new Error('Lỗi khi lấy hồ sơ sức khỏe');
     }
@@ -62,10 +62,10 @@ export const fetchStudentHealthRecord = async (studentId) => {
   }
 };
 
-// Update student health record by student ID
+// ✅ Cập nhật hồ sơ sức khỏe học sinh (route riêng cho học sinh)
 export const updateStudentHealthRecordByStudentId = async (studentId, healthData) => {
   try {
-    const response = await fetch(`${API_URL}/hoso-suckhoe/hocsinh/${studentId}/update`, {
+    const response = await fetch(`${API_URL}/student/health-profile/${studentId}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
@@ -82,7 +82,7 @@ export const updateStudentHealthRecordByStudentId = async (studentId, healthData
   }
 };
 
-// Create new student health record for a specific student
+// ❌ (Không dùng cho học sinh) - API tạo mới hồ sơ sức khỏe dành cho admin hoặc hệ thống
 export const createStudentHealthRecord = async (healthData) => {
   try {
     const response = await fetch(`${API_URL}/hoso-suckhoe`, {

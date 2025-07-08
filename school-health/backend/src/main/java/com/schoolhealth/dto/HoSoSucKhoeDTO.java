@@ -1,9 +1,9 @@
 package com.schoolhealth.dto;
 
+import java.util.Date;
+
 import com.schoolhealth.entity.HoSoSucKhoeHocSinh;
 import com.schoolhealth.entity.HocSinh;
-import java.util.Date;
-import java.util.UUID;
 
 public class HoSoSucKhoeDTO {
     private String maHoSo;

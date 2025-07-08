@@ -4,6 +4,7 @@ import Header from '../../components/student/Header';
 import Footer from '../../components/student/Footer';
 import { fetchStudentById, updateStudentById } from '../../api/studentApi';
 import { getUserId } from '../../utils/auth';
+
 const StudentProfile = () => {
   const maHocSinh = getUserId();
 
@@ -17,10 +18,8 @@ const StudentProfile = () => {
     sdtNguoiLienHe: ''
   });
 
-  const [isEditing, setIsEditing] = useState(false); // ✅ sửa lại mặc định là false
+  const [isEditing, setIsEditing] = useState(false);
   const [loading, setLoading] = useState(true);
-
-  // ✅ Dữ liệu gốc để kiểm tra thay đổi
   const [originalData, setOriginalData] = useState(null);
 
   useEffect(() => {
@@ -28,7 +27,7 @@ const StudentProfile = () => {
       try {
         const data = await fetchStudentById(maHocSinh);
         setFormData(data);
-        setOriginalData(data); // lưu bản gốc để so sánh
+        setOriginalData(data);
       } catch (error) {
         console.error('❌ Lỗi khi lấy dữ liệu học sinh:', error);
         alert('Không thể tải dữ liệu hồ sơ học sinh');
@@ -42,10 +41,7 @@ const StudentProfile = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value
-    }));
+    setFormData(prev => ({ ...prev, [name]: value }));
   };
 
   const handleSubmit = async (e) => {
@@ -53,7 +49,7 @@ const StudentProfile = () => {
     try {
       await updateStudentById(maHocSinh, formData);
       alert('✅ Hồ sơ đã được cập nhật');
-      setOriginalData(formData); // cập nhật lại bản gốc
+      setOriginalData(formData);
       setIsEditing(false);
     } catch (error) {
       console.error('❌ Lỗi khi cập nhật hồ sơ:', error);
@@ -66,7 +62,7 @@ const StudentProfile = () => {
   };
 
   const handleCancel = () => {
-    setFormData(originalData); // khôi phục về dữ liệu gốc
+    setFormData(originalData);
     setIsEditing(false);
   };
 
@@ -114,6 +110,19 @@ const StudentProfile = () => {
       <main className="profile-content">
         <div className="profile-container">
           <h1>Hồ sơ học sinh</h1>
+
+          {!isEditing && (
+            <div className="edit-button-wrapper">
+              <button
+                type="button"
+                className="btn-edit"
+                onClick={handleEdit}
+              >
+                ✏️ Chỉnh sửa
+              </button>
+            </div>
+          )}
+
           <form onSubmit={handleSubmit} className="profile-form">
             <div className="form-group">
               <label>Họ và tên <span className="required">*</span></label>
@@ -148,16 +157,12 @@ const StudentProfile = () => {
               </div>
             </div>
 
-            <div className="form-actions">
-              {isEditing ? (
-                <>
-                  <button type="submit" className="btn-save">Lưu thông tin</button>
-                  <button type="button" className="btn-cancel" onClick={handleCancel}>Hủy</button>
-                </>
-              ) : (
-                <button type="button" className="btn-edit" onClick={handleEdit}>Chỉnh sửa</button>
-              )}
-            </div>
+            {isEditing && (
+              <div className="form-actions">
+                <button type="submit" className="btn-save">💾 Lưu thông tin</button>
+                <button type="button" className="btn-cancel" onClick={handleCancel}>❌ Hủy</button>
+              </div>
+            )}
           </form>
         </div>
       </main>
