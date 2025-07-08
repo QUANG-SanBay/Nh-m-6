@@ -29,7 +29,7 @@ public class HoSoSucKhoeHocSinh {
     @Temporal(TemporalType.DATE)
     private Date ngayCapNhatCuoi;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "ma_hoc_sinh", referencedColumnName = "maHocSinh")
     @JsonIgnore
     private HocSinh hocSinh;

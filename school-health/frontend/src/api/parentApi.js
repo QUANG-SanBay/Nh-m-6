@@ -234,7 +234,7 @@ export const updateHealthInfo = async (healthData) => {
 // Lấy thông tin hồ sơ sức khỏe theo mã học sinh
 export const getHealthInfoByStudentId = async (studentId) => {
   try {
-    const response = await fetch(`${API_BASE_URL}/hoso-suckhoe/hocsinh/${studentId}`);
+    const response = await fetch(`${API_BASE_URL}/hoso-suckhoe/hocsinh/${studentId}/for-parent`);
     if (!response.ok) {
       throw new Error('Không thể lấy thông tin hồ sơ sức khỏe');
     }
