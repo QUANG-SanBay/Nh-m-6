@@ -12,7 +12,7 @@ import com.schoolhealth.repository.QuanLyNhaTruongRepository;
 
 @RestController
 @RequestMapping("/api/manager")
-public class QuanLyNhaTruongController {
+public class ManagerProfileController {
     @Autowired
     private QuanLyNhaTruongRepository quanLyNhaTruongRepository;
 

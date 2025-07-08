@@ -18,6 +18,7 @@ import com.schoolhealth.entity.HocSinh;
 import com.schoolhealth.entity.PhuHuynh;
 import com.schoolhealth.dto.HocSinhInfoDTO;
 import com.schoolhealth.service.PhuHuynhHocSinhService;
+import com.schoolhealth.service.PhuHuynhService;
 
 @RestController
 @RequestMapping("/api/phu-huynh-hoc-sinh")
@@ -27,6 +28,9 @@ public class PhuHuynhHocSinhController {
     @Autowired
     private PhuHuynhHocSinhService phuHuynhHocSinhService;
     
+    @Autowired
+     PhuHuynhService phuHuynhService;
+
     // Liên kết phụ huynh và học sinh
     @PostMapping("/link")
     public ResponseEntity<?> linkPhuHuynhToHocSinh(@RequestBody Map<String, String> request) {
@@ -116,7 +120,7 @@ public class PhuHuynhHocSinhController {
             return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
         }
     }
-    
+
     // Lấy thống kê học sinh của phụ huynh
     @GetMapping("/phu-huynh/{maPhuHuynh}/thong-ke")
     public ResponseEntity<?> getThongKeHocSinh(@PathVariable String maPhuHuynh) {
@@ -125,8 +129,8 @@ public class PhuHuynhHocSinhController {
             
             // Thống kê cơ bản
             int totalStudents = hocSinhList.size();
-            int studentsWithHealthRecords = (int) hocSinhList.stream()
-                .mapToLong(hs -> hs.getHoSoSucKhoeList() != null ? hs.getHoSoSucKhoeList().size() : 0)
+            long studentsWithHealthRecords = hocSinhList.stream()
+                .filter(hs -> hs.getHoSoSucKhoeList() != null && !hs.getHoSoSucKhoeList().isEmpty())
                 .count();
             
             Map<String, Object> thongKe = Map.of(
@@ -142,6 +146,17 @@ public class PhuHuynhHocSinhController {
             ));
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
+        }
+    }
+    
+    // Xoá phụ huynh khỏi hệ thống
+    @DeleteMapping("/delete-parent/{maPhuHuynh}")
+    public ResponseEntity<?> deletePhuHuynh(@PathVariable String maPhuHuynh) {
+        try {
+            phuHuynhService.deletePhuHuynh(maPhuHuynh);
+            return ResponseEntity.ok(Map.of("message", "Xoá phụ huynh thành công"));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(Map.of("error", "Không thể xoá phụ huynh: " + e.getMessage()));
         }
     }
 }

@@ -9,4 +9,6 @@ import com.schoolhealth.entity.NhanVienYTe;
 public interface NhanVienYTeRepository extends JpaRepository<NhanVienYTe, String> {
     NhanVienYTe findByTenDangNhap(String tenDangNhap);
     boolean existsById(String maNhanVienYTe);
+    void deleteByTenDangNhap(String tenDangNhap);
+
 }

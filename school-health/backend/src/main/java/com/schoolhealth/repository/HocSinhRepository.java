@@ -19,4 +19,6 @@ public interface HocSinhRepository extends JpaRepository<HocSinh, String> {
     // Đếm số học sinh của phụ huynh
     @Query("SELECT COUNT(h) FROM HocSinh h WHERE h.phuHuynh.maPhuHuynh = :maPhuHuynh")
     Long countByPhuHuynh(@Param("maPhuHuynh") String maPhuHuynh);
+    void deleteByTenDangNhap(String tenDangNhap);
+
 }

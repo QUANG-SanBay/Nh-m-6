@@ -6,4 +6,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface QuanTriVienRepository extends JpaRepository<QuanTriVien, String> {
     QuanTriVien findByTenDangNhap(String tenDangNhap);
     QuanTriVien findByEmail(String email);
+    void deleteByTenDangNhap(String tenDangNhap);
+
 }

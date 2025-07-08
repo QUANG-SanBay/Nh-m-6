@@ -15,59 +15,59 @@ const StudentHealthDetail = () => {
   const [healthRecord, setHealthRecord] = useState(null);
 
   // Load student and health record data
-  useEffect(() => {
-    const loadStudentData = async () => {
+  const loadStudentData = async () => {
+    try {
+      setLoading(true);
+      
+      // Fetch student basic info
+      const studentData = await fetchStudentById(id);
+      
+      // Fetch health record
+      let healthRecordData = null;
       try {
-        setLoading(true);
-        
-        // Fetch student basic info
-        const studentData = await fetchStudentById(id);
-        
-        // Fetch health record
-        let healthRecordData = null;
-        try {
-          healthRecordData = await fetchStudentHealthRecord(id);
-        } catch (healthError) {
-          // Health record might not exist, which is a valid case
-          console.log(`No health record found for student ${id}. A new one can be created.`);
-        }
-        
-        // Combine student data with health record
-        const combinedData = {
-          id: studentData.maHocSinh,
-          name: studentData.hoTen,
-          studentId: studentData.maHocSinh,
-          class: studentData.lop,
-          dateOfBirth: studentData.ngaySinh,
-          gender: studentData.gioiTinh,
-          address: studentData.diaChi,
-          height: healthRecordData?.chieuCao || 0,
-          weight: healthRecordData?.canNang || 0,
-          bloodType: healthRecordData?.nhomMau || 'Chưa xác định',
-          vision: healthRecordData?.thiLuc || 'Chưa kiểm tra',
-          hearing: healthRecordData?.thinhLuc || 'Chưa kiểm tra',
-          teethCondition: healthRecordData?.ketQuaRangMieng || 'Chưa kiểm tra',
-          generalHealth: healthRecordData?.tinhTrangSucKhoe || 'Chưa đánh giá',
-          allergies: healthRecordData?.diUng || 'Không có',
-          chronicDiseases: healthRecordData?.benhManTinh || 'Không có',
-          medicalHistory: healthRecordData?.tienSuDieuTri || 'Không có',
-          vaccinationHistory: healthRecordData?.lichSuTiemChung || 'Chưa cập nhật',
-          notes: healthRecordData?.ghiChu || '',
-          lastExamDate: healthRecordData?.ngayCapNhatCuoi || 'Chưa cập nhật',
-          avatar: healthRecordData?.anhHocSinh || 'https://via.placeholder.com/150'
-        };
-        
-        setStudentHealth(combinedData);
-        setHealthRecord(healthRecordData);
-        
-      } catch (error) {
-        console.error('Error loading student data:', error);
-        setError('Không thể tải thông tin học sinh. Vui lòng thử lại.');
-      } finally {
-        setLoading(false);
+        healthRecordData = await fetchStudentHealthRecord(id);
+      } catch (healthError) {
+        // Health record might not exist, which is a valid case
+        console.log(`No health record found for student ${id}. A new one can be created.`);
       }
-    };
+      
+      // Combine student data with health record
+      const combinedData = {
+        id: studentData.maHocSinh,
+        name: studentData.hoTen,
+        studentId: studentData.maHocSinh,
+        class: studentData.lop,
+        dateOfBirth: studentData.ngaySinh,
+        gender: studentData.gioiTinh,
+        address: studentData.diaChi,
+        height: healthRecordData?.chieuCao || 0,
+        weight: healthRecordData?.canNang || 0,
+        bloodType: healthRecordData?.nhomMau || 'Chưa xác định',
+        vision: healthRecordData?.thiLuc || 'Chưa kiểm tra',
+        hearing: healthRecordData?.thinhLuc || 'Chưa kiểm tra',
+        teethCondition: healthRecordData?.ketQuaRangMieng || 'Chưa kiểm tra',
+        generalHealth: healthRecordData?.tinhTrangSucKhoe || 'Chưa đánh giá',
+        allergies: healthRecordData?.diUng || 'Không có',
+        chronicDiseases: healthRecordData?.benhManTinh || 'Không có',
+        medicalHistory: healthRecordData?.tienSuDieuTri || 'Không có',
+        vaccinationHistory: healthRecordData?.lichSuTiemChung || 'Chưa cập nhật',
+        notes: healthRecordData?.ghiChu || '',
+        lastExamDate: healthRecordData?.ngayCapNhatCuoi || 'Chưa cập nhật',
+        avatar: healthRecordData?.anhHocSinh || 'https://via.placeholder.com/150'
+      };
+      
+      setStudentHealth(combinedData);
+      setHealthRecord(healthRecordData);
+      
+    } catch (error) {
+      console.error('Error loading student data:', error);
+      setError('Không thể tải thông tin học sinh. Vui lòng thử lại.');
+    } finally {
+      setLoading(false);
+    }
+  };
 
+  useEffect(() => {
     if (id) {
       loadStudentData();
     }

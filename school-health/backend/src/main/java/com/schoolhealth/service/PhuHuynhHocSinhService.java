@@ -24,6 +24,8 @@ public class PhuHuynhHocSinhService {
     
     @Autowired
     private PhuHuynhRepository phuHuynhRepository;
+
+    
     
     // Liên kết phụ huynh với học sinh
     public HocSinh linkPhuHuynhToHocSinh(String maHocSinh, String maPhuHuynh) {

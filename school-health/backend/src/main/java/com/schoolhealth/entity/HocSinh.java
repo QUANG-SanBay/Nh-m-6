@@ -18,6 +18,7 @@ import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
+import jakarta.persistence.Transient;
 
 @Entity
 @Table(name = "hoc_sinh")
@@ -89,4 +90,9 @@ public class HocSinh extends NguoiDung {
             System.out.println("Warning: HocSinh ID was not set before persist!");
         }
     }
-} 
+    @Transient
+    public String getId() {
+        return this.maHocSinh;
+    }
+
+}

@@ -7,4 +7,7 @@ import com.schoolhealth.entity.QuanLyNhaTruong;
 public interface QuanLyNhaTruongRepository extends JpaRepository<QuanLyNhaTruong, String> {
     QuanLyNhaTruong findByTenDangNhap(String tenDangNhap);
     boolean existsById(String maQuanLyNhaTruong);
+    QuanLyNhaTruong findByEmail(String email);
+    void deleteByTenDangNhap(String tenDangNhap);
+
 }

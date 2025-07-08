@@ -10,10 +10,13 @@ import org.springframework.transaction.annotation.Transactional;
 import com.schoolhealth.entity.QuanLyNhaTruong;
 import com.schoolhealth.repository.QuanLyNhaTruongRepository;
 
+
+// import java.util.UUID;
+
 @Service
 @Transactional
 public class QuanLyNhaTruongService {
-    
+
     @Autowired
     private QuanLyNhaTruongRepository quanLyNhaTruongRepository;
     

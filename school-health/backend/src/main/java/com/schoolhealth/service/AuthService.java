@@ -25,18 +25,38 @@ import com.schoolhealth.repository.QuanTriVienRepository;
 @Service
 public class AuthService {
 
-    @Autowired private HocSinhRepository hocSinhRepository;
-    @Autowired private PhuHuynhRepository phuHuynhRepository;
-    @Autowired private NhanVienYTeRepository nhanVienYTeRepository;
-    @Autowired private QuanLyNhaTruongRepository quanLyNhaTruongRepository;
-    @Autowired private QuanTriVienRepository quanTriVienRepository;
-    @Autowired private HoSoSucKhoeHocSinhRepository hoSoSucKhoeRepository;
+    @Autowired
+    private HocSinhRepository hocSinhRepository;
 
-    @Autowired private HocSinhService hocSinhService;
-    @Autowired private PhuHuynhService phuHuynhService;
-    @Autowired private NhanVienYTeService nhanVienYTeService;
-    @Autowired private QuanLyNhaTruongService quanLyNhaTruongService;
-    @Autowired private QuanTriVienService quanTriVienService;
+    @Autowired
+    private PhuHuynhRepository phuHuynhRepository;
+
+    @Autowired
+    private NhanVienYTeRepository nhanVienYTeRepository;
+
+    @Autowired
+    private QuanLyNhaTruongRepository quanLyNhaTruongRepository;
+
+    @Autowired
+    private QuanTriVienRepository quanTriVienRepository;
+
+    @Autowired
+    private HoSoSucKhoeHocSinhRepository hoSoSucKhoeRepository;
+
+    @Autowired
+    private HocSinhService hocSinhService;
+
+    @Autowired
+    private PhuHuynhService phuHuynhService;
+
+    @Autowired
+    private NhanVienYTeService nhanVienYTeService;
+
+    @Autowired
+    private QuanLyNhaTruongService quanLyNhaTruongService;
+
+    @Autowired
+    private QuanTriVienService quanTriVienService;
 
     public AuthResponse login(LoginRequest request) {
         String tenDangNhap = request.getTenDangNhap();
