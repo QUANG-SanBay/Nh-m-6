@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import Header from '../../../components/nurse/Header';
 import Footer from '../../../components/nurse/Footer';
-import { fetchStudentById, fetchStudentHealthRecord, updateStudentHealthRecord } from '../../../api/studentApi';
+import { fetchStudentById, fetchStudentHealthRecord, updateStudentHealthRecord, createStudentHealthRecordForStudent } from '../../../api/studentApi';
 import './StudentHealthDetail.css';
 
 const StudentHealthDetail = () => {
@@ -70,33 +70,44 @@ const StudentHealthDetail = () => {
 
   const handleSave = async () => {
     try {
+      const healthData = {
+        chieuCao: parseFloat(studentHealth.height) || 0,
+        canNang: parseFloat(studentHealth.weight) || 0,
+        nhomMau: studentHealth.bloodType,
+        thiLuc: studentHealth.vision,
+        thinhLuc: studentHealth.hearing,
+        ketQuaRangMieng: studentHealth.teethCondition,
+        tinhTrangSucKhoe: studentHealth.generalHealth,
+        diUng: studentHealth.allergies,
+        benhManTinh: studentHealth.chronicDiseases,
+        tienSuDieuTri: studentHealth.medicalHistory,
+        lichSuTiemChung: studentHealth.vaccinationHistory,
+        ghiChu: studentHealth.notes,
+        anhHocSinh: studentHealth.avatar
+      };
+      
       if (healthRecord) {
         // Update existing health record
         const updatedRecord = {
           ...healthRecord,
-          chieuCao: parseFloat(studentHealth.height) || 0,
-          canNang: parseFloat(studentHealth.weight) || 0,
-          nhomMau: studentHealth.bloodType,
-          thiLuc: studentHealth.vision,
-          thinhLuc: studentHealth.hearing,
-          ketQuaRangMieng: studentHealth.teethCondition,
-          tinhTrangSucKhoe: studentHealth.generalHealth,
-          diUng: studentHealth.allergies,
-          benhManTinh: studentHealth.chronicDiseases,
-          tienSuDieuTri: studentHealth.medicalHistory,
-          lichSuTiemChung: studentHealth.vaccinationHistory,
-          ghiChu: studentHealth.notes,
-          anhHocSinh: studentHealth.avatar
+          ...healthData
         };
         
         await updateStudentHealthRecord(healthRecord.maHoSo, updatedRecord);
         alert('Cập nhật hồ sơ sức khỏe thành công!');
+      } else {
+        // Create new health record
+        const result = await createStudentHealthRecordForStudent(id, healthData);
+        if (result.data) {
+          setHealthRecord(result.data);
+          alert('Tạo hồ sơ sức khỏe thành công!');
+        }
       }
       
       setIsEditing(false);
     } catch (error) {
       console.error('Error saving health record:', error);
-      alert('Có lỗi xảy ra khi cập nhật hồ sơ sức khỏe. Vui lòng thử lại.');
+      alert('Có lỗi xảy ra khi lưu hồ sơ sức khỏe. Vui lòng thử lại.');
     }
   };
 

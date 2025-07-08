@@ -71,3 +71,21 @@ export const createStudentHealthRecord = async (healthData) => {
     throw error;
   }
 };
+
+// Create new student health record for a specific student
+export const createStudentHealthRecordForStudent = async (studentId, healthData) => {
+  try {
+    const response = await fetch(`${API_URL}/hoso-suckhoe/hocsinh/${studentId}/create`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(healthData)
+    });
+    if (!response.ok) throw new Error("Không thể tạo hồ sơ sức khỏe");
+    return await response.json();
+  } catch (error) {
+    console.error("Lỗi tạo hồ sơ sức khỏe:", error);
+    throw error;
+  }
+};

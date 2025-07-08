@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { updateHealthInfo, getHealthInfoByStudentId } from '../../api/parentApi';
+import { updateHealthInfo, getHealthInfoByStudentId, createHealthRecordForStudent } from '../../api/parentApi';
 import Header from '../../components/parent/Header';
 import Footer from '../../components/parent/Footer';
 import './HealthInfo.css';
@@ -196,14 +196,7 @@ const HealthInfo = () => {
 
     try {
       const healthData = {
-        hocSinh: {
-          maHocSinh: formData.studentId,
-          hoTen: formData.fullName,
-          ngaySinh: parseDate(formData.dateOfBirth),
-          gioiTinh: formData.gender,
-          lop: formData.class,
-          diaChi: formData.address
-        },
+        studentId: formData.studentId,
         chieuCao: formData.healthInfo.height,
         canNang: formData.healthInfo.weight,
         thiLuc: formData.healthInfo.vision,
@@ -213,7 +206,9 @@ const HealthInfo = () => {
         benhManTinh: '',
         tienSuDieuTri: '',
         ghiChu: '',
-        anhHocSinh: formData.photo
+        anhHocSinh: formData.photo,
+        nhomMau: '',
+        tinhTrangSucKhoe: 'Bình thường'
       };
 
       await updateHealthInfo(healthData);

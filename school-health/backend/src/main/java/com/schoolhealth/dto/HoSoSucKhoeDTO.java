@@ -72,6 +72,29 @@ public class HoSoSucKhoeDTO {
         }
     }
     
+    // Constructor cho trường hợp chưa có hồ sơ sức khỏe
+    public HoSoSucKhoeDTO(HocSinh hocSinh) {
+        // Khởi tạo các giá trị mặc định cho hồ sơ sức khỏe
+        this.maHoSo = null;
+        this.diUng = "";
+        this.benhManTinh = "";
+        this.tienSuDieuTri = "";
+        this.thiLuc = "";
+        this.thinhLuc = "";
+        this.lichSuTiemChung = "";
+        this.ghiChu = "";
+        this.chieuCao = 0.0;
+        this.canNang = 0.0;
+        this.ketQuaRangMieng = "";
+        this.nhomMau = "";
+        this.tinhTrangSucKhoe = "";
+        this.anhHocSinh = "";
+        this.ngayCapNhatCuoi = null;
+        
+        // Gán thông tin học sinh
+        this.hocSinh = new StudentInfoDTO(hocSinh);
+    }
+    
     // Getters
     public String getMaHoSo() { return maHoSo; }
     public String getDiUng() { return diUng; }

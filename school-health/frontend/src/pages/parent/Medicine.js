@@ -38,20 +38,21 @@ const Medicine = () => {
         setLoading(true);
         
         // Gọi API để lấy thông tin hồ sơ sức khỏe của học sinh
-        const response = await fetch(`${API_BASE}/hoso-suckhoe/hocsinh/${formData.studentId}`);
+        const response = await fetch(`${API_BASE}/hoso-suckhoe/hocsinh/${formData.studentId}/for-parent`);
         
         if (response.ok) {
           const data = await response.json();
           
           if (Array.isArray(data) && data.length > 0) {
             const hoSo = data[0];
+            const studentInfo = hoSo.hocSinh || {};
             setFormData(prev => ({
               ...prev,
-              fullName: hoSo.hocSinh.hoTen || prev.fullName,
-              dateOfBirth: hoSo.hocSinh.ngaySinh ? formatDate(hoSo.hocSinh.ngaySinh) : prev.dateOfBirth,
-              gender: hoSo.hocSinh.gioiTinh || prev.gender,
-              class: hoSo.hocSinh.lop || prev.class,
-              address: hoSo.hocSinh.diaChi || prev.address,
+              fullName: studentInfo.hoTen || prev.fullName,
+              dateOfBirth: studentInfo.ngaySinh ? formatDate(studentInfo.ngaySinh) : prev.dateOfBirth,
+              gender: studentInfo.gioiTinh || prev.gender,
+              class: studentInfo.lop || prev.class,
+              address: studentInfo.diaChi || prev.address,
               healthInfo: {
                 height: hoSo.chieuCao ? hoSo.chieuCao.toString() : prev.healthInfo.height,
                 weight: hoSo.canNang ? hoSo.canNang.toString() : prev.healthInfo.weight,

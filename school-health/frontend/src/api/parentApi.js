@@ -184,20 +184,12 @@ export const sendMedicineRequest = async (data) => {
 export const updateHealthInfo = async (healthData) => {
   try {
     // Validate dữ liệu
-    if (!healthData.hocSinh || !healthData.hocSinh.maHocSinh) {
+    if (!healthData.studentId) {
       throw new Error('Thiếu thông tin mã học sinh');
     }
     
-    // Chuẩn bị dữ liệu gửi lên server
+    // Chuẩn bị dữ liệu gửi lên server (chỉ gửi thông tin sức khỏe)
     const dataToSend = {
-      hocSinh: {
-        maHocSinh: healthData.hocSinh.maHocSinh,
-        hoTen: healthData.hocSinh.hoTen,
-        ngaySinh: healthData.hocSinh.ngaySinh,
-        gioiTinh: healthData.hocSinh.gioiTinh,
-        lop: healthData.hocSinh.lop,
-        diaChi: healthData.hocSinh.diaChi
-      },
       chieuCao: parseFloat(healthData.chieuCao) || 0,
       canNang: parseFloat(healthData.canNang) || 0,
       thiLuc: healthData.thiLuc || '',
@@ -207,11 +199,13 @@ export const updateHealthInfo = async (healthData) => {
       benhManTinh: healthData.benhManTinh || '',
       tienSuDieuTri: healthData.tienSuDieuTri || '',
       ghiChu: healthData.ghiChu || '',
-      anhHocSinh: healthData.anhHocSinh || null
+      anhHocSinh: healthData.anhHocSinh || null,
+      nhomMau: healthData.nhomMau || '',
+      tinhTrangSucKhoe: healthData.tinhTrangSucKhoe || ''
     };
     
-    const response = await fetch(`${API_BASE_URL}/hoso-suckhoe`, {
-      method: 'POST',
+    const response = await fetch(`${API_BASE_URL}/hoso-suckhoe/hocsinh/${healthData.studentId}/update`, {
+      method: 'PUT',
       headers: { 
         'Content-Type': 'application/json',
         'Accept': 'application/json'
@@ -337,6 +331,26 @@ export const getThongKeHocSinh = async (maPhuHuynh) => {
     return result.data || result;
   } catch (error) {
     console.error('Error fetching student statistics:', error);
+    throw error;
+  }
+};
+
+// Create new health record for student (parent access)
+export const createHealthRecordForStudent = async (studentId, healthData) => {
+  try {
+    const response = await fetch(`${API_BASE_URL}/hoso-suckhoe/hocsinh/${studentId}/create`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(healthData)
+    });
+    if (!response.ok) {
+      throw new Error('Không thể tạo hồ sơ sức khỏe');
+    }
+    return await response.json();
+  } catch (error) {
+    console.error('Error creating health record:', error);
     throw error;
   }
 };
