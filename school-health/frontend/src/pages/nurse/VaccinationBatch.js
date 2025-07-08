@@ -20,9 +20,25 @@ const initialBatch = {
   }
 };
 
-const VaccinationBatch = ({ onCreated }) => {
-  const [batch, setBatch] = useState(initialBatch);
-  const [isEditing, setIsEditing] = useState(true);
+const VaccinationBatch = ({ onCreated, batchData, readOnly }) => {
+  const [batch, setBatch] = useState(batchData ? {
+    batchName: batchData.tenChienDich || '',
+    vaccineType: batchData.loaiVacXin || '',
+    eventDate: batchData.ngayBatDau ? batchData.ngayBatDau.split('T')[0] : '',
+    location: batchData.diaDiem || '',
+    expectedStudents: batchData.soLuongHocSinhDuKien || '',
+    batchNote: batchData.ghiChu || '',
+    vaccineInfo: {
+      vaccineName: batchData.tenVaccine || '',
+      manufacturer: batchData.nhaSanXuat || '',
+      lotNumber: batchData.soLo || '',
+      productionDate: batchData.ngaySanXuat ? batchData.ngaySanXuat.split('T')[0] : '',
+      expiryDate: batchData.hanSuDung ? batchData.hanSuDung.split('T')[0] : '',
+      vaccineNote: batchData.ghiChuVaccine || ''
+    }
+  } : initialBatch);
+
+  const [isEditing, setIsEditing] = useState(!readOnly);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -35,10 +51,16 @@ const VaccinationBatch = ({ onCreated }) => {
 
   const handleSave = async () => {
     setIsEditing(false);
+
     const body = {
-      ...batch,
-      eventDate: batch.eventDate ? batch.eventDate + 'T00:00:00' : ''
+      tenChienDich: batch.batchName,
+      loaiVacXin: batch.vaccineType,
+      ngayBatDau: batch.eventDate || null,
+      ngayKetThuc: batch.eventDate || null,
+      trangThai: "Sắp diễn ra",
+      diaDiem: batch.location,
     };
+
     const res = await fetch('http://localhost:8080/api/vaccination-batches', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -50,7 +72,8 @@ const VaccinationBatch = ({ onCreated }) => {
       alert('Tạo đợt tiêm chủng thành công!');
       if (onCreated) onCreated();
     } else {
-      alert('Có lỗi khi tạo đợt tiêm chủng!');
+      const errorText = await res.text();
+      alert('Có lỗi khi tạo đợt tiêm chủng!\n' + errorText);
       setIsEditing(true);
     }
   };
@@ -126,14 +149,14 @@ const VaccinationBatch = ({ onCreated }) => {
               </div>
             </div>
             <div className="batch-action-buttons">
-              {isEditing ? (
+              {!readOnly && (isEditing ? (
                 <>
                   <button type="button" className="btn-black" onClick={handleSave}>Lưu</button>
                   <button type="button" className="btn-black" onClick={handleCancel}>Hủy</button>
                 </>
               ) : (
                 <button type="button" className="btn-blue" onClick={handleEdit}>Chỉnh sửa</button>
-              )}
+              ))}
             </div>
           </form>
         </div>

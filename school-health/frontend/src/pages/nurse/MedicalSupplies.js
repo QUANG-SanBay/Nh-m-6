@@ -1,7 +1,8 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import Header from '../../components/nurse/Header';
 import Footer from '../../components/nurse/Footer';
 import '../../styles/MedicalSupplies.css';
+import { createSupply, getAllMedicines, updateSupply, deleteSupply } from '../../api/medicineApi';
 
 const mockSupplies = [
   { id: 1, name: 'Paracetamol 500mg', category: 'Sốt', quantity: 150, unit: 'viên', expiryDate: '2025-12-31', status: 'in_stock' },
@@ -33,9 +34,14 @@ const MedicalSupplies = () => {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [editingSupply, setEditingSupply] = useState(null);
 
-  const handleDeleteSupply = (id) => {
+  const handleDeleteSupply = async (id) => {
     if (window.confirm('Bạn có chắc chắn muốn xóa sản phẩm này?')) {
-      setSupplies(currentSupplies => currentSupplies.filter(supply => supply.id !== id));
+      try {
+        await deleteSupply(id);
+        setSupplies(prev => prev.filter(supply => supply.id !== id));
+      } catch (error) {
+        alert(error.message || 'Có lỗi khi xóa thuốc/vật tư');
+      }
     }
   };
 
@@ -51,16 +57,37 @@ const MedicalSupplies = () => {
     setNewSupplyData(prev => ({ ...prev, [name]: value }));
   };
 
-  const handleAddNewSupply = (e) => {
+  const handleAddNewSupply = async (e) => {
     e.preventDefault();
-    const newSupply = {
-      id: supplies.length > 0 ? Math.max(...supplies.map(s => s.id)) + 1 : 1,
-      ...newSupplyData,
-      quantity: parseInt(newSupplyData.quantity) || 0,
-      status: 'in_stock', // Mặc định là còn hàng
-    };
-    setSupplies(prev => [newSupply, ...prev]);
-    handleCloseAddModal();
+    try {
+      // Map dữ liệu đúng với entity backend
+      const newSupply = {
+        maThuoc: '', // để trống, backend sẽ tự sinh nếu cần
+        ten: newSupplyData.name,
+        lieuLuong: '', // hoặc lấy từ form nếu muốn
+        donVi: newSupplyData.unit,
+        moTa: newSupplyData.category,
+        soLuong: Number(newSupplyData.quantity), // thêm số lượng
+        hanSuDung: newSupplyData.expiryDate, // thêm hạn sử dụng
+      };
+      const created = await createSupply(newSupply);
+
+      // Nếu backend trả về bản ghi vừa tạo, map lại và thêm vào danh sách
+      // Nếu không, tự tạo object mới từ newSupplyData
+      const newSupplyFrontend = {
+        id: created?.maThuoc || Math.random().toString(36).substr(2, 9),
+        name: newSupplyData.name,
+        category: newSupplyData.category,
+        quantity: Number(newSupplyData.quantity),
+        unit: newSupplyData.unit,
+        expiryDate: newSupplyData.expiryDate,
+      };
+
+      setSupplies(prev => [...prev, newSupplyFrontend]);
+      handleCloseAddModal();
+    } catch (error) {
+      alert(error.message || 'Có lỗi khi thêm mới thuốc/vật tư');
+    }
   };
 
   const handleOpenEditModal = (supply) => {
@@ -78,17 +105,29 @@ const MedicalSupplies = () => {
     setEditingSupply(prev => ({ ...prev, [name]: value }));
   };
 
-  const handleUpdateSupply = (e) => {
+  const handleUpdateSupply = async (e) => {
     e.preventDefault();
     if (!editingSupply) return;
-    const updatedSupply = {
-      ...editingSupply,
-      quantity: parseInt(editingSupply.quantity) || 0,
-    };
-    setSupplies(prevSupplies => 
-      prevSupplies.map(s => s.id === updatedSupply.id ? updatedSupply : s)
-    );
-    handleCloseEditModal();
+    try {
+      // Map dữ liệu đúng với entity backend
+      const updatedSupply = {
+        maThuoc: editingSupply.id,
+        ten: editingSupply.name,
+        lieuLuong: '', // hoặc lấy từ form nếu muốn
+        donVi: editingSupply.unit,
+        moTa: editingSupply.category,
+        soLuong: Number(editingSupply.quantity), // thêm số lượng
+        hanSuDung: editingSupply.expiryDate, // thêm hạn sử dụng
+      };
+      await updateSupply(editingSupply.id, updatedSupply);
+
+      // Cập nhật lại danh sách trên frontend (cách 1: reload lại toàn bộ)
+      const medicinesFromServer = await getAllMedicines();
+      setSupplies(medicinesFromServer.map(mapBackendToFrontend));
+      handleCloseEditModal();
+    } catch (error) {
+      alert(error.message || 'Có lỗi khi cập nhật thuốc/vật tư');
+    }
   };
 
   const filteredSupplies = useMemo(() => {
@@ -144,6 +183,23 @@ const MedicalSupplies = () => {
   }, [supplies]);
 
   const categories = useMemo(() => [...new Set(supplies.map(s => s.category))], [supplies]);
+
+  // Hàm map dữ liệu từ backend về frontend
+  function mapBackendToFrontend(thuoc) {
+    return {
+      id: thuoc.maThuoc,
+      name: thuoc.ten,
+      category: thuoc.moTa,
+      quantity: thuoc.soLuong,
+      unit: thuoc.donVi,
+      expiryDate: thuoc.hanSuDung,
+    };
+  }
+
+  // Load supplies từ backend khi mở trang hoặc sau khi thêm mới
+  useEffect(() => {
+    getAllMedicines().then(data => setSupplies(data.map(mapBackendToFrontend))).catch(() => setSupplies([]));
+  }, []);
 
   return (
     <div className="nurse-layout">
@@ -340,4 +396,11 @@ const MedicalSupplies = () => {
   );
 };
 
-export default MedicalSupplies; 
+export default MedicalSupplies;
+
+
+
+
+
+
+
