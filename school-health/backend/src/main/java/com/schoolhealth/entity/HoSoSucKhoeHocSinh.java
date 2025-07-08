@@ -1,9 +1,21 @@
 package com.schoolhealth.entity;
 
+
 import jakarta.persistence.*;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.Date;
 import java.util.UUID;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.Lob;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.PrePersist;
+import jakarta.persistence.Table;
+import jakarta.persistence.Temporal;
+import jakarta.persistence.TemporalType;
 
 @Entity
 @Table(name = "ho_so_suc_khoe_hoc_sinh")
@@ -38,6 +50,10 @@ public class HoSoSucKhoeHocSinh {
     @JoinColumn(name = "ma_nhan_vien_y_te", referencedColumnName = "maNhanVienYTe")
     @JsonIgnore
     private NhanVienYTe nhanVienYTe;
+
+    @ManyToOne
+    @JoinColumn(name = "ma_quan_ly") // tên cột foreign key trong bảng HoSoSucKhoeHocSinh
+    private QuanLyNhaTruong quanLyNhaTruong;
 
     // Constructor tạo ID mới nếu cần
     @PrePersist
@@ -84,4 +100,14 @@ public class HoSoSucKhoeHocSinh {
     public void setNhomMau(String nhomMau) { this.nhomMau = nhomMau; }
     public String getTinhTrangSucKhoe() { return tinhTrangSucKhoe; }
     public void setTinhTrangSucKhoe(String tinhTrangSucKhoe) { this.tinhTrangSucKhoe = tinhTrangSucKhoe; }
+
+
+    public QuanLyNhaTruong getQuanLyNhaTruong() {
+        return quanLyNhaTruong;
+    }
+
+    public void setQuanLyNhaTruong(QuanLyNhaTruong quanLyNhaTruong) {
+        this.quanLyNhaTruong = quanLyNhaTruong;
+    }
+
 }

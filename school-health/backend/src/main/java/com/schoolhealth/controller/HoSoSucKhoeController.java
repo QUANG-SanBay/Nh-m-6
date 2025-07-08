@@ -1,18 +1,27 @@
 package com.schoolhealth.controller;
 
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
 import com.schoolhealth.entity.HoSoSucKhoeHocSinh;
 import com.schoolhealth.entity.HocSinh;
 import com.schoolhealth.dto.HoSoSucKhoeDTO;
 import com.schoolhealth.service.HoSoSucKhoeService;
 import com.schoolhealth.service.HocSinhService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/hoso-suckhoe")
@@ -73,7 +82,20 @@ public class HoSoSucKhoeController {
             return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
         }
     }
-    
+
+    @PutMapping("/hocsinh/{maHocSinh}/update")
+    public ResponseEntity<?> updateHoSoSucKhoeByStudentId(@PathVariable String maHocSinh, @RequestBody HoSoSucKhoeHocSinh hoSoData) {
+        try {
+            HoSoSucKhoeHocSinh updatedHoSo = hoSoSucKhoeService.updateHoSoSucKhoeByStudentId(maHocSinh, hoSoData);
+            return ResponseEntity.ok(Map.of(
+                "message", "Cập nhật hồ sơ sức khỏe thành công",
+                "data", new HoSoSucKhoeDTO(updatedHoSo)
+            ));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
+        }
+    }
+
     @GetMapping("/hocsinh/{maHocSinh}/for-parent")
     public ResponseEntity<?> getHoSoByMaHocSinhForParent(@PathVariable String maHocSinh) {
         try {
@@ -115,14 +137,11 @@ public class HoSoSucKhoeController {
         }
     }
     
-    @PutMapping("/hocsinh/{maHocSinh}/update")
-    public ResponseEntity<?> updateHoSoSucKhoeByStudentId(@PathVariable String maHocSinh, @RequestBody HoSoSucKhoeHocSinh hoSoData) {
+    @GetMapping("/by-date")
+    public ResponseEntity<?> getHoSoByDate(@RequestParam(required = false) String date) {
         try {
-            HoSoSucKhoeHocSinh updatedHoSo = hoSoSucKhoeService.updateHoSoSucKhoeByStudentId(maHocSinh, hoSoData);
-            return ResponseEntity.ok(Map.of(
-                "message", "Cập nhật hồ sơ sức khỏe thành công",
-                "data", new HoSoSucKhoeDTO(updatedHoSo)
-            ));
+            List<HoSoSucKhoeHocSinh> result = hoSoSucKhoeService.getHoSoByDate(date);
+            return ResponseEntity.ok(result);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
         }
