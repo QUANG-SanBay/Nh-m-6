@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, {  } from 'react'; // ✅ Thêm useEffect
 import './Home.css';
 import Header from '../../components/student/Header';
 import Footer from '../../components/student/Footer';

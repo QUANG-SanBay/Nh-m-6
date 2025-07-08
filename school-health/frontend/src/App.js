@@ -23,13 +23,14 @@ import MedicalExam from './pages/nurse/MedicalExam';
 import VaccinationManagement from './pages/nurse/VaccinationManagement';
 import EditStudentHealth from './pages/nurse/StudentHealth/EditStudentHealth';
 import EventDetail from './pages/nurse/EventDetail';
-import { Link } from 'react-router-dom';
 import VaccinationBatch from './pages/nurse/VaccinationBatch';
 import ParentStudentList from './pages/parent/StudentList';
 import StudentHome from './pages/Student/Home.js';
 import StudentProfile from './pages/Student/Profile';
-
-
+import HealthProfile from './pages/Student/HealthProfile';
+import StudentHealthInfo from './pages/Student/StudentHealthInfo';
+import StudentEvents from './pages/Student/StudentEvents';
+import MedicalHistory from './pages/Student/MedicalHistory';
 function App() {
   return (
     <Router>
@@ -50,10 +51,31 @@ function App() {
               <ParentProfile />
             </ProtectedRoute>
           } />
+          <Route path="/student/health-info" element={
+            <ProtectedRoute allowedRoles={['HOC_SINH']}>
+               <StudentHealthInfo />
+             </ProtectedRoute>
+          } />
+          <Route path="/student/medical-history" element={
+            <ProtectedRoute allowedRoles={['HOC_SINH']}>
+              <MedicalHistory />
+            </ProtectedRoute>
+          } />
+          <Route path="/student/events" element={
+             <ProtectedRoute allowedRoles={['HOC_SINH']}>
+                <StudentEvents />
+            </ProtectedRoute>
+          } />
           <Route path="/student/home" element={
             <ProtectedRoute allowedRoles={['HOC_SINH']}>
               <StudentHome />
          </ProtectedRoute>
+          } />
+          
+          <Route path="/student/health" element={
+            <ProtectedRoute allowedRoles={['HOC_SINH']}>
+              <HealthProfile />
+            </ProtectedRoute>
           } />
           <Route path="/student/profile"element={
             <ProtectedRoute allowedRoles={['HOC_SINH']}>

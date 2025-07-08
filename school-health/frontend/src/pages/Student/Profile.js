@@ -3,9 +3,9 @@ import './Profile.css';
 import Header from '../../components/student/Header';
 import Footer from '../../components/student/Footer';
 import { studentApi } from '../../api/studentApi';
-
+import { getUserId } from '../../utils/auth';
 const StudentProfile = () => {
-  const maHocSinh = 'HS001';
+  const maHocSinh = getUserId();
 
   const [formData, setFormData] = useState({
     hoTen: '',

@@ -16,9 +16,9 @@ const Header = ({ activePage }) => {
         <nav className="nav-menu">
           <ul>
             <li><a href="/student/home" className={activePage === 'home' ? 'active' : ''}>Trang chủ</a></li>
-            <li><a href="/student/health-info" className={activePage === 'health' ? 'active' : ''}>Sức Khỏe</a></li>
+            <li><a href="/student/health" className={activePage === 'health' ? 'active' : ''}>Sức Khỏe</a></li>
             <li><a href="/student/events" className={activePage === 'events' ? 'active' : ''}>Lịch sự kiện</a></li>
-            <li><a href="/studnet/medical-history" className={activePage === 'medical-history' ? 'active' : ''}>Lịch sử khám bệnh/Điều trị</a></li>
+            <li><a href="/student/medical-history" className={activePage === 'medical-history' ? 'active' : ''}>Lịch sử khám bệnh/Điều trị</a></li>
 
             
           </ul>

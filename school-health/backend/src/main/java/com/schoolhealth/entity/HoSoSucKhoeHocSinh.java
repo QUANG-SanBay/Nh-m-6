@@ -1,8 +1,20 @@
 package com.schoolhealth.entity;
 
-import jakarta.persistence.*;
 import java.util.Date;
 import java.util.UUID;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.Lob;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.PrePersist;
+import jakarta.persistence.Table;
+import jakarta.persistence.Temporal;
+import jakarta.persistence.TemporalType;
 
 @Entity
 @Table(name = "ho_so_suc_khoe_hoc_sinh")
@@ -19,6 +31,7 @@ public class HoSoSucKhoeHocSinh {
     private double chieuCao;  // Thêm trường chiều cao
     private double canNang;   // Thêm trường cân nặng
     private String ketQuaRangMieng; // Thêm trường kết quả răng miệng
+    private String nhomMau;
     @Lob
     @Column(columnDefinition = "TEXT")
     private String anhHocSinh; // Thêm trường ảnh học sinh
@@ -28,6 +41,7 @@ public class HoSoSucKhoeHocSinh {
 
     @ManyToOne
     @JoinColumn(name = "ma_hoc_sinh", referencedColumnName = "maHocSinh")
+    @JsonIgnore 
     private HocSinh hocSinh;
 
     @ManyToOne
@@ -75,4 +89,12 @@ public class HoSoSucKhoeHocSinh {
     public void setKetQuaRangMieng(String ketQuaRangMieng) { this.ketQuaRangMieng = ketQuaRangMieng; }
     public String getAnhHocSinh() { return anhHocSinh; }
     public void setAnhHocSinh(String anhHocSinh) { this.anhHocSinh = anhHocSinh; }
+
+      public String getNhomMau() {
+        return nhomMau;
+    }
+
+    public void setNhomMau(String nhomMau) {
+        this.nhomMau = nhomMau;
+    }
 }

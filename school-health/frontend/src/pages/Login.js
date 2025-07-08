@@ -1,15 +1,12 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { setAuthData } from '../utils/auth';
+import { setAuthData } from '../utils/auth'; // Hàm lưu thông tin vào localStorage
 import './Login.css';
 
 const API_BASE = process.env.REACT_APP_API_BASE || 'http://localhost:8080/api';
 
 const Login = () => {
-  const [formData, setFormData] = useState({
-    tenDangNhap: '',
-    matKhau: ''
-  });
+  const [formData, setFormData] = useState({ tenDangNhap: '', matKhau: '' });
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
   const [showRegister, setShowRegister] = useState(false);
@@ -17,10 +14,7 @@ const Login = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }));
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleSubmit = async (e) => {
@@ -29,53 +23,48 @@ const Login = () => {
     setMessage('');
 
     try {
-      const response = await fetch(`${API_BASE}/auth/login`, {
+      const res = await fetch(`${API_BASE}/auth/login`, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formData)
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData),
       });
 
-      const data = await response.json();
+      const data = await res.json();
+      console.log('[Login Response]', data);
 
       if (data.success) {
-        // Sử dụng utility function để lưu thông tin đăng nhập
+        if (data.vaiTro === 'HOC_SINH' && !data.maHocSinh) {
+          setMessage('Thiếu mã học sinh từ server.');
+          setLoading(false);
+          return;
+        }
+
         setAuthData({
           token: data.token,
           role: data.vaiTro,
-          name: data.hoTen
+          name: data.hoTen,
+          maHocSinh: data.maHocSinh || '',
         });
-        
+
         setMessage(data.message);
-        
-        // Chuyển hướng theo vai trò
+
+        const roleRouteMap = {
+          PHU_HUYNH: '/parent/home',
+          NHAN_VIEN_Y_TE: '/nurse/home',
+          HOC_SINH: '/student/home',
+          QUAN_LY_NHA_TRUONG: '/manager/home',
+          QUAN_TRI_VIEN: '/admin/home',
+        };
+
         setTimeout(() => {
-          switch (data.vaiTro) {
-            case 'PHU_HUYNH':
-              navigate('/parent/home');
-              break;
-            case 'NHAN_VIEN_Y_TE':
-              navigate('/nurse/home');
-              break;
-            case 'HOC_SINH':
-              navigate('/student/home');
-              break;
-            case 'QUAN_LY_NHA_TRUONG':
-              navigate('/manager/home');
-              break;
-            case 'QUAN_TRI_VIEN':
-              navigate('/admin/home');
-              break;
-            default:
-              navigate('/');
-          }
+          navigate(roleRouteMap[data.vaiTro] || '/');
         }, 1000);
       } else {
-        setMessage(data.message);
+        setMessage(data.message || 'Tên đăng nhập hoặc mật khẩu không đúng.');
       }
     } catch (error) {
-      setMessage('Lỗi kết nối server');
+      console.error('[Login Error]', error);
+      setMessage('Lỗi kết nối đến server.');
     } finally {
       setLoading(false);
     }
@@ -130,24 +119,18 @@ const Login = () => {
         <div className="login-footer">
           <p>
             Chưa có tài khoản?{' '}
-            <button 
-              className="link-btn" 
-              onClick={() => setShowRegister(true)}
-            >
+            <button className="link-btn" onClick={() => setShowRegister(true)}>
               Đăng ký ngay
             </button>
           </p>
         </div>
       </div>
 
-      {showRegister && (
-        <Register onClose={() => setShowRegister(false)} />
-      )}
+      {showRegister && <Register onClose={() => setShowRegister(false)} />}
     </div>
   );
 };
 
-// Component Register
 const Register = ({ onClose }) => {
   const [formData, setFormData] = useState({
     tenDangNhap: '',
@@ -155,17 +138,14 @@ const Register = ({ onClose }) => {
     email: '',
     soDienThoai: '',
     vaiTro: 'PHU_HUYNH',
-    hoTen: ''
+    hoTen: '',
   });
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }));
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleSubmit = async (e) => {
@@ -174,15 +154,14 @@ const Register = ({ onClose }) => {
     setMessage('');
 
     try {
-      const response = await fetch(`${API_BASE}/auth/register`, {
+      const res = await fetch(`${API_BASE}/auth/register`, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formData)
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData),
       });
 
-      const data = await response.json();
+      const data = await res.json();
+      console.log('[Register Response]', data);
 
       if (data.success) {
         setMessage(data.message);
@@ -190,9 +169,10 @@ const Register = ({ onClose }) => {
           onClose();
         }, 2000);
       } else {
-        setMessage(data.message);
+        setMessage(data.message || 'Đăng ký thất bại.');
       }
     } catch (error) {
+      console.error('[Register Error]', error);
       setMessage('Lỗi kết nối server');
     } finally {
       setLoading(false);
@@ -204,7 +184,9 @@ const Register = ({ onClose }) => {
       <div className="register-modal">
         <div className="modal-header">
           <h2>Đăng ký tài khoản</h2>
-          <button className="close-btn" onClick={onClose}>&times;</button>
+          <button className="close-btn" onClick={onClose}>
+            &times;
+          </button>
         </div>
 
         <form className="register-form" onSubmit={handleSubmit}>
@@ -275,13 +257,7 @@ const Register = ({ onClose }) => {
 
           <div className="form-group">
             <label htmlFor="vaiTro">Vai trò</label>
-            <select
-              id="vaiTro"
-              name="vaiTro"
-              value={formData.vaiTro}
-              onChange={handleChange}
-              required
-            >
+            <select id="vaiTro" name="vaiTro" value={formData.vaiTro} onChange={handleChange} required>
               <option value="PHU_HUYNH">Phụ huynh</option>
               <option value="HOC_SINH">Học sinh</option>
               <option value="NHAN_VIEN_Y_TE">Nhân viên y tế</option>
@@ -291,9 +267,7 @@ const Register = ({ onClose }) => {
           </div>
 
           {message && (
-            <div className={`message ${message.includes('thành công') ? 'success' : 'error'}`}>
-              {message}
-            </div>
+            <div className={`message ${message.includes('thành công') ? 'success' : 'error'}`}>{message}</div>
           )}
 
           <button type="submit" className="register-btn" disabled={loading}>
@@ -305,4 +279,4 @@ const Register = ({ onClose }) => {
   );
 };
 
-export default Login; 
+export default Login;
