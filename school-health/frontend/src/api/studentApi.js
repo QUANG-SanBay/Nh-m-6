@@ -4,7 +4,9 @@ const API_URL = 'http://localhost:8080/api';
 export const fetchStudents = async () => {
   try {
     const response = await fetch(`${API_URL}/hocsinh`);
-    if (!response.ok) throw new Error("Không thể gọi API");
+    if (!response.ok) {
+      throw new Error('Lỗi khi lấy danh sách học sinh');
+    }
     return await response.json();
   } catch (error) {
     console.error("Lỗi gọi API:", error);
@@ -16,7 +18,9 @@ export const fetchStudents = async () => {
 export const fetchStudentById = async (studentId) => {
   try {
     const response = await fetch(`${API_URL}/hocsinh/${studentId}`);
-    if (!response.ok) throw new Error("Không thể gọi API");
+    if (!response.ok) {
+      throw new Error('Lỗi khi lấy thông tin học sinh');
+    }
     return await response.json();
   } catch (error) {
     console.error("Lỗi gọi API:", error);
@@ -28,7 +32,9 @@ export const fetchStudentById = async (studentId) => {
 export const fetchStudentHealthRecord = async (studentId) => {
   try {
     const response = await fetch(`${API_URL}/hoso-suckhoe/hocsinh/${studentId}`);
-    if (!response.ok) throw new Error("Không thể gọi API");
+    if (!response.ok) {
+      throw new Error('Lỗi khi lấy hồ sơ sức khỏe');
+    }
     return await response.json();
   } catch (error) {
     console.error("Lỗi gọi API:", error);
@@ -36,17 +42,19 @@ export const fetchStudentHealthRecord = async (studentId) => {
   }
 };
 
-// Update student health record
-export const updateStudentHealthRecord = async (healthRecordId, healthData) => {
+// Update student health record by student ID
+export const updateStudentHealthRecordByStudentId = async (studentId, healthData) => {
   try {
-    const response = await fetch(`${API_URL}/hoso-suckhoe/${healthRecordId}`, {
+    const response = await fetch(`${API_URL}/hoso-suckhoe/hocsinh/${studentId}/update`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify(healthData)
     });
-    if (!response.ok) throw new Error("Không thể cập nhật hồ sơ sức khỏe");
+    if (!response.ok) {
+      throw new Error('Lỗi cập nhật hồ sơ sức khỏe');
+    }
     return await response.json();
   } catch (error) {
     console.error("Lỗi cập nhật hồ sơ sức khỏe:", error);
@@ -54,23 +62,6 @@ export const updateStudentHealthRecord = async (healthRecordId, healthData) => {
   }
 };
 
-// Create new student health record
-export const createStudentHealthRecord = async (healthData) => {
-  try {
-    const response = await fetch(`${API_URL}/hoso-suckhoe`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(healthData)
-    });
-    if (!response.ok) throw new Error("Không thể tạo hồ sơ sức khỏe");
-    return await response.json();
-  } catch (error) {
-    console.error("Lỗi tạo hồ sơ sức khỏe:", error);
-    throw error;
-  }
-};
 
 // Create new student health record for a specific student
 export const createStudentHealthRecordForStudent = async (studentId, healthData) => {
@@ -82,7 +73,9 @@ export const createStudentHealthRecordForStudent = async (studentId, healthData)
       },
       body: JSON.stringify(healthData)
     });
-    if (!response.ok) throw new Error("Không thể tạo hồ sơ sức khỏe");
+    if (!response.ok) {
+      throw new Error('Lỗi tạo hồ sơ sức khỏe');
+    }
     return await response.json();
   } catch (error) {
     console.error("Lỗi tạo hồ sơ sức khỏe:", error);

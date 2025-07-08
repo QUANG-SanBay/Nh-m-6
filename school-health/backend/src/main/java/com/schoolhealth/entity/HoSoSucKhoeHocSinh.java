@@ -1,21 +1,9 @@
 package com.schoolhealth.entity;
 
-
 import jakarta.persistence.*;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.Date;
 import java.util.UUID;
-
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.Lob;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.PrePersist;
-import jakarta.persistence.Table;
-import jakarta.persistence.Temporal;
-import jakarta.persistence.TemporalType;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name = "ho_so_suc_khoe_hoc_sinh")
@@ -34,6 +22,7 @@ public class HoSoSucKhoeHocSinh {
     private String ketQuaRangMieng; // Thêm trường kết quả răng miệng
     private String nhomMau;   // Thêm trường nhóm máu
     private String tinhTrangSucKhoe; // Thêm trường tình trạng sức khỏe
+
     @Lob
     @Column(columnDefinition = "TEXT")
     private String anhHocSinh; // Thêm trường ảnh học sinh
@@ -101,7 +90,6 @@ public class HoSoSucKhoeHocSinh {
     public String getTinhTrangSucKhoe() { return tinhTrangSucKhoe; }
     public void setTinhTrangSucKhoe(String tinhTrangSucKhoe) { this.tinhTrangSucKhoe = tinhTrangSucKhoe; }
 
-
     public QuanLyNhaTruong getQuanLyNhaTruong() {
         return quanLyNhaTruong;
     }
@@ -109,5 +97,4 @@ public class HoSoSucKhoeHocSinh {
     public void setQuanLyNhaTruong(QuanLyNhaTruong quanLyNhaTruong) {
         this.quanLyNhaTruong = quanLyNhaTruong;
     }
-
 }

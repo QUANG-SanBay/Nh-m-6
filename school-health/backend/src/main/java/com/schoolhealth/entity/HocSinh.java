@@ -1,10 +1,23 @@
 package com.schoolhealth.entity;
 
-import jakarta.persistence.*;
+
+// import jakarta.persistence.*;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+// import com.fasterxml.jackson.annotation.JsonManagedReference;
+
+
 import java.util.Date;
 import java.util.List;
+
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.PrePersist;
+import jakarta.persistence.Table;
+import jakarta.persistence.Temporal;
+import jakarta.persistence.TemporalType;
 
 @Entity
 @Table(name = "hoc_sinh")
@@ -18,7 +31,8 @@ public class HocSinh extends NguoiDung {
     private String lop;
     private String gioiTinh;
     private String diaChi;
-
+    private String tenNguoiLienHe;
+    private String sdtNguoiLienHe;  
     @ManyToOne
     @JoinColumn(name = "ma_phu_huynh", referencedColumnName = "maPhuHuynh")
     @JsonIgnore
@@ -62,6 +76,11 @@ public class HocSinh extends NguoiDung {
     public void setHoSoTiemChungList(List<HoSoTiemChung> hoSoTiemChungList) { this.hoSoTiemChungList = hoSoTiemChungList; }
     public List<HoSoKiemTraYTe> getHoSoKiemTraYTeList() { return hoSoKiemTraYTeList; }
     public void setHoSoKiemTraYTeList(List<HoSoKiemTraYTe> hoSoKiemTraYTeList) { this.hoSoKiemTraYTeList = hoSoKiemTraYTeList; }
+    public String getTenNguoiLienHe() {return tenNguoiLienHe;}
+    public void setTenNguoiLienHe(String tenNguoiLienHe) {this.tenNguoiLienHe = tenNguoiLienHe;}
+    public String getSdtNguoiLienHe() {return sdtNguoiLienHe;}
+    public void setSdtNguoiLienHe(String sdtNguoiLienHe) {this.sdtNguoiLienHe = sdtNguoiLienHe;}
+
     @PrePersist
     public void prePersist() {
         // Chỉ kiểm tra làm backup, logic chính vẫn ở HocSinhService

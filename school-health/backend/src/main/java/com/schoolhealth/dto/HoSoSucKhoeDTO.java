@@ -3,6 +3,7 @@ package com.schoolhealth.dto;
 import com.schoolhealth.entity.HoSoSucKhoeHocSinh;
 import com.schoolhealth.entity.HocSinh;
 import java.util.Date;
+import java.util.UUID;
 
 public class HoSoSucKhoeDTO {
     private String maHoSo;
@@ -20,10 +21,10 @@ public class HoSoSucKhoeDTO {
     private String tinhTrangSucKhoe;
     private String anhHocSinh;
     private Date ngayCapNhatCuoi;
-    
+
     // Student information
     private StudentInfoDTO hocSinh;
-    
+
     public static class StudentInfoDTO {
         private String maHocSinh;
         private String hoTen;
@@ -31,7 +32,7 @@ public class HoSoSucKhoeDTO {
         private String lop;
         private String gioiTinh;
         private String diaChi;
-        
+
         public StudentInfoDTO(HocSinh hocSinh) {
             this.maHocSinh = hocSinh.getMaHocSinh();
             this.hoTen = hocSinh.getHoTen();
@@ -40,7 +41,7 @@ public class HoSoSucKhoeDTO {
             this.gioiTinh = hocSinh.getGioiTinh();
             this.diaChi = hocSinh.getDiaChi();
         }
-        
+
         // Getters
         public String getMaHocSinh() { return maHocSinh; }
         public String getHoTen() { return hoTen; }
@@ -49,7 +50,7 @@ public class HoSoSucKhoeDTO {
         public String getGioiTinh() { return gioiTinh; }
         public String getDiaChi() { return diaChi; }
     }
-    
+
     public HoSoSucKhoeDTO(HoSoSucKhoeHocSinh hoSo) {
         this.maHoSo = hoSo.getMaHoSo();
         this.diUng = hoSo.getDiUng();
@@ -66,12 +67,12 @@ public class HoSoSucKhoeDTO {
         this.tinhTrangSucKhoe = hoSo.getTinhTrangSucKhoe();
         this.anhHocSinh = hoSo.getAnhHocSinh();
         this.ngayCapNhatCuoi = hoSo.getNgayCapNhatCuoi();
-        
+
         if (hoSo.getHocSinh() != null) {
             this.hocSinh = new StudentInfoDTO(hoSo.getHocSinh());
         }
     }
-    
+
     // Constructor cho trường hợp chưa có hồ sơ sức khỏe
     public HoSoSucKhoeDTO(HocSinh hocSinh) {
         // Khởi tạo các giá trị mặc định cho hồ sơ sức khỏe
@@ -90,11 +91,11 @@ public class HoSoSucKhoeDTO {
         this.tinhTrangSucKhoe = "";
         this.anhHocSinh = "";
         this.ngayCapNhatCuoi = null;
-        
+
         // Gán thông tin học sinh
         this.hocSinh = new StudentInfoDTO(hocSinh);
     }
-    
+
     // Getters
     public String getMaHoSo() { return maHoSo; }
     public String getDiUng() { return diUng; }
@@ -112,4 +113,22 @@ public class HoSoSucKhoeDTO {
     public String getAnhHocSinh() { return anhHocSinh; }
     public Date getNgayCapNhatCuoi() { return ngayCapNhatCuoi; }
     public StudentInfoDTO getHocSinh() { return hocSinh; }
+
+    // Setters (optional, add if needed)
+    public void setMaHoSo(String maHoSo) { this.maHoSo = maHoSo; }
+    public void setDiUng(String diUng) { this.diUng = diUng; }
+    public void setBenhManTinh(String benhManTinh) { this.benhManTinh = benhManTinh; }
+    public void setTienSuDieuTri(String tienSuDieuTri) { this.tienSuDieuTri = tienSuDieuTri; }
+    public void setThiLuc(String thiLuc) { this.thiLuc = thiLuc; }
+    public void setThinhLuc(String thinhLuc) { this.thinhLuc = thinhLuc; }
+    public void setLichSuTiemChung(String lichSuTiemChung) { this.lichSuTiemChung = lichSuTiemChung; }
+    public void setGhiChu(String ghiChu) { this.ghiChu = ghiChu; }
+    public void setChieuCao(double chieuCao) { this.chieuCao = chieuCao; }
+    public void setCanNang(double canNang) { this.canNang = canNang; }
+    public void setKetQuaRangMieng(String ketQuaRangMieng) { this.ketQuaRangMieng = ketQuaRangMieng; }
+    public void setNhomMau(String nhomMau) { this.nhomMau = nhomMau; }
+    public void setTinhTrangSucKhoe(String tinhTrangSucKhoe) { this.tinhTrangSucKhoe = tinhTrangSucKhoe; }
+    public void setAnhHocSinh(String anhHocSinh) { this.anhHocSinh = anhHocSinh; }
+    public void setNgayCapNhatCuoi(Date ngayCapNhatCuoi) { this.ngayCapNhatCuoi = ngayCapNhatCuoi; }
+    public void setHocSinh(StudentInfoDTO hocSinh) { this.hocSinh = hocSinh; }
 }

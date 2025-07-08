@@ -35,6 +35,10 @@ export const setAuthData = (data) => {
   if (data.role) localStorage.setItem('userRole', data.role);
   if (data.name) localStorage.setItem('userName', data.name);
   if (data.id) localStorage.setItem('userId', data.id);
+  if (data.maHocSinh) localStorage.setItem('maHocSinh', data.maHocSinh); 
   if (data.email) localStorage.setItem('userEmail', data.email);
   if (data.phone) localStorage.setItem('userPhone', data.phone);
 }; 
+export const getUserId = () => {
+  return localStorage.getItem('maHocSinh'); // hoặc 'userId' nếu backend dùng tên đó
+};

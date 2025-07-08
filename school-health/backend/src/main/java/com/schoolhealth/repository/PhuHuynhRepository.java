@@ -1,9 +1,10 @@
 package com.schoolhealth.repository;
 
-import com.schoolhealth.entity.PhuHuynh;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+
+import com.schoolhealth.entity.PhuHuynh;
 
 public interface PhuHuynhRepository extends JpaRepository<PhuHuynh, String> {
     

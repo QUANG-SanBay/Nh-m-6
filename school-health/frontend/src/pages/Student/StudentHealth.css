@@ -1,0 +1,17 @@
+.health-info-page {
+  padding: 2rem;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.health-info-card {
+  background-color: #fff;
+  padding: 1.5rem;
+  border-radius: 12px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.05);
+  line-height: 1.8;
+}
+
+.health-info-card p {
+  margin: 0.5rem 0;
+}
