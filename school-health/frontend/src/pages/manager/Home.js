@@ -34,10 +34,6 @@ const Home = () => {
             <section className="quick-actions-section">
               <h2>Thao tác nhanh</h2>
               <div className="actions-grid">
-                <button className="action-button">
-                  <span className="action-icon">📝</span>
-                  <span>Tạo hồ sơ mới</span>
-                </button>
                 <Link to="/manager/statistics" className="action-button">
                   <span className="action-icon">📅</span>
                   <span>Báo cáo thống kê</span>
@@ -49,6 +45,10 @@ const Home = () => {
                 <Link to="/manager/events" className="action-button">
                   <span className="action-icon">📅</span>
                   <span>Sự kiện y tế</span>
+                </Link>
+                 <Link to="/manager/eventsManager" className="action-button">
+                  <span className="action-icon">📅</span>
+                  <span>Lịch sự kiện</span>
                 </Link>
               </div>
             </section>

@@ -36,6 +36,7 @@ import EditStudentHealthManager from './pages/manager/StudentHealth/EditStudentH
 import EditEventManager from './pages/manager/EditEventManager';
 import EventDetailManager from './pages/manager/EventDetailManager';
 import MedicalExamManager from './pages/manager/MedicalExamManager';
+import EventsManager from './pages/manager/EventsManager';
 function App() {
   return (
     <Router>
@@ -181,7 +182,6 @@ function App() {
           } />
           <Route path="/manager/events" element={
             <ProtectedRoute allowedRoles={['QUAN_LY_NHA_TRUONG']}>
-              <div>Trang Lịch sử sự kiện</div>
               <MedicalEventsManager />
             </ProtectedRoute>
           } />
@@ -245,6 +245,12 @@ function App() {
               <div>Trang Cài đặt</div>
             </ProtectedRoute>
           } />
+          <Route path="/manager/eventsManager" element={
+            <ProtectedRoute allowedRoles={['QUAN_LY_NHA_TRUONG']}>
+              <EventsManager />
+            </ProtectedRoute>
+          } />
+          
           <Route path="/manager/logout" element={<Logout />} />
           {/* Redirect root to login */}
           <Route path="/" element={<Navigate to="/login" replace />} />

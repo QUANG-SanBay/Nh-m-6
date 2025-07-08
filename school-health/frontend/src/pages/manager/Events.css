@@ -1,0 +1,146 @@
+:root {
+  --status-upcoming: #4a90e2;
+  --status-completed: #27ae60;
+}
+
+.events-page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.events-content {
+  flex: 1;
+  padding: 2rem;
+  background-color: #f5f6fa;
+}
+
+.events-container {
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.events-container h1 {
+  color: #333;
+  margin-bottom: 2rem;
+  font-size: 1.8rem;
+  text-align: center;
+}
+
+.events-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.event-card {
+  background-color: white;
+  border-radius: 8px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.event-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.event-header h2 {
+  color: #333;
+  font-size: 1.2rem;
+  margin: 0;
+}
+
+.event-status {
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  color: white;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.event-details {
+  display: flex;
+  gap: 2rem;
+  margin-bottom: 1rem;
+}
+
+.event-info {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #666;
+}
+
+.event-info i {
+  color: #4a90e2;
+}
+
+.event-description {
+  color: #666;
+  line-height: 1.5;
+  margin-bottom: 1rem;
+}
+
+.event-actions {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.btn-remind,
+.btn-calendar {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 4px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.btn-remind {
+  background-color: #4a90e2;
+  color: white;
+}
+
+.btn-remind:hover {
+  background-color: #357abd;
+}
+
+.btn-calendar {
+  background-color: #f5f6fa;
+  color: #666;
+}
+
+.btn-calendar:hover {
+  background-color: #e4e6ef;
+}
+
+@media (max-width: 768px) {
+  .events-content {
+    padding: 1rem;
+  }
+
+  .event-details {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .event-actions {
+    flex-direction: column;
+  }
+
+  .btn-remind,
+  .btn-calendar {
+    width: 100%;
+    justify-content: center;
+  }
+} 
+body {
+  padding-top: 80px; /* hoặc tùy chiều cao header */
+}
