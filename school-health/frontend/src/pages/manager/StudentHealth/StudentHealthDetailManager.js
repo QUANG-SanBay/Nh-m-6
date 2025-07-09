@@ -258,6 +258,25 @@ const StudentHealthDetailManager = () => {
               </button>
               <h1>Hồ sơ sức khỏe học sinh</h1>
             </div>
+            <div className="header-actions">
+              {!isEditing ? (
+                <button className="edit-button" onClick={() => setIsEditing(true)}>
+                  <i className="fas fa-edit"></i>
+                  Chỉnh sửa
+                </button>
+              ) : (
+                <>
+                  <button className="cancel-button" onClick={() => setIsEditing(false)}>
+                    <i className="fas fa-times"></i>
+                    Hủy
+                  </button>
+                  <button className="save-button" onClick={handleSave}>
+                    <i className="fas fa-save"></i>
+                    Lưu thay đổi
+                  </button>
+                </>
+              )}
+            </div>
           </div>
 
           <div className="health-record">

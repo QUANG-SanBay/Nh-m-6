@@ -171,6 +171,13 @@ const StudentListManager = () => {
                     <i className="fas fa-eye"></i>
                     Xem chi tiết
                   </Link>
+                  <Link 
+                    to={`/manager/student-health/${student.id}/edit`} 
+                    className="edit-button"
+                    state={{ student: student }}>
+                    <i className="fas fa-edit"></i>
+                    Chỉnh sửa
+                  </Link>
                 </div>
               </div>
             ))}
