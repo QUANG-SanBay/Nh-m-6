@@ -7,8 +7,8 @@ import java.util.List;
 @Table(name = "nhan_vien_y_te")
 public class NhanVienYTe extends NguoiDung {
     @Id
-    // Loại bỏ @GeneratedValue để tránh xung đột
     private String maNhanVienYTe;
+
     private String hoTen;
 
     @OneToMany(mappedBy = "nhanVienYTe")
@@ -33,6 +33,13 @@ public class NhanVienYTe extends NguoiDung {
         }
     }
 
+    // ✅ THÊM: Override getMaNguoiDung từ NguoiDung (dành cho service xóa theo ID chung)
+    @Override
+    public String getMaNguoiDung() {
+        return maNhanVienYTe;
+    }
+
+    // Getter/Setter
     public String getMaNhanVienYTe() { return maNhanVienYTe; }
     public void setMaNhanVienYTe(String maNhanVienYTe) { this.maNhanVienYTe = maNhanVienYTe; }
     public String getHoTen() { return hoTen; }

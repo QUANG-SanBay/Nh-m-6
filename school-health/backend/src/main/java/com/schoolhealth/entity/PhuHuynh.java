@@ -15,6 +15,17 @@ public class PhuHuynh extends NguoiDung {
     private String quanHeVoiHocSinh;
     private String thongTinLienHe;
 
+    // ✅ THÊM: ánh xạ ID từ maPhuHuynh lên trường maNguoiDung (từ class cha)
+    @Override
+    public String getMaNguoiDung() {
+        return maPhuHuynh;
+    }
+
+    @Override
+    public void setMaNguoiDung(String maNguoiDung) {
+        this.maPhuHuynh = maNguoiDung;
+    }
+
     // Thêm @PrePersist để kiểm tra ID trước khi persist
     @PrePersist
     public void prePersist() {

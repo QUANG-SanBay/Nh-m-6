@@ -21,31 +21,12 @@ const Header = () => {
           </Link>
         </div>
 
+        {/* ✅ Chỉ giữ lại 1 nav là Home */}
         <nav className="main-nav">
           <ul>
             <li>
               <Link to="/manager/home" className="nav-link">
-                <i className="fas fa-home"></i>Tổng quan
-              </Link>
-            </li>
-            <li>
-              <Link to="/manager/statistics" className="nav-link">
-                <i className="fas fa-chart-bar"></i>Báo cáo thống kê
-              </Link>
-            </li>
-            <li>
-              <Link to="/manager/student-health" className="nav-link">
-                <i className="fas fa-notes-medical"></i>Danh sách sức khỏe học sinh
-              </Link>
-            </li>
-            <li>
-              <Link to="/manager/events" className="nav-link">
-                <i className="fas fa-calendar-alt"></i>Sự kiện y tế
-              </Link>
-            </li>
-            <li>
-              <Link to="/manager/eventsManager" className="nav-link">
-                <i className="fas fa-calendar-check"></i>Lịch sự kiện
+                <i className="fas fa-home"></i> Trang chủ
               </Link>
             </li>
           </ul>

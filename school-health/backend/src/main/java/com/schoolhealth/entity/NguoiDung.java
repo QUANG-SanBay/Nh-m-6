@@ -24,4 +24,8 @@ public abstract class NguoiDung {
     public void setSoDienThoai(String soDienThoai) { this.soDienThoai = soDienThoai; }
     public String getVaiTro() { return vaiTro; }
     public void setVaiTro(String vaiTro) { this.vaiTro = vaiTro; }
+
+    
+
 } 
+

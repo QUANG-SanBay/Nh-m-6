@@ -15,6 +15,16 @@ public class QuanLyNhaTruong extends NguoiDung {
     // Loại bỏ @GeneratedValue để tránh xung đột
     private String maQuanLy;
     private String hoTen;
+    private String maQuanLyNhaTruong;
+
+    public String getMaQuanLyNhaTruong() {
+        return maQuanLyNhaTruong;
+     }
+
+     public void setMaQuanLyNhaTruong(String maQuanLyNhaTruong) {
+         this.maQuanLyNhaTruong = maQuanLyNhaTruong;
+     }
+
 
     @OneToMany(mappedBy = "quanLyNhaTruong")
     private List<SuKienYTe> suKienYTeList;
